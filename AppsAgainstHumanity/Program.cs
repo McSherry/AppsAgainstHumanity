@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AppsAgainstHumanity
+namespace AppsAgainstHumanityClient
 {
 	static class Program
 	{
