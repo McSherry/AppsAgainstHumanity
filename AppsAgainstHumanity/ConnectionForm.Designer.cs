@@ -27,20 +27,20 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.tbx_Host = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.textBox2 = new System.Windows.Forms.TextBox();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.tbx_Nick = new System.Windows.Forms.TextBox();
+			this.btn_Connect = new System.Windows.Forms.Button();
+			this.btn_Exit = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// textBox1
+			// tbx_Host
 			// 
-			this.textBox1.Location = new System.Drawing.Point(96, 10);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(133, 20);
-			this.textBox1.TabIndex = 0;
+			this.tbx_Host.Location = new System.Drawing.Point(96, 10);
+			this.tbx_Host.Name = "tbx_Host";
+			this.tbx_Host.Size = new System.Drawing.Size(133, 20);
+			this.tbx_Host.TabIndex = 0;
 			// 
 			// label1
 			// 
@@ -60,42 +60,43 @@
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Username:";
 			// 
-			// textBox2
+			// tbx_Nick
 			// 
-			this.textBox2.Location = new System.Drawing.Point(96, 36);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(133, 20);
-			this.textBox2.TabIndex = 3;
+			this.tbx_Nick.Location = new System.Drawing.Point(96, 36);
+			this.tbx_Nick.Name = "tbx_Nick";
+			this.tbx_Nick.Size = new System.Drawing.Size(133, 20);
+			this.tbx_Nick.TabIndex = 3;
 			// 
-			// button1
+			// btn_Connect
 			// 
-			this.button1.Location = new System.Drawing.Point(118, 78);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(111, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "Connect";
-			this.button1.UseVisualStyleBackColor = true;
+			this.btn_Connect.Location = new System.Drawing.Point(118, 78);
+			this.btn_Connect.Name = "btn_Connect";
+			this.btn_Connect.Size = new System.Drawing.Size(111, 23);
+			this.btn_Connect.TabIndex = 4;
+			this.btn_Connect.Text = "Connect";
+			this.btn_Connect.UseVisualStyleBackColor = true;
+			this.btn_Connect.Click += new System.EventHandler(this.btn_Connect_Click);
 			// 
-			// button2
+			// btn_Exit
 			// 
-			this.button2.Location = new System.Drawing.Point(12, 78);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(100, 23);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "Exit";
-			this.button2.UseVisualStyleBackColor = true;
+			this.btn_Exit.Location = new System.Drawing.Point(12, 78);
+			this.btn_Exit.Name = "btn_Exit";
+			this.btn_Exit.Size = new System.Drawing.Size(100, 23);
+			this.btn_Exit.TabIndex = 5;
+			this.btn_Exit.Text = "Exit";
+			this.btn_Exit.UseVisualStyleBackColor = true;
 			// 
 			// ConnectionForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(241, 113);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
-			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.btn_Exit);
+			this.Controls.Add(this.btn_Connect);
+			this.Controls.Add(this.tbx_Nick);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.tbx_Host);
 			this.MaximumSize = new System.Drawing.Size(257, 151);
 			this.MinimumSize = new System.Drawing.Size(257, 151);
 			this.Name = "ConnectionForm";
@@ -107,11 +108,11 @@
 
 		#endregion
 
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox tbx_Host;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox textBox2;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.TextBox tbx_Nick;
+		private System.Windows.Forms.Button btn_Connect;
+		private System.Windows.Forms.Button btn_Exit;
 	}
 }

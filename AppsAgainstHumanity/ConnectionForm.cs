@@ -12,9 +12,17 @@ namespace AppsAgainstHumanityClient
 {
 	public partial class ConnectionForm : Form
 	{
-		public ConnectionForm()
+		private NetworkInterface NetworkInterface;
+
+		public ConnectionForm(NetworkInterface ni)
 		{
+			NetworkInterface = ni;
 			InitializeComponent();
+		}
+
+		private void btn_Connect_Click(object sender, EventArgs e)
+		{
+			NetworkInterface.Connect(tbx_Host.Text, tbx_Nick.Text);
 		}
 	}
 }
