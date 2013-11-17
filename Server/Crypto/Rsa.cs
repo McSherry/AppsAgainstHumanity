@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 namespace AppsAgainstHumanity.Server.Crypto
 {
     using BytePair = KeyValuePair<byte[], byte[]>;
-    using QuadPair = KeyValuePair<BytePair, BytePair>;
+    using QuadPair = KeyValuePair<KeyValuePair<byte[], byte[]>, KeyValuePair<byte[], byte[]>>;
 
     public class Rsa
     {

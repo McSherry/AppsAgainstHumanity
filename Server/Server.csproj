@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crypto\SRand.cs" />
     <Compile Include="Crypto\Rsa.cs" />
     <Compile Include="Crypto\Sha256.cs" />
     <Compile Include="Form1.cs">

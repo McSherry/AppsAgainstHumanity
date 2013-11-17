@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Server
+namespace AppsAgainstHumanity.Server
 {
 	public partial class Form1 : Form
 	{
@@ -16,5 +16,10 @@ namespace Server
 		{
 			InitializeComponent();
 		}
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.label1.Text = ((ulong)new Crypto.SRand()).ToString();
+        }
 	}
 }
