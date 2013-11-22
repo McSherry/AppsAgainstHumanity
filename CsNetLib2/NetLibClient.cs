@@ -15,7 +15,7 @@ namespace CsNetLib2
 	{
 		private TcpClient client;
 		private byte[] buffer;
-		private ITransferProtocol dataProcessor;
+		private ITransferProtocol Protocol;
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
@@ -25,23 +25,20 @@ namespace CsNetLib2
 			client = new TcpClient();
 			client.LingerState.Enabled = true;
 		}
-
 		public void SendBytes(byte[] buffer)
 		{
+			buffer = Protocol.FormatData(buffer);
 			client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
 		}
-
 		public void Send(string data)
 		{
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
 			SendBytes(buffer);
 		}
-
 		public void Disconnect()
 		{
 			client.Close();
 		}
-
 		public void SendCallback(IAsyncResult ar)
 		{
 			try {
@@ -50,14 +47,12 @@ namespace CsNetLib2
 				Console.WriteLine("Socket closed.");
 			}
 		}
-
 		public void Connect(string hostname, int port, TransferProtocol protocol)
 		{
-			dataProcessor = new TransferProtocolFactory().CreateTransferProtocol(protocol);
-			dataProcessor.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
+			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 			client.BeginConnect(hostname, port, ConnectCallback, null);
 		}
-
 		public void ConnectCallback(IAsyncResult ar)
 		{
 			client.EndConnect(ar);
@@ -65,7 +60,6 @@ namespace CsNetLib2
 			buffer = new byte[client.ReceiveBufferSize];
 			stream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
 		}
-
 		private void ReadCallback(IAsyncResult result)
 		{
 			NetworkStream networkStream = null;
@@ -80,11 +74,10 @@ namespace CsNetLib2
 				client.Close();
 			}
 
-			dataProcessor.ProcessData(buffer, 0);
+			Protocol.ProcessData(buffer, 0);
 
 			networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
 		}
-
 		public void AwaitConnect()
 		{
 			while (!client.Connected) {

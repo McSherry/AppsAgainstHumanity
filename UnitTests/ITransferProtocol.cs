@@ -20,12 +20,5 @@ namespace CsNetLib2
 		/// Processes the incoming data. Once the data has been processed, events are fired and the data is passed with them.
 		/// </summary>
 		void ProcessData(byte[] buffer, long clientId);
-
-		/// <summary>
-		/// Formats the data about to be sent so is formatted according to the protocol.
-		/// </summary>
-		/// <param name="buffer">The data that is about to be sent.</param>
-		/// <returns>The formatted data, to be sent.</returns>
-		byte[] FormatData(byte[] buffer);
 	}
 }

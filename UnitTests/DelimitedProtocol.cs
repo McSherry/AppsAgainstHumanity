@@ -22,17 +22,6 @@ namespace CsNetLib2
 			BytesAvailableCallback = bytes;
 		}
 
-		public byte[] FormatData(byte[] data)
-		{
-			if (data.Contains(Delimiter)) {
-				throw new InvalidOperationException("Data to be sent contains a byte that is used as a delimiter.");
-			}
-			byte[] newData = new byte[data.Length + 1]; // Add space for delimiter
-			Array.Copy(data, newData, data.Length); // Put the data back in
-			newData[data.Length] = Delimiter; // Put a delimiter at the end
-			return newData;
-		}
-
 		public void ProcessData(byte[] buffer, long clientId)
 		{
 			if (Retain.Length != 0) { // There's still data left over
