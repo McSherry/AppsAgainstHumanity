@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using CSNetLib;
+using CsNetLib2;
 
 namespace AppsAgainstHumanityClient
 {
@@ -12,7 +12,7 @@ namespace AppsAgainstHumanityClient
 
 	public class NetworkInterface
 	{
-		private NetClient Client;
+		private NetLibClient Client;
 		private const int Port = 11235;
 		private const char Nul = (char)((byte)0);
 		private CommandProcessor CmdProcessor;
@@ -21,8 +21,8 @@ namespace AppsAgainstHumanityClient
 
 		public NetworkInterface(MainForm frm)
 		{
-			Client = new NetClient();
-			Client.OnNetworkDataAvailabe += HandleIncomingData;
+			Client = new NetLibClient();
+			Client.OnDataAvailable += HandleIncomingData;
 			CmdProcessor = new CommandProcessor(frm);
 			Commands = new Dictionary<string, CommandHandler>() {
 				{ "ACKN", CmdProcessor.ProcessACKN },
@@ -30,7 +30,7 @@ namespace AppsAgainstHumanityClient
 			};
 		}
 
-		private void HandleIncomingData(string data)
+		private void HandleIncomingData(string data, long clientId)
 		{
 			var command = data.Substring(0, 4);
 			string[] args = null;
