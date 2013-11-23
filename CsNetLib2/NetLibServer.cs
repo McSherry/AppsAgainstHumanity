@@ -12,21 +12,18 @@ namespace CsNetLib2
     {
 		private TcpListener Listener;
 		private Dictionary<long, Client> Clients = new Dictionary<long, Client>();
-		private TransferProtocol Protocol;
+		private ITransferProtocol Protocol;
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
 
 		public NetLibServer(int port, TransferProtocol protocol)
-		{
-			Protocol = protocol;
-			Listener = new TcpListener(IPAddress.Any, port);
-		}
-
+			: this(IPAddress.Any, port, protocol) { }
 		public NetLibServer(IPAddress localaddr, int port, TransferProtocol protocol)
 		{
-			Protocol = protocol;
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
 			Listener = new TcpListener(localaddr, port);
+			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 		}
 		public void Start()
 		{
@@ -64,34 +61,26 @@ namespace CsNetLib2
 					return;
 				}
 			}
-			if (OnBytesAvailable != null) {
-				OnBytesAvailable(client.Buffer.Take(read).ToArray(), client.ClientId);
-			}
-			
-			if (OnDataAvailable != null) {
-				string data = Encoding.ASCII.GetString(client.Buffer, 0, read);
-				OnDataAvailable(data, client.ClientId);
-			}
+			Protocol.ProcessData(client.Buffer.Take(read).ToArray(), client.ClientId);
+
 			try {
 				networkStream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
 			}catch(System.IO.IOException){
 				Console.WriteLine("Remote host closed connection.");
 			}
 		}
-
 		public void SendBytes(byte[] buffer, long clientId)
 		{
+			buffer = Protocol.FormatData(buffer);
 			lock (Clients) {
 				Clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
 			}
 		}
-
 		public void Send(string data, long clientId)
 		{
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
 			SendBytes(buffer, clientId);
 		}
-
 		private void SendCallback(IAsyncResult ar)
 		{
 			try {
@@ -101,16 +90,13 @@ namespace CsNetLib2
 			}
 
 		}
-
 		public void Stop()
 		{
 			Listener.Stop();
 		}
-
 		internal class Client
 		{
 			private static long MaxClientId = 0;
-
 			public long ClientId { get; private set; }
 			public TcpClient TcpClient { get; private set; }
 			public byte[] Buffer { get; private set; }
@@ -123,7 +109,6 @@ namespace CsNetLib2
 					}
 				} 
 			}
-
 			public Client(TcpClient client, byte[] buffer)
 			{
 				TcpClient = client;
@@ -131,7 +116,6 @@ namespace CsNetLib2
 				ClientId = MaxClientId;
 				MaxClientId++;
 			}
-
 		}
     }
 }

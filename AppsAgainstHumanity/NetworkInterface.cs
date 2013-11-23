@@ -53,7 +53,7 @@ namespace AppsAgainstHumanityClient
 
 		public void Connect(string host, string nick)
 		{
-			Client.Connect(host, 11235);
+			Client.Connect(host, 11235, TransferProtocol.Streaming);
 			// TODO: Send join command
 		}
 	}

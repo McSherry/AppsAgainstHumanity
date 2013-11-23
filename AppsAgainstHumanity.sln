@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsNetLib2", "CsNetLib2\CsNetLib2.csproj", "{68170802-5DE7-4F66-99C7-136B3C7DD93C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E3B22317-BB25-4ED5-91A9-451C27F58325}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{68170802-5DE7-4F66-99C7-136B3C7DD93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68170802-5DE7-4F66-99C7-136B3C7DD93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68170802-5DE7-4F66-99C7-136B3C7DD93C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B22317-BB25-4ED5-91A9-451C27F58325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B22317-BB25-4ED5-91A9-451C27F58325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B22317-BB25-4ED5-91A9-451C27F58325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B22317-BB25-4ED5-91A9-451C27F58325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

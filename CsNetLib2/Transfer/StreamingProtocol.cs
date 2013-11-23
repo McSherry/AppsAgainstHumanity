@@ -17,6 +17,11 @@ namespace CsNetLib2
 			BytesAvailableCallback = bytes;
 		}
 
+		public byte[] FormatData(byte[] data)
+		{
+			return data; // Streaming protocol doesn't care about formatting
+		}
+
 		public void ProcessData(byte[] buffer, long clientId)
 		{
 			if (BytesAvailableCallback != null) {

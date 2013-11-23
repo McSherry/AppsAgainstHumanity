@@ -17,9 +17,14 @@ namespace CsNetLib2
 			BytesAvailableCallback = bytes;
 		}
 
+		public byte[] FormatData(byte[] data)
+		{
+			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
+		}
+
 		public void ProcessData(byte[] buffer, long clientId)
 		{
-
+			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
 		}
 	}
 }
