@@ -31,15 +31,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// Creates an instance of a white card, cast as a Card abstract type.
         /// </summary>
         /// <param name="text">The text of the white card.</param>
+        /// <param name="ID">The identifier to assign to the card.</param>
         /// <returns>A white card cast as a Card.</returns>
-        public static Card CreateWhite(string text, byte[] hash)
+        public static Card CreateWhite(string text, uint ID)
         {
-            return new WhiteCard(text, hash);
+            return new WhiteCard(text, ID);
         }
-
-        /// <summary>
-        /// A hash used to verify the authenticity of white cards.
-        /// </summary>
-        public virtual byte[] Hash { get; internal set; }
     }
 }

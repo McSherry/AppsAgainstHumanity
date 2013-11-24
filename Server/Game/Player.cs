@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using CsNetLib2;
 
 namespace AppsAgainstHumanity.Server.Game
 {
@@ -58,5 +59,15 @@ namespace AppsAgainstHumanity.Server.Game
         /// The number of Awesome Points the player currently has.
         /// </summary>
         public uint AwesomePoints { get; set; }
+
+        /// <summary>
+        /// The cards the player has currently drawn.
+        /// </summary>
+        public List<WhiteCard> DrawnCards { get; set; }
+
+        /// <summary>
+        /// A network library client representing the player. Used to communicate with the player.
+        /// </summary>
+        public NetLibClient Client { get; private set; }
     }
 }

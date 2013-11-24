@@ -23,26 +23,14 @@ namespace AppsAgainstHumanity.Server.Game
         /// Create an instance of WhiteCard.
         /// </summary>
         /// <param name="text"></param>
-        public WhiteCard(string text, byte[] hash)
+        public WhiteCard(string text)
         {
             this.Text = text;
-            base.Hash = hash;
         }
 
         /// <summary>
         /// The text of the white card.
         /// </summary>
         public override string Text { get; internal set; }
-
-        /// <summary>
-        /// A hash used to verify the authenticity of the card.
-        /// </summary>
-        public override byte[] Hash
-        {
-            get
-            {
-                return base.Hash;
-            }
-        }
     }
 }

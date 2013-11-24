@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AppsAgainstHumanity.Server.Crypto;
 
 namespace AppsAgainstHumanity.Server
 {
@@ -19,9 +20,16 @@ namespace AppsAgainstHumanity.Server
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string first = "McSherry";
+            Random rnd = new Random((int)(new SRand() & 0xFFFF));
+            int[] randoms = new int[600];
 
-            this.label1.Text = third.ToString();
+            for (int i = 0; i < randoms.Length; i++)
+                randoms[i] = rnd.Next();
+
+            int ctr = -randoms.Length;
+            foreach (int n in randoms)
+                foreach (int m in randoms)
+                    if (m == n) ++ctr;
         }
 	}
 }
