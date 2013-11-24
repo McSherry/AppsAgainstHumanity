@@ -29,6 +29,8 @@ namespace AppsAgainstHumanity.Server.Game
     /// </summary>
     public class Deck
     {
+        // Class doesn't support loading addons yet. Will do in future, just not now.
+
         /// <summary>
         /// Determines the pack type of the given XML document.
         /// </summary>
@@ -121,6 +123,16 @@ namespace AppsAgainstHumanity.Server.Game
                     xex.Message
                     );
             }
+        }
+
+        /// <summary>
+        /// Extends the number of cards in a deck using addon packs.
+        /// </summary>
+        /// <param name="addonXml">The XML of the addon pack file.</param>
+        public void ExtendDeck(string addonXml)
+        {
+            throw new NotImplementedException
+            ("This functionality is not currently implemented.");
         }
 
         /// <summary>
