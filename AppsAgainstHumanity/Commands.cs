@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppsAgainstHumanityClient
 {
-	enum Commands
+	enum CommandType
 	{
+		JOIN,
+		NICK
 	}
 }

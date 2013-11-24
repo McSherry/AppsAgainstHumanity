@@ -12,10 +12,27 @@ namespace AppsAgainstHumanityClient
 {
 	public partial class Card : UserControl
 	{
-		public Card(string contents)
+		public const int CardWidth = 120;
+		public const int CardSpacing = 6;
+		public const int CardFullWidth = CardWidth + CardSpacing;
+		public const int CardFullHeight = CardFullWidth;
+
+
+		public Card()
 		{
 			InitializeComponent();
-			lbl_CardText.Text = contents;
+		}
+
+		public string Contents
+		{
+			get
+			{
+				return lbl_CardText.Text;
+			}
+			set
+			{
+				lbl_CardText.Text = value;
+			}
 		}
 	}
 }

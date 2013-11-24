@@ -41,6 +41,7 @@
 			this.tbx_Host.Name = "tbx_Host";
 			this.tbx_Host.Size = new System.Drawing.Size(133, 20);
 			this.tbx_Host.TabIndex = 0;
+			this.tbx_Host.Text = "82.41.255.140";
 			// 
 			// label1
 			// 
@@ -66,6 +67,7 @@
 			this.tbx_Nick.Name = "tbx_Nick";
 			this.tbx_Nick.Size = new System.Drawing.Size(133, 20);
 			this.tbx_Nick.TabIndex = 3;
+			this.tbx_Nick.Text = "Baggykiin";
 			// 
 			// btn_Connect
 			// 

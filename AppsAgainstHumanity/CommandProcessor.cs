@@ -8,12 +8,6 @@ namespace AppsAgainstHumanityClient
 {
 	class CommandProcessor
 	{
-		private MainForm Form;
-
-		public CommandProcessor(MainForm frm)
-		{
-			Form = frm;
-		}
 		// HACK: Template, remove when done
 		private void ProcessTEMP()
 		{

@@ -50,6 +50,9 @@
     <Compile Include="Card.Designer.cs">
       <DependentUpon>Card.cs</DependentUpon>
     </Compile>
+    <Compile Include="CardList.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommandProcessor.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="ConnectionForm.cs">

@@ -47,15 +47,42 @@ namespace CsNetLib2
 				Console.WriteLine("Socket closed.");
 			}
 		}
-		public void Connect(string hostname, int port, TransferProtocol protocol)
+
+		public byte Delimiter
+		{
+			get
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					return protocol.Delimiter;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+			set
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					protocol.Delimiter = value;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+		}
+
+		public void ConnectBlocking(string hostname, int port, TransferProtocol protocol)
 		{
 			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
-			client.BeginConnect(hostname, port, ConnectCallback, null);
+			client.Connect(hostname, port);
 		}
-		public void ConnectCallback(IAsyncResult ar)
+
+		public async Task Connect(string hostname, int port, TransferProtocol protocol)
 		{
-			client.EndConnect(ar);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
+			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
+			Task t = client.ConnectAsync(hostname, port);
+			await t;
 			NetworkStream stream = client.GetStream();
 			buffer = new byte[client.ReceiveBufferSize];
 			stream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);

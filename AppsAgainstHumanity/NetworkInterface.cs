@@ -14,19 +14,20 @@ namespace AppsAgainstHumanityClient
 	{
 		private NetLibClient Client;
 		private const int Port = 11235;
-		private const char Nul = (char)((byte)0);
-		private CommandProcessor CmdProcessor;
+		private const char NUL = (char)0;
+		private const byte ETX = 3;
+		internal CommandProcessor CommandProcessor { get; private set; }
 
 		private Dictionary<string, CommandHandler> Commands;
 
-		public NetworkInterface(MainForm frm)
+		internal NetworkInterface()
 		{
 			Client = new NetLibClient();
 			Client.OnDataAvailable += HandleIncomingData;
-			CmdProcessor = new CommandProcessor(frm);
+			CommandProcessor = new CommandProcessor();
 			Commands = new Dictionary<string, CommandHandler>() {
-				{ "ACKN", CmdProcessor.ProcessACKN },
-				{ "REFU", CmdProcessor.ProcessREFU },
+				{ "ACKN", CommandProcessor.ProcessACKN },
+				{ "REFU", CommandProcessor.ProcessREFU },
 			};
 		}
 
@@ -36,25 +37,34 @@ namespace AppsAgainstHumanityClient
 			string[] args = null;
 			if (data.Length > 4) {
 				var arglist = data.Substring(4);
-				args = arglist.Split(new char[] { Nul });
+				args = arglist.Split(new char[] { NUL });
 			}
 			Commands[command](args);
 		}
 
-		private void SendData(Commands cmd, string[] args = null)
+		private void SendData(CommandType cmd, string argument)
+		{
+			SendData(cmd, new string[] { argument });
+		}
+
+		private void SendData(CommandType cmd, string[] args = null)
 		{
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.Append(cmd.ToString());
-			
-			// TODO: Format and send command string
 
-			//Client.SendData(data);
+			messageBuilder.Append(string.Join(NUL.ToString(), args));
+
+			string data = messageBuilder.ToString();
+
+			Client.Send(data);
 		}
 
-		public void Connect(string host, string nick)
+		internal async void Connect(string host, string nick)
 		{
-			Client.Connect(host, 11235, TransferProtocol.Streaming);
-			// TODO: Send join command
+			Task t = Client.Connect(host, 11235, TransferProtocol.Streaming);
+			Client.Delimiter = ETX;
+			await t;
+			SendData(CommandType.JOIN, nick);
 		}
 	}
 }

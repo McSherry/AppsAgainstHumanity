@@ -33,20 +33,22 @@
 			// lbl_CardText
 			// 
 			this.lbl_CardText.AutoSize = true;
-			this.lbl_CardText.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lbl_CardText.Location = new System.Drawing.Point(3, 3);
+			this.lbl_CardText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lbl_CardText.Location = new System.Drawing.Point(2, 2);
+			this.lbl_CardText.MaximumSize = new System.Drawing.Size(116, 116);
 			this.lbl_CardText.Name = "lbl_CardText";
-			this.lbl_CardText.Size = new System.Drawing.Size(117, 25);
+			this.lbl_CardText.Size = new System.Drawing.Size(113, 40);
 			this.lbl_CardText.TabIndex = 1;
-			this.lbl_CardText.Text = "Black Card";
+			this.lbl_CardText.Text = "Card contents go here";
 			// 
 			// Card
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.Controls.Add(this.lbl_CardText);
 			this.Name = "Card";
-			this.Size = new System.Drawing.Size(133, 158);
+			this.Size = new System.Drawing.Size(120, 120);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
