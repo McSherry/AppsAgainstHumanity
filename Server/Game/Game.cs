@@ -35,7 +35,7 @@ namespace AppsAgainstHumanity.Server.Game
 
             for (int i = 0; i < n; i++)
             {
-                KeyValuePair<int, WhiteCard> choice = WhiteCardPool.ElementAt(_RNG.Next(WhiteCardPool.Count);
+                KeyValuePair<int, WhiteCard> choice = WhiteCardPool.ElementAt(_RNG.Next(WhiteCardPool.Count));
                 WhiteCardPool.Remove(choice.Key);
                 choices.Add(choice.Key, choice.Value);
             }

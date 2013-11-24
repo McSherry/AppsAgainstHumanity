@@ -79,7 +79,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// A list of players and whether they've played a card this round.
         /// </summary>
-        Dictionary<Player, bool> HasPlayedList { get; internal set; }
+        public Dictionary<Player, bool> HasPlayedList { get; internal set; }
         /// <summary>
         /// The white cards played by players.
         /// </summary>

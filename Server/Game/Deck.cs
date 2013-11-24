@@ -85,8 +85,8 @@ namespace AppsAgainstHumanity.Server.Game
                         {
                             System.Windows.Forms.MessageBox.Show(
                                 String.Format(
-                                    "Pick value for card \"{0}\" is invalid.",
-                                    xmn.InnerText
+                                    "Pick value for card \"{0}\" is invalid: \n\n{1}",
+                                    xmn.InnerText, fex.Message
                                     )
                                 );
                         }

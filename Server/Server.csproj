@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Handlers.cs" />
     <Compile Include="Crypto\SRand.cs" />
     <Compile Include="Crypto\Sha256.cs" />
     <Compile Include="Form1.cs">
@@ -56,6 +57,7 @@
     <Compile Include="Game\Card.cs" />
     <Compile Include="Game\Deck.cs" />
     <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\GameParameters.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Round.cs" />
     <Compile Include="Game\WhiteCard.cs" />
