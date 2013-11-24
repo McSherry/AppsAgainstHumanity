@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsNetLib2
 {
-	public delegate void CommandHandler(string[] arguments);
+	public delegate void CommandHandler(long sender, string[] arguments);
 
 	public class AAHProtocolWrapper
 	{
@@ -80,7 +80,7 @@ namespace CsNetLib2
 			// HACK: This will throw an exception when no commandhandler has been set up for the specified command type.
 			// A workaround for this behaviour has not been implemented, as it may aid the programmer in making sure
 			// that they have a handler set up for each command. Graceful checking should be implemented before release.
-			Commands[(CommandType)Enum.Parse(typeof(CommandType), command)](args);
+			Commands[(CommandType)Enum.Parse(typeof(CommandType), command)](clientId, args);
 		}
 		/// <summary>
 		/// Sends a command with a single argument to the specified client. If the wrapped ITransmittable is a client, 

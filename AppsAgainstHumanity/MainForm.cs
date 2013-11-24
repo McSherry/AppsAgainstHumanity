@@ -14,22 +14,10 @@ namespace AppsAgainstHumanityClient
 	{
 		private NetworkInterface NetworkInterface;
 
-		public MainForm()
+		public MainForm(NetworkInterface networkInterface)
 		{
-			NetworkInterface = new NetworkInterface();
+			NetworkInterface = networkInterface;
 			InitializeComponent();
-		}
-
-		private void MainForm_Load(object sender, EventArgs e)
-		{
-			InitializeGame();
-			/*var form = new ConnectionForm(NetworkInterface);
-			var result = form.ShowDialog();
-			if (result == DialogResult.OK) {
-				InitializeGame();
-			} else {
-				base.Close(); // User pressed cancel or in any other way did not connect to the server. Close the application.
-			}*/
 		}
 		private void InitializeGame()
 		{

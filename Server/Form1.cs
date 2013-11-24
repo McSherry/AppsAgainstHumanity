@@ -16,22 +16,32 @@ namespace AppsAgainstHumanity.Server
 	{
         public const byte ETX = 3;
 
+		private NetLibServer Server;
+		private AAHProtocolWrapper ServerWrapper;
+
 		public Form1()
 		{
 			InitializeComponent();
             this.Load += (s, e) =>
             {
-                var Server = new NetLibServer(11235, TransferProtocol.Delimited);
-                var ServerWrapper = new AAHProtocolWrapper(Server);
-                Server.Start();
-                Server.OnDataAvailable += (s2, e2) =>
+                Server = new NetLibServer(11235, TransferProtocol.Delimited);
+				Server.Delimiter = ETX;
+                ServerWrapper = new AAHProtocolWrapper(Server);
+				ServerWrapper.RegisterCommandHandler(CsNetLib2.CommandType.JOIN, (sender, arguments) =>
+				{
+					MessageBox.Show(String.Format("Client #{0} attempts to connect with nickname {1}", sender, arguments[0]));
+				});
+
+				Server.Start();
+
+                /*Server.OnDataAvailable += (s2, e2) =>
                 {
                     MessageBox.Show("Data received!");
                 };
                 Server.OnBytesAvailable += (s2, e2) =>
                 {
                     MessageBox.Show("Bytes received!");
-                };
+                };*/
             };
 		}
 

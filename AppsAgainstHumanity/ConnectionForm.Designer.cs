@@ -87,6 +87,7 @@
 			this.btn_Exit.TabIndex = 5;
 			this.btn_Exit.Text = "Exit";
 			this.btn_Exit.UseVisualStyleBackColor = true;
+			this.btn_Exit.Click += new System.EventHandler(this.btn_Exit_Click);
 			// 
 			// ConnectionForm
 			// 

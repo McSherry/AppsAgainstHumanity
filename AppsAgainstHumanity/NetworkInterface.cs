@@ -22,14 +22,27 @@ namespace AppsAgainstHumanityClient
 		{
 			Client = new NetLibClient();
 			ClientWrapper = new AAHProtocolWrapper(Client);
+			ClientWrapper.RegisterCommandHandler(CommandType.ACKN, (sender, arguments) =>
+			{
+
+			});
 		}
 
 		internal async void Connect(string host, string nick)
 		{
-			Task t = Client.Connect(host, 11235, TransferProtocol.Streaming);
-			Client.Delimiter = ETX;
-			await t;
+			try {
+				Task t = Client.Connect(host, 11235, TransferProtocol.Delimited);
+				Client.Delimiter = ETX;
+				await t;
+			} catch (Exception e) {
+				System.Diagnostics.Debugger.Break();
+			}
 			ClientWrapper.SendCommand(CommandType.JOIN, nick);
+		}
+
+		internal void Disconnect()
+		{
+			Client.Disconnect();
 		}
 	}
 }

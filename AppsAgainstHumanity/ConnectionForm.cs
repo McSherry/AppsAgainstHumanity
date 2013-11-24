@@ -14,9 +14,9 @@ namespace AppsAgainstHumanityClient
 	{
 		private NetworkInterface NetworkInterface;
 
-		public ConnectionForm(NetworkInterface ni)
+		public ConnectionForm()
 		{
-			NetworkInterface = ni;
+			NetworkInterface = new NetworkInterface();
 			InitializeComponent();
 		}
 
@@ -28,13 +28,27 @@ namespace AppsAgainstHumanityClient
 			}
 			tbx_Nick.Enabled = false;
 			tbx_Host.Enabled = false;
+			btn_Connect.Enabled = false;
 			try {
 				NetworkInterface.Connect(tbx_Host.Text, tbx_Nick.Text);
+				ShowMainUI();
 			} catch (System.Net.Sockets.SocketException ex) {
 				MessageBox.Show(ex.Message, "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				tbx_Nick.Enabled = true;
 				tbx_Host.Enabled = true;
+				btn_Connect.Enabled = true;
 			}
+		}
+
+		private void ShowMainUI()
+		{
+			base.Hide();
+			new MainForm(NetworkInterface).Show();
+		}
+		private void btn_Exit_Click(object sender, EventArgs e)
+		{
+			NetworkInterface.Disconnect();
+			base.Close();
 		}
 	}
 }

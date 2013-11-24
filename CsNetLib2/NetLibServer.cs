@@ -16,17 +16,38 @@ namespace CsNetLib2
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
-
+		public byte Delimiter
+		{
+			get
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					return protocol.Delimiter;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+			set
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					protocol.Delimiter = value;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+		}
 		public NetLibServer(int port, TransferProtocol protocol)
 			: this(IPAddress.Any, port, protocol) { }
 		public NetLibServer(IPAddress localaddr, int port, TransferProtocol protocol)
 		{
 			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
 			Listener = new TcpListener(localaddr, port);
-			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 		}
+
 		public void Start()
 		{
+			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 			Listener.Start();
 			Listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
 		}
