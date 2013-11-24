@@ -20,10 +20,6 @@ namespace AppsAgainstHumanity.Server
         private void button1_Click(object sender, EventArgs e)
         {
             string first = "McSherry";
-            var rsa = new Crypto.Rsa();
-            var keys = Crypto.Rsa.GenerateKeyPair();
-            byte[] second = rsa.Sign(Encoding.UTF8.GetBytes(first), keys.Key);
-            bool third = rsa.Verify(second, keys.Value, Encoding.UTF8.GetBytes(first));
 
             this.label1.Text = third.ToString();
         }
