@@ -67,6 +67,8 @@ namespace CsNetLib2
 		/// <param name="clientId">The id of the client who sent the line. Is simply passed along to the upper layers.</param>
 		private void HandleDataAvailable(string data, long clientId)
 		{
+			Console.WriteLine("[RECV]\t[{0}]\t{1}", clientId, data);
+
 			// Command is always the first four bytes, so extract those
 			var command = data.Substring(0, 4);
 			string[] args = null;
@@ -113,6 +115,7 @@ namespace CsNetLib2
 			// Now append the parameters, separated by ASCII NULs
 			CommandBuilder.Append(string.Join(NUL.ToString(), args));
 			string data = CommandBuilder.ToString();
+			Console.WriteLine("[SEND]\t[{0}]\t{1}", clientId, data);
 			Transmitter.Send(data, clientId);
 		}
 	}
