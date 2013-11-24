@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="0"> <!-- Card Pack = 0 | Addon Pack = 1 -->
+  <!--
+      Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+      The texts herein are a reproduction of the official Cards Against Humanity game.
+  -->
+  <name>Cards Against Humanity</name>
+  <count white="460" black="90"/>
+  <cards>
+    <white>
+      <card>Being on fire.</card>
+      <card>Racism.</card>
+      <card>Old-people smell.</card>
+      <card>A micropenis.</card>
+      <card>Women in yogurt commercials.</card>
+      <card>Classist undertones.</card>
+      <card>Not giving a shit about the Third World.</card>
+      <card>Sexting.</card>
+      <card>Roofies.</card>
+      <card>A windmill full of corpses.</card>
+      <card>The gays.</card>
+      <card>An oversized lollipop.</card>
+      <card>African children.</card>
+      <card>An asymmetric boob job.</card>
+      <card>Bingeing and purging.</card>
+      <card>The hardworking Mexican.</card>
+      <card>An Oedipus complex.</card>
+      <card>A tiny horse.</card>
+      <card>Boogers.</card>
+      <card>Penis envy.</card>
+      <card>Barack Obama.</card>
+      <card>My humps.</card>
+      <card>The Tempurpedic Swedish Sleep System.</card>
+      <card>Scientology.</card>
+      <card>Dry heaving.</card>
+      <card>Skeletor.</card>
+      <card>Darth Vader.</card>
+      <card>Figgy pudding.</card>
+      <card>Advice from a wise, old black man.</card>
+      <card>Five-Dollar Footlongs.</card>
+      <card>Elderly Japanese men.</card>
+      <card>Free samples.</card>
+      <card>Estrogen.</card>
+      <card>Sexual tension.</card>
+      <card>Famine.</card>
+      <card>A stray pube.</card>
+      <card>Men.</card>
+      <card>Heartwarming orphans.</card>
+      <card>Genital piercings.</card>
+      <card>A bag of magic beans.</card>
+      <card>Repression.</card>
+      <card>Prancing.</card>
+      <card>My relationship status.</card>
+      <card>Overcompensation.</card>
+      <card>Peeing a little bit.</card>
+      <card>Pooping back and forth forever.</card>
+      <card>Eating all of the cookies before the AIDS bake-sale.</card>
+      <card>Testicular torsion.</card>
+      <card>The Devil himself.</card>
+      <card>The World of Warcraft.</card>
+      <card>Dick Cheney.</card>
+      <card>MechaHitler.</card>
+      <card>Being fabulous.</card>
+      <card>Pictures of boobs.</card>
+      <card>A gentle caress of the inner thigh.</card>
+      <card>The Amish.</card>
+      <card>Pabst Blue Ribbon.</card>
+      <card>Lance Armstrong's missing testicle.</card>
+      <card>Pedophiles.</card>
+      <card>The Pope.</card>
+      <card>Flying sex snakes.</card>
+      <card>Emma Watson.</card>
+      <card>My ex-wife.</card>
+      <card>Sexy pillow fights.</card>
+      <card>Another goddamn vampire movie.</card>
+      <card>Cybernetic enhancements.</card>
+      <card>Civilian casualties.</card>
+      <card>Scrubbing under the folds.</card>
+      <card>The female orgasm.</card>
+      <card>Bitches.</card>
+      <card>The Boy Scouts of America.</card>
+      <card>Auschwitz.</card>
+      <card>Finger painting.</card>
+      <card>The Care Bear Stare.</card>
+      <card>The Jews.</card>
+      <card>Being marginalized.</card>
+      <card>The Blood of Christ.</card>
+      <card>Dead parents.</card>
+      <card>The art of seduction.</card>
+      <card>Dying of dysentery.</card>
+      <card>Mr. Clean, right behind you.</card>
+      <card>The Virginia Tech Massacre.</card>
+      <card>Jewish fraternities.</card>
+      <card>Hot Pockets.</card>
+      <card>Natalie Portman.</card>
+      <card>Agriculture.</card>
+      <card>Judge Judy.</card>
+      <card>Surprise sex!</card>
+      <card>The homosexual agenda.</card>
+      <card>Robert Downey, Jr.</card>
+      <card>The Trial of Tears.</card>
+      <card>An M. Night Shyamalan plot twist.</card>
+      <card>Funky fresh rhymes.</card>
+      <card>The light of a billion suns.</card>
+      <card>Amputees.</card>
+      <card>Throwing a virgin into a volcano.</card>
+      <card>Italians.</card>
+      <card>Explosions.</card>
+      <card>A good sniff.</card>
+      <card>Destroying the evidence.</card>
+      <card>Children on leashes.</card>
+      <card>Catapults.</card>
+      <card>One trillion dollars.</card>
+      <card>Establishing dominance.</card>
+      <card>Dying.</card>
+      <card>Silence.</card>
+      <card>Growing a pair.</card>
+      <card>YOU MUST CONSTRUCT ADDITIONAL PYLONS.</card>
+      <card>Justin Bieber.</card>
+      <card>The Holy Bible.</card>
+      <card>Balls.</card>
+      <card>Praying the gay away.</card>
+      <card>Teenage pregnancy.</card>
+      <card>German dungeon porn.</card>
+      <card>The invisible hand.</card>
+      <card>My inner demons.</card>
+      <card>Powerful thighs.</card>
+      <card>Getting naked and watching Nickelodeon.</card>
+      <card>Crippling debt.</card>
+      <card>Kamikaze pilots.</card>
+      <card>Teaching a robot to love.</card>
+      <card>Police brutality.</card>
+      <card>Horse meat.</card>
+      <card>All-you-can-eat shrip for $4.99.</card>
+      <card>Heteronormativity.</card>
+      <card>Michael Jackson.</card>
+      <card>A really cool hat.</card>
+      <card>Copping a feel.</card>
+      <card>Crystal meth.</card>
+      <card>Shapeshifters.</card>
+      <card>Fingering.</card>
+      <card>A disappointing birthday party.</card>
+      <card>Dental dams.</card>
+      <card>My soul.</card>
+      <card>The unstoppable tide of Islam.</card>
+      <card>The chronic.</card>
+      <card>Eugenics.</card>
+      <card>Synergistic mangement solutions.</card>
+      <card>RoboCop.</card>
+      <card>Serfdom.</card>
+      <card>Stephen Hawking talking dirty.</card>
+      <card>Tangled Slinkys.</card>
+      <card>Firey poops.</card>
+      <card>Public ridicule.</card>
+      <card>That thing that electrocutes your abs.</card>
+      <card>Picking up girls at the abortion clinic.</card>
+      <card>Object permanence.</card>
+      <card>GoGurt.</card>
+      <card>Lockjaw.</card>
+      <card>Attitude.</card>
+      <card>Passable transvestites.</card>
+      <card>Wet dreams.</card>
+      <card>The Dance of the Sugar Plum Fairy.</card>
+      <card>Firing a rifle into the air while balls deep in a squealing hog.</card>
+      <card>Panda sex.</card>
+      <card>Necrophilia.</card>
+      <card>Grave robbing.</card>
+      <card>A bleached asshole.</card>
+      <card>Muhammad (Praise Be Unto Him).</card>
+      <card>Multiple stab wounds.</card>
+      <card>Stranger danger.</card>
+      <card>A monkey smoking a cigar.</card>
+      <card>Smegma.</card>
+      <card>A live studio audience.</card>
+      <card>Making a pouty face.</card>
+      <card>The violation of our most basic human rights.</card>
+      <card>Unfathomable stupidity.</card>
+      <card>Sunshine and rainbows.</card>
+      <card>Whipping it out.</card>
+      <card>The token minority.</card>
+      <card>The terrorists.</card>
+      <card>The Three-Fifths compromise.</card>
+      <card>A snapping turtle biting the tip of your penis.</card>
+      <card>Vehicular manslaughter.</card>
+      <card>The Great Depression.</card>
+      <card>Emotions.</card>
+      <card>Getting so angry that you pop a boner.</card>
+      <card>Same-sex ice dancing.</card>
+      <card>An M16 assault rifle.</card>
+      <card>Man meat.</card>
+      <card>Incest.</card>
+      <card>David Bowie flying in on a tiger made of lightning.</card>
+      <card>Flightless birds.</card>
+      <card>Doing the right thing.</card>
+      <card>When you fart and a little bit comes out.</card>
+      <card>Frolicking.</card>
+      <card>Being a dick to children.</card>
+      <card>Poopy diapers.</card>
+      <card>Tickling Sean Hannity, even after he tells you to stop.</card>
+      <card>Raptor attacks.</card>
+      <card>Swooping.</card>
+      <card>Concealing a boner.</card>
+      <card>Full frontal nudity.</card>
+      <card>Vigorous jazz hands.</card>
+      <card>Nipple blades.</card>
+      <card>A bitch slap.</card>
+      <card>Michelle Obama's arms.</card>
+      <card>Mouth herpes.</card>
+      <card>A robust mongoloid.</card>
+      <card>Mutually-assured destruction.</card>
+      <card>The Rapture.</card>
+      <card>Road head.</card>
+      <card>Stalin.</card>
+      <card>Lactation.</card>
+      <card>Hurricane Katrina.</card>
+      <card>The true meaning of Christmas.</card>
+      <card>Self-loathing.</card>
+      <card>A brain tumor.</card>
+      <card>Dead babies.</card>
+      <card>New Age music.</card>
+      <card>A thermonuclear detonation.</card>
+      <card>Geese.</card>
+      <card>Kayne West.</card>
+      <card>God.</card>
+      <card>A spastic nerd.</card>
+      <card>Harry Potter erotica.</card>
+      <card>Kids with ass cancer.</card>
+      <card>Lumberjack fantasies.</card>
+      <card>The American Dream.</card>
+      <card>Puberty.</card>
+      <card>Sweet, sweet vengeance.</card>
+      <card>Winking at old people.</card>
+      <card>The taint; the grundle; the fleshy fun-bridge.</card>
+      <card>Oompa-Loompas.</card>
+      <card>Authentic Mexican cuisine.</card>
+      <card>Preteens.</card>
+      <card>The Little Engine That Could.</card>
+      <card>Guys who don't call.</card>
+      <card>Erectile dysfunction.</card>
+      <card>Parting the Red Sea.</card>
+      <card>Rush Limbaugh's soft, shitty body.</card>
+      <card>A saxophone solo.</card>
+      <card>Land mines.</card>
+      <card>Capturing Newt Gingrich and forcing him to dance in a monkey suit.</card>
+      <card>Me time.</card>
+      <card>Nickelback.</card>
+      <card>Vigilante justice.</card>
+      <card>The South.</card>
+      <card>Opposable thumbs.</card>
+      <card>Ghosts.</card>
+      <card>Alcoholism.</card>
+      <card>Poorly-timed Holocaust jokes.</card>
+      <card>Inappropriate yodeling.</card>
+      <card>Battlefield amputations.</card>
+      <card>Exactly what you'd expect.</card>
+      <card>A time travel paradox.</card>
+      <card>AXE Body Spray.</card>
+      <card>Actually taking candy from a baby.</card>
+      <card>Leaving an awkward voicemail.</card>
+      <card>A sassy black woman.</card>
+      <card>Being a motherfucking sorceror.</card>
+      <card>A mopey zoo lion.</card>
+      <card>A murder most foul.</card>
+      <card>A falcon with a cap on its head.</card>
+      <card>Farting and walking away.</card>
+      <card>A mating display.</card>
+      <card>The Chinese gymnastics team.</card>
+      <card>Friction.</card>
+      <card>Asians who aren't good at math.</card>
+      <card>Fear itself.</card>
+      <card>A can of whoop-ass.</card>
+      <card>Yeast.</card>
+      <card>Lunchables.</card>
+      <card>Licking things to claim them as your own.</card>
+      <card>Vikings.</card>
+      <card>The Kool-Aid Man.</card>
+      <card>Hot cheese.</card>
+      <card>Nicolas Cage.</card>
+      <card>A defective condom.</card>
+      <card>The inevitable heat death of the universe.</card>
+      <card>Republicans.</card>
+      <card>William Shatner.</card>
+      <card>Tentacle porn.</card>
+      <card>Sperm whales.</card>
+      <card>Lady Gaga.</card>
+      <card>Chunks of dead prostitute.</card>
+      <card>Gloryholes.</card>
+      <card>Daddy issues.</card>
+      <card>A mime having a stroke.</card>
+      <card>White people.</card>
+      <card>A lifetime of sadness.</card>
+      <card>Tasteful sideboob.</card>
+      <card>A sea of troubles.</card>
+      <card>Nazis.</card>
+      <card>A cooler full of organs.</card>
+      <card>Giving 110%.</card>
+      <card>Doin' it in the butt.</card>
+      <card>John Wilkes Booth.</card>
+      <card>Obesity.</card>
+      <card>A homoerotic volleyball montage.</card>
+      <card>Puppies!</card>
+      <card>Natural male enhancement.</card>
+      <card>Brown people.</card>
+      <card>Dropping a chandelier on your enemies and riding the rope up.</card>
+      <card>Soup that is too hot.</card>
+      <card>Porn stars.</card>
+      <card>Hormone injections.</card>
+      <card>Pulling out.</card>
+      <card>The Big Bang.</card>
+      <card>Switching to Geico</card>
+      <card>Wearing underwear inside-out to avoid doing laundry.</card>
+      <card>Rehab.</card>
+      <card>Christopher Walken.</card>
+      <card>Count Chocula.</card>
+      <card>The Hamburglar.</card>
+      <card>Not reciprocating oral sex.</card>
+      <card>Aaron Burr.</card>
+      <card>Hot people.</card>
+      <card>Foreskin.</card>
+      <card>Assless chaps.</card>
+      <card>The miracle of childbirth.</card>
+      <card>Waiting 'til marriage.</card>
+      <card>Two midgets shitting in a bucket.</card>
+      <card>Adderall.</card>
+      <card>A sad handjob.</card>
+      <card>Cheating in the Special Olympics.</card>
+      <card>The glass ceiling.</card>
+      <card>The Hustle.</card>
+      <card>Getting drunk on mouthwash.</card>
+      <card>Swag.</card>
+      <card>Breaking out into song and dance.</card>
+      <card>A Super Soaker full of cat pee.</card>
+      <card>The Underground Railroad.</card>
+      <card>Home video of Oprah sobbing into a Lean Cuisine.</card>
+      <card>The Rev. Dr. Martin Luther King, Jr.</card>
+      <card>Extremely tight pants.</card>
+      <card>Third base.</card>
+      <card>Waking up half-naked in a Denny's parking lot.</card>
+      <card>Golden showers.</card>
+      <card>White privilege.</card>
+      <card>Hope.</card>
+      <card>Taking off your shirt.</card>
+      <card>Smallpox blankets.</card>
+      <card>Ethnic cleansing.</card>
+      <card>Queefing.</card>
+      <card>Helplessly giggling at the metion of Hutas and Tutsis.</card>
+      <card>Getting really high.</card>
+      <card>Natural selection.</card>
+      <card>A gassy antelope.</card>
+      <card>My sex life.</card>
+      <card>Arnold Schwarzenegger.</card>
+      <card>Pretending to care.</card>
+      <card>Ronald Reagan.</card>
+      <card>Toni Morrison's vagina.</card>
+      <card>An ugly face.</card>
+      <card>A death ray.</card>
+      <card>BATMAN!!!</card>
+      <card>Homeless people.</card>
+      <card>Racially-biased SAT questions.</card>
+      <card>Centaurs.</card>
+      <card>A salty surprise.</card>
+      <card>72 virgins.</card>
+      <card>Embryonic stem cells.</card>
+      <card>Pixelated bukkake.</card>
+      <card>Seppuku.</card>
+      <card>An icepick lobotomy.</card>
+      <card>Stormtroopers.</card>
+      <card>Menstrual rage.</card>
+      <card>Passing a kidney stone.</card>
+      <card>An uppercut.</card>
+      <card>Shaquille O'Neal's acting career.</card>
+      <card>Horrifying laser hair removal accidents.</card>
+      <card>Autocannibalism.</card>
+      <card>A fetus.</card>
+      <card>Riding off into the sunset.</card>
+      <card>Goblins.</card>
+      <card>Eating the last known bison.</card>
+      <card>Shiny objects.</card>
+      <card>Being rich.</card>
+      <card>A Bop It.</card>
+      <card>Leprosy.</card>
+      <card>World peace.</card>
+      <card>Dick fingers.</card>
+      <card>Chainsaws for hands.</card>
+      <card>The Make-A-Wish Foundation.</card>
+      <card>Britney Spears at 55.</card>
+      <card>Laying an egg.</card>
+      <card>The folly of man.</card>
+      <card>My genitals.</card>
+      <card>Grandma.</card>
+      <card>Flesh-eating bacteria.</card>
+      <card>Poor people.</card>
+      <card>50,000 volts straight to the nipples.</card>
+      <card>Active listening.</card>
+      <card>Strong female characters.</card>
+      <card>Poor life choices.</card>
+      <card>Altar boys.</card>
+      <card>My vagina.</card>
+      <card>Pac-Man uncontrollably guzzling cum.</card>
+      <card>Sniffing glue.</card>
+      <card>The placenta.</card>
+      <card>The profoundly handicapped.</card>
+      <card>Spontaneous human combustion.</card>
+      <card>The KKK.</card>
+      <card>The clitoris.</card>
+      <card>Not wearing pants.</card>
+      <card>Consensual sex.</card>
+      <card>Black people.</card>
+      <card>A bucket of fish heads.</card>
+      <card>Hospice care.</card>
+      <card>Passive-aggressive Post-it notes.</card>
+      <card>Fancy Feast.</card>
+      <card>The heart of a child.</card>
+      <card>Sharing needles.</card>
+      <card>Scalping.</card>
+      <card>Being fat and stupid.</card>
+      <card>Getting married, having a few kids, buying some stuff, retiring to Florida, and dying.</card>
+      <card>Sean Penn.</card>
+      <card>Sean Connery.</card>
+      <card>Expecting a burp and vomiting on the floor.</card>
+      <card>Wifely duties.</card>
+      <card>A pyramid of severed heads.</card>
+      <card>Genghis Khan.</card>
+      <card>Historically black colleges.</card>
+      <card>Crucifixion.</card>
+      <card>A subscription to Men's Fitness.</card>
+      <card>The milk man.</card>
+      <card>Friendly fire.</card>
+      <card>Women's suffrage.</card>
+      <card>AIDS.</card>
+      <card>Former President George W. Bush.</card>
+      <card>8 oz. of sweet Mexican black-tar heroin.</card>
+      <card>Half-assed foreplay.</card>
+      <card>Edible underwear.</card>
+      <card>My collection of high-tech sex toys.</card>
+      <card>The Force.</card>
+      <card>Bees?</card>
+      <card>Some god-damn peace and quiet.</card>
+      <card>Jerking off into a pool of children's tears.</card>
+      <card>A micrpig wearing a tiny raincoat and booties.</card>
+      <card>A hot mess.</card>
+      <card>Masturbation.</card>
+      <card>Tom Cruise.</card>
+      <card>A balanced breakfast.</card>
+      <card>Anal beads.</card>
+      <card>Drining alone.</card>
+      <card>Cards Against Humanity.</card>
+      <card>Coat hanger abortions.</card>
+      <card>Used panties.</card>
+      <card>Cuddling.</card>
+      <card>Wiping her butt.</card>
+      <card>Domino's Oreo Dessert Pizza.</card>
+      <card>A zesty breakfast burrito.</card>
+      <card>Morgan Freeman's voice.</card>
+      <card>A middle-aged man on roller skates.</card>
+      <card>Gandhi.</card>
+      <card>The penny whistle solo from "My Heart Will Go On".</card>
+      <card>Spectacular abs.</card>
+      <card>Keanu Reeves.</card>
+      <card>Child beauty pageants.</card>
+      <card>Child abuse.</card>
+      <card>Bill Nye the Science Guy.</card>
+      <card>Science.</card>
+      <card>A tribe of warrior women.</card>
+      <card>Viagra(R).</card>
+      <card>Her Majesty, Queen Elizabeth II.</card>
+      <card>The entire Mormon Tabernacle Choir.</card>
+      <card>Hulk Hogan.</card>
+      <card>Take-backsies.</card>
+      <card>An erection that lasts longer than four hours.</card>
+    </white>
+    <black>
+      <!-- 
+        Black Attributes:
+          pick  - Number of cards, integer value.
+          xd    - Whether to draw an extra card (draw 2 cards). Implicitly false.
+      -->
+      <card pick="1">How did I lose my virginity?</card>
+      <card pick="1">Why can't I sleep at night?</card>
+      <card pick="1">What's that smell?</card>
+      <card pick="1">I got 99 problems but __________ ain't one.</card>
+      <card pick="1">Maybe she's born with. Maybe it's __________.</card>
+      <card pick="1">What's the next Happy Meal(R) toy?</card>
+      <card pick="1">Here is the church, here is the steeple, open the doors, and there is __________.</card>
+      <card pick="1">It's a pity that kids these days are all getting involved with __________.</card>
+      <card pick="1">During his childhood, Salvador Dali produced hundreds of paintings of __________.</card>
+      <card pick="1">Alternative medicine is now embracing the curative powers of __________.</card>
+      <card pick="2">And the Academy Award for _________ goes to _______.</card>
+      <card pick="1">What's that sound?</card>
+      <card pick="1">What ended my last relationship?</card>
+      <card pick="1">MTV's new reality show features eight washed up celebrities living with __________..</card>
+      <card pick="1">I drink to forget __________.</card>
+      <card pick="1">I'm sorry Professor but I couldn't complete my homework because of _____.</card>
+      <card pick="1">What is Batman's guilty pleasure?</card>
+      <card pick="1">This is the way the world ends \ This is the way the world ends \ Not with a bang but with __________.</card>
+      <card pick="1">What's a girl's best friend?</card>
+      <card pick="1">TSA guidelines now prohibit ______________ on airplanes</card>
+      <card pick="1">__________. That's how I want to die.</card>
+      <card pick="2">For my next trick, I will pull ______ out of __________.</card>
+      <card pick="1">In the new Disney Channel Orginal Movie, Hannah Montana struggles with _________ for the first time.</card>
+      <card pick="2">__________ is a slippery slope that leads to __________.</card>
+      <card pick="1">What does Dick Cheney prefer?</card>
+      <card pick="1">Dear Abby, I'm having trouble with ________ and would like your advice.</card>
+      <card pick="1">Insted of coal, Santa now gives bad children __________.</card>
+      <card pick="1">What's the most emo?</card>
+      <card pick="1">In 1,000 years, when paper money is a distant memory, how will we pay for goods and services?</card>
+      <card pick="2">What's the next superhero/sidekick duo?</card>
+      <card pick="2">In M. Night Shyamalan's new movie, Bruce Willis discovers that __________ had really been _____ all along.</card>
+      <card pick="1">A romantic, candlelit dinner would be incomplete without __________.</card>
+      <card pick="1">____________. Betcha can't have just one!</card>
+      <card pick="1">White people like __________.</card>
+      <card pick="1">_________. High five, bro.</card>
+      <card pick="1">Next from J.K. Rowling: Harry Potter and the Chamber of _________.</card>
+      <card pick="1">BILLY MAYS HERE FOR __________.</card>
+      <card pick="2">In a world ravaged by __________, our only solace is __________.</card>
+      <card pick="1">War! What is it good for?</card>
+      <card pick="1">During sex, I like to think about __________.</card>
+      <card pick="1">What are my parents hiding from me?</card>
+      <card pick="1">What will always get you laid?</card>
+      <card pick="1">In L.A. County Jail, word is that you can trade 200 cigarettes for ___________></card>
+      <card pick="1">What did I bring back from Mexico?.</card>
+      <card pick="1">What don't you want to find in your Kung Pao chicken?</card>
+      <card pick="1">What will I bring back in time to convince people that I am a powerful wizard?</card>
+      <card pick="1">How am I maintaining my relationship status?</card>
+      <card pick="1">__________. It's a trap!</card>
+      <card pick="1">Coming to Broadway this season, ___________: The Musical.</card>
+      <card pick="1">While the United States raced the Soviet Union to the moon, the Mexican government funnled millions of pesos into the research on ___________.</card>
+      <card pick="1">After the earthquake, Sean Penn brought __________ to the people of Haiti.</card>
+      <card pick="1">Next on ESPN2, the World Series of __________.</card>
+      <card pick="2">Step 1: _____. Step 2: _____. Step 3: Profit.</card>
+      <card pick="2">Rumour has it that Valdimir Putin's favorite delicacy is _______ stuffed with ______.</card>
+      <card pick="1">But before I kill you, Mr. Bond, I must show you __________.</card>
+      <card pick="1">What gives me unctrollable gas?</card>
+      <card pick="1">What do old people smell like?</card>
+      <card pick="1">The class field trip was completely ruined by ___________.</card>
+      <card pick="1">When Pharoah remained unmoved, Moses called down a Plague of __________.</card>
+      <card pick="1">What's my secret power?</card>
+      <card pick="1">What's there a ton of in heaven?</card>
+      <card pick="1">What would grandma find disturbing, yet oddly charming?</card>
+      <card pick="2">I never truly understood __________ until I encountered __________.</card>
+      <card pick="1">What did the U.S. airdrop to the children of Afghanistan?</card>
+      <card pick="1">What helps Obama unwind?</card>
+      <card pick="1">What did Vin Diesel eat for dinner?</card>
+      <card pick="1">__________: good to the last drop.</card>
+      <card pick="1">Why am I sticky?</card>
+      <card pick="1">What gets better with age?</card>
+      <card pick="1">__________: kid-tested, mother-approved.</card>
+      <card pick="1">Daddy, why is mommy crying.</card>
+      <card pick="1">What's Teach for America using to inspire inner city students to succeed?</card>
+      <card pick="1">Studies show that lab rats navigate mazes 50% faster after being exposed to __________.</card>
+      <card pick="1">Life for American Indians was forever changed when the White Man introduced them to __________.</card>
+      <card pick="3" xd="true">Make a haiku.</card>
+      <card pick="1">I do not know with what weapons World War III will be fought, but World War IV will be fought with __________.</card>
+      <card pick="1">Why do I hurt all over?</card>
+      <card pick="1">What am I giving up for Lent?</card>
+      <card pick="1">In Michael Jackson's final moments, he thought about __________.</card>
+      <card pick="1">The Smithsonian Museum of Natural Histroy has justed opend an interactive exhibit on ________.</card>
+      <card pick="1">When I am President of the United States, I will create the Department of ________.</card>
+      <card pick="2">Lifetime(R) 4 presents __________, the story of __________.</card>
+      <card pick="1">When I am a billionare, I shall erect a 50-foot statue to commemorate __________.</card>
+      <card pick="2">When I was tripping on acid, __________ turned into __________.</card>
+      <card pick="2">That's right, I killed __________. How, you ask? __________.</card>
+      <card pick="1">What's my anti-drug?</card>
+      <card pick="3" xd="true">_____ + _____ = __________.</card>
+      <card pick="1">What never fails to liven up the party?</card>
+      <card pick="1">What's the new fad diet?</card>
+      <card pick="1">Major League Baseball has banned _________ for giving players an unfair advantage.</card>
+    </black>
+  </cards>
+</deck>
