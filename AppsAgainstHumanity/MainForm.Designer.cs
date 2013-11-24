@@ -38,7 +38,7 @@
 			this.btn_GameAction = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.button9 = new System.Windows.Forms.Button();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.tbx_ChatLog = new System.Windows.Forms.TextBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
 			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
@@ -99,7 +99,7 @@
 			// 
 			// sts_GameStatus
 			// 
-			this.sts_GameStatus.Location = new System.Drawing.Point(0, 584);
+			this.sts_GameStatus.Location = new System.Drawing.Point(0, 582);
 			this.sts_GameStatus.Name = "sts_GameStatus";
 			this.sts_GameStatus.Size = new System.Drawing.Size(938, 22);
 			this.sts_GameStatus.TabIndex = 1;
@@ -107,10 +107,13 @@
 			// 
 			// tbx_Chat
 			// 
+			this.tbx_Chat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbx_Chat.Location = new System.Drawing.Point(0, 564);
 			this.tbx_Chat.Name = "tbx_Chat";
 			this.tbx_Chat.Size = new System.Drawing.Size(864, 20);
 			this.tbx_Chat.TabIndex = 6;
+			this.tbx_Chat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbx_Chat_KeyDown);
 			// 
 			// btn_GameAction
 			// 
@@ -139,19 +142,23 @@
 			this.button9.Text = "I am without meaning";
 			this.button9.UseVisualStyleBackColor = true;
 			// 
-			// textBox1
+			// tbx_ChatLog
 			// 
-			this.textBox1.Location = new System.Drawing.Point(0, 440);
-			this.textBox1.Multiline = true;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBox1.Size = new System.Drawing.Size(938, 120);
-			this.textBox1.TabIndex = 0;
-			this.textBox1.Text = resources.GetString("textBox1.Text");
+			this.tbx_ChatLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbx_ChatLog.Location = new System.Drawing.Point(0, 440);
+			this.tbx_ChatLog.Multiline = true;
+			this.tbx_ChatLog.Name = "tbx_ChatLog";
+			this.tbx_ChatLog.ReadOnly = true;
+			this.tbx_ChatLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbx_ChatLog.Size = new System.Drawing.Size(938, 120);
+			this.tbx_ChatLog.TabIndex = 0;
+			this.tbx_ChatLog.Text = resources.GetString("tbx_ChatLog.Text");
 			// 
 			// button1
 			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.button1.Location = new System.Drawing.Point(863, 564);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 20);
@@ -188,9 +195,9 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(938, 606);
+			this.ClientSize = new System.Drawing.Size(938, 604);
 			this.Controls.Add(this.button1);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.tbx_ChatLog);
 			this.Controls.Add(this.button9);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.btn_GameAction);
@@ -200,6 +207,8 @@
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.sts_GameStatus);
 			this.Controls.Add(this.groupBox1);
+			this.MaximumSize = new System.Drawing.Size(954, 1080);
+			this.MinimumSize = new System.Drawing.Size(954, 642);
 			this.Name = "MainForm";
 			this.Text = "Apps Against Humanity";
 			this.groupBox1.ResumeLayout(false);
@@ -226,7 +235,7 @@
 		private System.Windows.Forms.Button btn_GameAction;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button button9;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox tbx_ChatLog;
 		private System.Windows.Forms.Button button1;
 	}
 }

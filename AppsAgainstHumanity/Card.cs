@@ -34,5 +34,20 @@ namespace AppsAgainstHumanityClient
 				lbl_CardText.Text = value;
 			}
 		}
+		public bool Selected
+		{
+			get;
+			private set;
+		}
+
+		private void Card_Click(object sender, EventArgs e)
+		{
+			if (Selected) {
+				BackColor = SystemColors.ControlLightLight;
+			} else {
+				BackColor = Color.FromArgb(225, 225, 255);
+			}
+			Selected = !Selected;
+		}
 	}
 }

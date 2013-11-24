@@ -120,7 +120,7 @@
   <metadata name="sts_GameStatus.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="textBox1.Text" xml:space="preserve">
+  <data name="tbx_ChatLog.Text" xml:space="preserve">
     <value>O!
 how does one truely know
 the soft dream of man's dark path?
@@ -130,8 +130,7 @@ What he wants?
 No.
 It is not until he beholds one,
 a man who knows not what he is,
-but only who he needs be.
-</value>
+but only who he needs be.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>38</value>

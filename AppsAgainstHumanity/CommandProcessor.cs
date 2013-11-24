@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Windows.Forms;
+
 namespace AppsAgainstHumanityClient
 {
 	class CommandProcessor
@@ -17,9 +19,9 @@ namespace AppsAgainstHumanityClient
 		{
 
 		}
-		public void ProcessREFU(string[] arguments)
+		public void ProcessREFU(long sender, string[] arguments)
 		{
-
+			MessageBox.Show(arguments[0], "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 		}
 	}
 }
