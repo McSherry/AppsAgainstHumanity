@@ -17,5 +17,7 @@ namespace AppsAgainstHumanity.Server.Commands
         /// </summary>
         /// <param name="args">The arguments to pass to the command.</param>
         public delegate void CommandArgs(params string[] args);
+
+
     }
 }

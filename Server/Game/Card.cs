@@ -35,7 +35,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <returns>A white card cast as a Card.</returns>
         public static Card CreateWhite(string text, uint ID)
         {
-            return new WhiteCard(text, ID);
+            return new WhiteCard(text);
         }
     }
 }
