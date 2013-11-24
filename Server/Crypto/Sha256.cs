@@ -31,7 +31,7 @@ namespace AppsAgainstHumanity.Server.Crypto
         /// <returns>A SHA-256 hash.</returns>
         public static byte[] Generate(string input)
         {
-            return Generate(UTF8Encoding.UTF8.GetBytes(input));
+            return Generate(ASCIIEncoding.ASCII.GetBytes(input));
         }
     }
 }
