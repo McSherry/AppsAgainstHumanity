@@ -122,7 +122,7 @@ namespace AppsAgainstHumanity.Server.Game
         public Player Start()
         {
             // TODO: REMOVE THIS PLAYER
-            Player tempPlayer = new Player("REMOVE ME", new System.Net.IPAddress(0L));
+            Player tempPlayer = new Player("REMOVE ME", 0);
 
             // Players are limited in the time they have available to choose.
             // This timeout is in seconds in the parameters, so we have to multiply by 1000

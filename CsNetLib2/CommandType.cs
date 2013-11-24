@@ -11,6 +11,8 @@ namespace CsNetLib2
 		JOIN,
 		ACKN,
 		REFU,
-		NICK
+		NICK,
+        NACC,
+        NDNY
 	}
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AppsAgainstHumanity.Server.Crypto;
 using CsNetLib2;
+using AppsAgainstHumanity.Server.Game;
 
 namespace AppsAgainstHumanity.Server
 {
@@ -16,15 +17,20 @@ namespace AppsAgainstHumanity.Server
 	{
         public const byte ETX = 3;
 
-		private NetLibServer Server;
-		private AAHProtocolWrapper ServerWrapper;
+		//private NetLibServer Server;
+		//private AAHProtocolWrapper ServerWrapper;
 
 		public Form1()
 		{
 			InitializeComponent();
             this.Load += (s, e) =>
             {
-                Server = new NetLibServer(11235, TransferProtocol.Delimited);
+                GameParameters gp = new GameParameters() {
+                   Players = 0
+                };
+                var g = new Game.Game(gp);
+
+                /*Server = new NetLibServer(11235, TransferProtocol.Delimited);
 				Server.Delimiter = ETX;
                 ServerWrapper = new AAHProtocolWrapper(Server);
 				ServerWrapper.RegisterCommandHandler(CsNetLib2.CommandType.JOIN, (sender, arguments) =>
@@ -34,7 +40,7 @@ namespace AppsAgainstHumanity.Server
 
 				Server.Start();
 
-                /*Server.OnDataAvailable += (s2, e2) =>
+                Server.OnDataAvailable += (s2, e2) =>
                 {
                     MessageBox.Show("Data received!");
                 };

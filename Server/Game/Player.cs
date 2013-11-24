@@ -20,11 +20,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// </summary>
         /// <param name="Nick">The nickname used to represent the player in each game.</param>
         /// <param name="IP">The IP address the player is connecting from.</param>
-        public Player(string Nick, IPAddress IP)
+        public Player(string Nick, long clientID)
         {
             this.JoinTime = DateTime.UtcNow;
             this.Nickname = Nick;
-            this.IP = IP;
+            this.ClientIdentifier = clientID;
         }
 
         private string _Nickname;
@@ -47,9 +47,9 @@ namespace AppsAgainstHumanity.Server.Game
             }
         }
         /// <summary>
-        /// The IP address the player is connecting from. Used to transmit messages.
+        /// The unique identifier used to identify the client in a NetLibServer instance.
         /// </summary>
-        public IPAddress IP { get; set; }
+        public long ClientIdentifier { get; set; }
         /// <summary>
         /// The UTC time at which the player connected. Automatically set by the constructor.
         /// </summary>
@@ -65,9 +65,5 @@ namespace AppsAgainstHumanity.Server.Game
         /// </summary>
         public List<WhiteCard> DrawnCards { get; set; }
 
-        /// <summary>
-        /// A network library client representing the player. Used to communicate with the player.
-        /// </summary>
-        public NetLibClient Client { get; private set; }
     }
 }

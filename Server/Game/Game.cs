@@ -3,14 +3,101 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsNetLib2;
 
 namespace AppsAgainstHumanity.Server.Game
 {
     public class Game
     {
+        /// <summary>
+        /// The port an AAH server runs on. Selected because it's an easy to remember
+        /// sequence (being nearly linear AND fibonacci) and because it isn't something
+        /// likely to be already taken.
+        /// </summary>
+        private const int PORT = 11235;
+        /// <summary>
+        /// The delimiter used in server messages.
+        /// </summary>
+        private const byte ETX = 3;
+
         private Random _RNG;
         private ulong _gameSeed;
         private bool _gameWon = false;
+        private bool _hasStarted = false;
+        private NetLibServer _server;
+        private AAHProtocolWrapper _serverWrapper;
+
+        /// <summary>
+        /// Determines whether the given nickname meets the requirements.
+        /// Maximum length 20 chars, alphanumeric, _, |
+        /// </summary>
+        /// <param name="nick">The nickname to determine the validity of.</param>
+        /// <returns>Whether the nickname is valid.</returns>
+        private bool _validNick(string nick)
+        {
+            char[] validNickChars = 
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_|".ToCharArray();
+
+            bool hasEncounteredInvalid = false;
+            foreach (char c in nick)
+                hasEncounteredInvalid = !validNickChars.Contains(c) ? true : hasEncounteredInvalid;
+
+            if (hasEncounteredInvalid || nick.Length > 20) return false;
+            else if (nick.Length <= 20 && !hasEncounteredInvalid) return true;
+            else return false;
+        }
+        /// <summary>
+        /// Determines whether the provided nickname is free within the current game.
+        /// </summary>
+        /// <param name="nick">The nickname to determine the availability of.</param>
+        /// <returns>Whether the given nickname is available.</returns>
+        private bool _freeNick(string nick)
+        {
+            bool dupeNickEncountered = false;
+            foreach (Player p in Players)
+                dupeNickEncountered = p.Nickname.ToLower() == nick.ToLower() ? true : dupeNickEncountered;
+            return dupeNickEncountered;
+        }
+        // handles any JOIN commands received by the server.
+        private void _handlerJOIN(long sender, string[] args)
+        {
+            // Game hasn't started, so we can allow the player to join,
+            // assuming the player limit has not yet been reached.
+            if (!_hasStarted)
+            {
+                // If the length of this class's property Players (number of connected players)
+                // is equal to the maximum number specified in the parameters, refuse the connection
+                // with the limit-reached message.
+                if (this.Players.Count == this.Parameters.Players)
+                    _serverWrapper.SendCommand(
+                        CommandType.REFU,
+                        new string[1] { "Player limit reached." },
+                        sender
+                        );
+                else
+                {
+                    if (_validNick(args[0]) && _freeNick(args[0]))
+                    {
+                        // If the nickname is valid, add the player to the list of players
+                        // and send a nickname-accept (NACC) to the client.
+                        this.Players.Add(new Player(args[0], sender));
+                        _serverWrapper.SendCommand(CommandType.NACC, (string)null, sender);
+                    }
+                    else if (!_validNick(args[0]))
+                    {
+                        // If the nickname is invalid, send NDNY with appropriate text.
+                        _serverWrapper.SendCommand(CommandType.NDNY, "Invalid nickname.", sender);
+                    }
+                    else if (!_freeNick(args[0]))
+                    {
+                        // If the nickname is already in use, send NDNY with appropriate text.
+                        _serverWrapper.SendCommand(CommandType.NDNY, "Nickname in use.", sender);
+                    }
+                    // If nickname is neither free nor valid, send NDNY.
+                    else _serverWrapper.SendCommand(CommandType.NDNY, (string)null, sender);
+                }
+            }
+        }
 
         /// <summary>
         /// Selects a black card from the pool, and removes it from the pool.
@@ -54,6 +141,13 @@ namespace AppsAgainstHumanity.Server.Game
                 this.WhiteCardPool.Add(_RNG.Next(), wc);
             }
             this.BlackCardPool = Parameters.Cards.BlackCards;
+            this._server = new NetLibServer(PORT, TransferProtocol.Delimited);
+            _server.Delimiter = ETX;
+            this._serverWrapper = new AAHProtocolWrapper(_server);
+
+            _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
+
+            _server.Start();
         }
 
         /// <summary>
@@ -69,7 +163,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// </summary>
         public List<BlackCard> BlackCardPool { get; private set; }
         /// <summary>
-        /// The players currently in the game.
+        /// The players currently in the game, with internal NetLib identifiers.
         /// </summary>
         public List<Player> Players { get; private set; }
         /// <summary>
@@ -79,6 +173,9 @@ namespace AppsAgainstHumanity.Server.Game
 
         public void Start()
         {
+            if (!_hasStarted) _hasStarted = true;
+            else throw new Exception("This game has already been started. Please create a new instance to start a new game.");
+
             while (!_gameWon)
             {
                 BlackCard roundBlack = _selectBlack();
