@@ -28,15 +28,18 @@
 		private void InitializeComponent()
 		{
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.crd_BlackCard = new AppsAgainstHumanityClient.Card();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.lb_Players = new System.Windows.Forms.ListBox();
 			this.sts_GameStatus = new System.Windows.Forms.StatusStrip();
 			this.tbx_Chat = new System.Windows.Forms.TextBox();
-			this.cardList1 = new AppsAgainstHumanityClient.CardList();
-			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
-			this.crd_BlackCard = new AppsAgainstHumanityClient.Card();
+			this.btn_GameAction = new System.Windows.Forms.Button();
+			this.button2 = new System.Windows.Forms.Button();
+			this.button9 = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -53,6 +56,15 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Black card";
 			// 
+			// crd_BlackCard
+			// 
+			this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.crd_BlackCard.Contents = "Card contents go here";
+			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
+			this.crd_BlackCard.Name = "crd_BlackCard";
+			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
+			this.crd_BlackCard.TabIndex = 0;
+			// 
 			// groupBox2
 			// 
 			this.groupBox2.Controls.Add(this.crl_PickedCards);
@@ -63,15 +75,31 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Picked cards";
 			// 
+			// crl_PickedCards
+			// 
+			this.crl_PickedCards.AutoScroll = true;
+			this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
+			this.crl_PickedCards.Name = "crl_PickedCards";
+			this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
+			this.crl_PickedCards.TabIndex = 0;
+			// 
 			// groupBox3
 			// 
-			this.groupBox3.Controls.Add(this.cardList1);
+			this.groupBox3.Controls.Add(this.crl_OwnedCards);
 			this.groupBox3.Location = new System.Drawing.Point(150, 290);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(779, 148);
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Your cards";
+			// 
+			// crl_OwnedCards
+			// 
+			this.crl_OwnedCards.AutoScroll = true;
+			this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
+			this.crl_OwnedCards.Name = "crl_OwnedCards";
+			this.crl_OwnedCards.Size = new System.Drawing.Size(767, 120);
+			this.crl_OwnedCards.TabIndex = 0;
 			// 
 			// groupBox4
 			// 
@@ -106,36 +134,41 @@
 			this.tbx_Chat.Size = new System.Drawing.Size(938, 20);
 			this.tbx_Chat.TabIndex = 6;
 			// 
-			// cardList1
+			// btn_GameAction
 			// 
-			this.cardList1.AutoScroll = true;
-			this.cardList1.Location = new System.Drawing.Point(6, 20);
-			this.cardList1.Name = "cardList1";
-			this.cardList1.Size = new System.Drawing.Size(767, 120);
-			this.cardList1.TabIndex = 0;
+			this.btn_GameAction.Location = new System.Drawing.Point(12, 353);
+			this.btn_GameAction.Name = "btn_GameAction";
+			this.btn_GameAction.Size = new System.Drawing.Size(132, 23);
+			this.btn_GameAction.TabIndex = 7;
+			this.btn_GameAction.Text = "Submit Selected";
+			this.btn_GameAction.UseVisualStyleBackColor = true;
 			// 
-			// crl_PickedCards
+			// button2
 			// 
-			this.crl_PickedCards.AutoScroll = true;
-			this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
-			this.crl_PickedCards.Name = "crl_PickedCards";
-			this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
-			this.crl_PickedCards.TabIndex = 0;
+			this.button2.Location = new System.Drawing.Point(12, 382);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(132, 23);
+			this.button2.TabIndex = 8;
+			this.button2.Text = "I am without purpose";
+			this.button2.UseVisualStyleBackColor = true;
 			// 
-			// crd_BlackCard
+			// button9
 			// 
-			this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.crd_BlackCard.Contents = "Card contents go here";
-			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
-			this.crd_BlackCard.Name = "crd_BlackCard";
-			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
-			this.crd_BlackCard.TabIndex = 0;
+			this.button9.Location = new System.Drawing.Point(12, 411);
+			this.button9.Name = "button9";
+			this.button9.Size = new System.Drawing.Size(132, 23);
+			this.button9.TabIndex = 9;
+			this.button9.Text = "I am without meaning";
+			this.button9.UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(938, 476);
+			this.Controls.Add(this.button9);
+			this.Controls.Add(this.button2);
+			this.Controls.Add(this.btn_GameAction);
 			this.Controls.Add(this.tbx_Chat);
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
@@ -163,9 +196,12 @@
 		private System.Windows.Forms.ListBox lb_Players;
 		private Card crd_BlackCard;
 		private CardList crl_PickedCards;
-		private CardList cardList1;
+		private CardList crl_OwnedCards;
 		private System.Windows.Forms.StatusStrip sts_GameStatus;
 		private System.Windows.Forms.TextBox tbx_Chat;
+		private System.Windows.Forms.Button btn_GameAction;
+		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button button9;
 	}
 }
 

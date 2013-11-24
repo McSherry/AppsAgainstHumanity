@@ -11,7 +11,7 @@ namespace CsNetLib2
 {
 	public delegate void ClientDataAvailable(string data);
 
-	public class NetLibClient
+	public class NetLibClient : ITransmittable
 	{
 		private TcpClient client;
 		private byte[] buffer;
@@ -29,6 +29,10 @@ namespace CsNetLib2
 		{
 			buffer = Protocol.FormatData(buffer);
 			client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
+		}
+		public void Send(string data, long clientId)
+		{
+			Send(data);
 		}
 		public void Send(string data)
 		{

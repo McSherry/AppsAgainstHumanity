@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppsAgainstHumanityClient
+namespace CsNetLib2
 {
-	enum CommandType
+	public enum CommandType
 	{
 		JOIN,
+		ACKN,
+		REFU,
 		NICK
 	}
 }

@@ -54,7 +54,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CommandProcessor.cs" />
-    <Compile Include="Commands.cs" />
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
