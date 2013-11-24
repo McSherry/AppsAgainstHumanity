@@ -8,7 +8,7 @@ using System.Net.Sockets;
 
 namespace CsNetLib2
 {
-    public class NetLibServer
+    public class NetLibServer : ITransmittable
     {
 		private TcpListener Listener;
 		private Dictionary<long, Client> Clients = new Dictionary<long, Client>();

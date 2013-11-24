@@ -39,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AAHProtocolWrapper.cs" />
+    <Compile Include="CommandType.cs" />
     <Compile Include="Events.cs" />
+    <Compile Include="ITransmittable.cs" />
     <Compile Include="Transfer\DelimitedProtocol.cs" />
     <Compile Include="Transfer\ITransferProtocol.cs" />
     <Compile Include="NetLibClient.cs" />

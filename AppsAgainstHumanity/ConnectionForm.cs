@@ -13,12 +13,10 @@ namespace AppsAgainstHumanityClient
 	public partial class ConnectionForm : Form
 	{
 		private NetworkInterface NetworkInterface;
-		private CommandProcessor CommandProcessor;
 
 		public ConnectionForm(NetworkInterface ni)
 		{
 			NetworkInterface = ni;
-			CommandProcessor = ni.CommandProcessor;
 			InitializeComponent();
 		}
 

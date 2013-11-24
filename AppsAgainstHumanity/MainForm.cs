@@ -33,12 +33,12 @@ namespace AppsAgainstHumanityClient
 		}
 		private void InitializeGame()
 		{
-			
 			for (int i = 0; i < 13; i++) {
 				var card = new Card();
 				card.Contents = SystemInformation.VerticalScrollBarWidth.ToString();
 				crl_PickedCards.AddCard(card);
 			}
+			sts_GameStatus.Text = "My life is hollow inside";
 		}
 	}
 }
