@@ -56,7 +56,7 @@ namespace AppsAgainstHumanity.Server.Game
             bool dupeNickEncountered = false;
             foreach (Player p in Players)
                 dupeNickEncountered = p.Nickname.ToLower() == nick.ToLower() ? true : dupeNickEncountered;
-            return dupeNickEncountered;
+            return !dupeNickEncountered;
         }
         // handles any JOIN commands received by the server.
         private void _handlerJOIN(long sender, string[] args)
@@ -94,7 +94,7 @@ namespace AppsAgainstHumanity.Server.Game
                         _serverWrapper.SendCommand(CommandType.NDNY, "Nickname in use.", sender);
                     }
                     // If nickname is neither free nor valid, send NDNY.
-                    else _serverWrapper.SendCommand(CommandType.NDNY, (string)null, sender);
+                    else _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
                 }
             }
         }
@@ -135,12 +135,17 @@ namespace AppsAgainstHumanity.Server.Game
             this.Parameters = gameParams;
             this._gameSeed = new Crypto.SRand();
             this._RNG = new Random((int)_gameSeed);
+            this.WhiteCardPool = new Dictionary<int, WhiteCard>();
+            this.BlackCardPool = new List<BlackCard>();
+            this.Players = new List<Player>();
 
             foreach (WhiteCard wc in Parameters.Cards.WhiteCards)
             {
                 this.WhiteCardPool.Add(_RNG.Next(), wc);
             }
             this.BlackCardPool = Parameters.Cards.BlackCards;
+
+
             this._server = new NetLibServer(PORT, TransferProtocol.Delimited);
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);

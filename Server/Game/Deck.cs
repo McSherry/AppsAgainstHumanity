@@ -59,6 +59,9 @@ namespace AppsAgainstHumanity.Server.Game
             _xmd = new XmlDocument();
             _xmd.LoadXml(deckXml);
 
+            this.WhiteCards = new List<WhiteCard>(int.Parse(_xmd.SelectNodes("/deck/count").Item(0).Attributes["white"].Value));
+            this.BlackCards = new List<BlackCard>(int.Parse(_xmd.SelectNodes("/deck/count").Item(0).Attributes["black"].Value));
+
             try
             {
                 if (_determinePackType() == PackType.Addon)
@@ -67,14 +70,14 @@ namespace AppsAgainstHumanity.Server.Game
                 else
                 {
                     this.Name = _xmd.SelectNodes("/deck/name").Item(0).InnerText;
-                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/white/card"))
+                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/white/card"))
                     {
                         // Select white cards from file and load into list.
                         // White cards all reside as a <card> element which is
                         // the child of a <white> element.
                         this.WhiteCards.Add(new WhiteCard(xmn.InnerText));
                     }
-                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/black/card"))
+                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/black/card"))
                     {
                         int pick = 0;
                         try

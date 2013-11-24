@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using AppsAgainstHumanity.Server.Crypto;
 using CsNetLib2;
 using AppsAgainstHumanity.Server.Game;
+using System.IO;
 
 namespace AppsAgainstHumanity.Server
 {
@@ -19,40 +20,46 @@ namespace AppsAgainstHumanity.Server
 
 		//private NetLibServer Server;
 		//private AAHProtocolWrapper ServerWrapper;
+        Game.Game game;
 
 		public Form1()
 		{
 			InitializeComponent();
-            this.Load += (s, e) =>
+            string xml = String.Empty;
+
+            using (StreamReader sr = new StreamReader("UK.xml"))
             {
-                GameParameters gp = new GameParameters() {
-                   Players = 0
-                };
-                var g = new Game.Game(gp);
-
-                /*Server = new NetLibServer(11235, TransferProtocol.Delimited);
-				Server.Delimiter = ETX;
-                ServerWrapper = new AAHProtocolWrapper(Server);
-				ServerWrapper.RegisterCommandHandler(CsNetLib2.CommandType.JOIN, (sender, arguments) =>
-				{
-					MessageBox.Show(String.Format("Client #{0} attempts to connect with nickname {1}", sender, arguments[0]));
-				});
-
-				Server.Start();
-
-                Server.OnDataAvailable += (s2, e2) =>
-                {
-                    MessageBox.Show("Data received!");
-                };
-                Server.OnBytesAvailable += (s2, e2) =>
-                {
-                    MessageBox.Show("Bytes received!");
-                };*/
+                xml = sr.ReadToEnd();
+            }
+            GameParameters gp = new GameParameters() {
+                Players = 2,
+                Cards = new Deck(xml)
             };
+            game = new Game.Game(gp);
+
+            /*Server = new NetLibServer(11235, TransferProtocol.Delimited);
+			Server.Delimiter = ETX;
+            ServerWrapper = new AAHProtocolWrapper(Server);
+			ServerWrapper.RegisterCommandHandler(CsNetLib2.CommandType.JOIN, (sender, arguments) =>
+			{
+				MessageBox.Show(String.Format("Client #{0} attempts to connect with nickname {1}", sender, arguments[0]));
+			});
+
+			Server.Start();
+
+            Server.OnDataAvailable += (s2, e2) =>
+            {
+                MessageBox.Show("Data received!");
+            };
+            Server.OnBytesAvailable += (s2, e2) =>
+            {
+                MessageBox.Show("Bytes received!");
+            };*/
 		}
 
         private void button1_Click(object sender, EventArgs e)
         {
+            throw new Exception();
             Random rnd = new Random((int)(new SRand() & 0xFFFF));
             int[] randoms = new int[600];
 

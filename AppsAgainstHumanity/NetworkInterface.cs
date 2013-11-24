@@ -32,6 +32,11 @@ namespace AppsAgainstHumanityClient
 		{
 			Client = new NetLibClient();
 			ClientWrapper = new AAHProtocolWrapper(Client);
+
+            ClientWrapper.RegisterCommandHandler(CommandType.NDNY, (s, e) =>
+            {
+                System.Windows.Forms.MessageBox.Show(e[0]);
+            });
 		}
 
 		internal void RegisterCommandHandler(CommandType type, CommandHandler handler)
@@ -51,6 +56,7 @@ namespace AppsAgainstHumanityClient
 				Client.Delimiter = ETX;
 				await t;
 			} catch (Exception e) {
+                System.Windows.Forms.MessageBox.Show(e.Message);
 				return;
 			}
 			ClientWrapper.SendCommand(CommandType.JOIN, nick);
