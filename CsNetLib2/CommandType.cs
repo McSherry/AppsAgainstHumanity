@@ -13,6 +13,10 @@ namespace CsNetLib2
 		REFU,
 		NICK,
         NACC,
-        NDNY
+        NDNY,
+        // For use when an invalid command is sent to AAHProtocolWrapper.
+        // Recommended behaviour for handlers registered to this on a server is to reply with UNRG.
+        // Recommended behaviour for clients is not to bind to this.
+        _InternalInvalid
 	}
 }
