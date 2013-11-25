@@ -58,6 +58,7 @@ namespace AppsAgainstHumanity.Server.Game
                 dupeNickEncountered = p.Nickname.ToLower() == nick.ToLower() ? true : dupeNickEncountered;
             return !dupeNickEncountered;
         }
+
         // handles any JOIN commands received by the server.
         private void _handlerJOIN(long sender, string[] args)
         {
@@ -100,10 +101,26 @@ namespace AppsAgainstHumanity.Server.Game
                     else _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
                 }
             }
+            else
+            {
+                // The game has already started, so we'll disallow clients
+                // from joining. This is purely to simplify matters. We could
+                // implement game-in-progress joining, but it's far simpler to
+                // just refuse connection attempts.
+                _serverWrapper.SendCommand(
+                    CommandType.REFU,
+                    "Game in progress; joining prohibited.",
+                    sender
+                    );
+            }
         }
+
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
         {
+            // This sends the connecting client its own nickname,
+            // so clients should probably compensate for this if
+            // necessary.
             string[] playerNames = new string[this.Players.Count];
             int ctr = 0;
             if (playerNames.Length > 1)
@@ -117,7 +134,8 @@ namespace AppsAgainstHumanity.Server.Game
                 _serverWrapper.SendCommand(CommandType.CLNF, playerNames, clientID);
             }
         }
-
+        // sends CLJN (Client Join) to other clients, informing them
+        // that another player has joined the game.
         private void _senderCLJN(long joinedClientID, Player joinedPlayer)
         {
             foreach (Player p in Players)
