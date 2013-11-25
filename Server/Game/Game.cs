@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using CsNetLib2;
 
 namespace AppsAgainstHumanity.Server.Game
@@ -114,6 +115,43 @@ namespace AppsAgainstHumanity.Server.Game
                     );
             }
         }
+        // handles NICK requests from clients.
+        private void _handlerNICK(long sender, string[] args)
+        {
+            if (_validNick(args[0]) && _freeNick(args[0]))
+            {
+                // LINQ is much nicer than a foreach loop with a condition in it, no?
+                // TODO: Account for when a NICK is sent after a JOIN was denied.
+                var pn = from play in Players
+                           where play.ClientIdentifier == sender
+                           select play;
+
+                // We're only expecting one player with the ID, so first element
+                // will be fine.
+                Player p = pn.ElementAt(0);
+                foreach (Player py in Players)
+                {
+                    if (py != p)
+                    {
+                        _senderCLNF(py.ClientIdentifier);
+                    }
+                }
+
+                _serverWrapper.SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
+            }
+            else if (!_validNick(args[0]))
+            {
+                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname invalid; unchanged.", sender);
+            }
+            else if (!_freeNick(args[0]))
+            {
+                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname in use; unchanged.", sender);
+            }
+            else
+            {
+                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
+            }
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -197,6 +235,7 @@ namespace AppsAgainstHumanity.Server.Game
             this._serverWrapper = new AAHProtocolWrapper(_server);
 
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
+            _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
 
             _server.Start();
         }
