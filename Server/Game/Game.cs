@@ -110,7 +110,6 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 foreach (Player p in Players)
                 {
-                    if (ctr == p.ClientIdentifier) continue;
                     playerNames[ctr] = p.Nickname;
                     ++ctr;
                 }
