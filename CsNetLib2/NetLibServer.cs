@@ -83,7 +83,7 @@ namespace CsNetLib2
 					return;
 				}
 			}
-			Protocol.ProcessData(client.Buffer.Take(read).ToArray(), client.ClientId);
+			Protocol.ProcessData(client.Buffer, read, client.ClientId);
 
 			try {
 				networkStream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);

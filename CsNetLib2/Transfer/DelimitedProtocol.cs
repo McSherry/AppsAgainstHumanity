@@ -33,24 +33,24 @@ namespace CsNetLib2
 			return newData;
 		}
 
-		public void ProcessData(byte[] buffer, long clientId)
+		public void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			if (Retain.Length != 0) { // There's still data left over
 				byte[] oldBuf = buffer; // Temporarily put the new data aside
-				buffer = new byte[oldBuf.Length + Retain.Length]; // Expand the buffer to fit both the old and the new data
+				buffer = new byte[read + Retain.Length]; // Expand the buffer to fit both the old and the new data
 				Array.Copy(Retain, buffer, Retain.Length); // Put the old data in first
-				Array.Copy(oldBuf, 0, buffer, Retain.Length, oldBuf.Length); // Now put the new data back in
+				Array.Copy(oldBuf, 0, buffer, Retain.Length, read); // Now put the new data back in
 			}
 
 			int beginIndex = 0; // This is where the next message starts
-			for (int i = beginIndex; i < buffer.Length; i++) { // Iterate over buffer
+			for (int i = beginIndex; i < read; i++) { // Iterate over buffer
 				if (buffer[i] == Delimiter) { // We've found a delimiter
 					ProcessMessage(buffer, beginIndex == 0 ? beginIndex : beginIndex + 1, i, clientId); // Process a message from the begin index to the current position
 					beginIndex = i; // Since we've found a new delimiter, set the begin index equal to its location
 				}
-				if (i == buffer.Length - 1) {
-					Retain = new byte[buffer.Length - beginIndex - 1];
-					Array.Copy(buffer, beginIndex + 1, Retain, 0, buffer.Length - beginIndex - 1); // Take any left over data and keep it for next usage
+				if (i == read - 1) {
+					Retain = new byte[read - beginIndex - 1];
+					Array.Copy(buffer, beginIndex + 1, Retain, 0, read - beginIndex - 1); // Take any left over data and keep it for next usage
 				}
 			}
 		}

@@ -22,7 +22,7 @@ namespace CsNetLib2
 			return data; // Streaming protocol doesn't care about formatting
 		}
 
-		public void ProcessData(byte[] buffer, long clientId)
+		public void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			if (BytesAvailableCallback != null) {
 				BytesAvailableCallback(buffer, clientId);

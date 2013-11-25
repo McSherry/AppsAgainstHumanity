@@ -105,7 +105,7 @@ namespace CsNetLib2
 				client.Close();
 			}
 
-			Protocol.ProcessData(buffer, 0);
+			Protocol.ProcessData(buffer, read, 0);
 
 			networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
 		}

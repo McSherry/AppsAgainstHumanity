@@ -19,7 +19,7 @@ namespace CsNetLib2
 		/// <summary>
 		/// Processes the incoming data. Once the data has been processed, events are fired and the data is passed with them.
 		/// </summary>
-		void ProcessData(byte[] buffer, long clientId);
+		void ProcessData(byte[] buffer, int read, long clientId);
 
 		/// <summary>
 		/// Formats the data about to be sent so is formatted according to the protocol.

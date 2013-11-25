@@ -22,7 +22,7 @@ namespace CsNetLib2
 			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
 		}
 
-		public void ProcessData(byte[] buffer, long clientId)
+		public void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
 		}
