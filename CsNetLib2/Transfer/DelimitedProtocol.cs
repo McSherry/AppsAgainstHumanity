@@ -60,8 +60,9 @@ namespace CsNetLib2
 			for(int i = 0; i < data.Length; i++){
 				data[i] = buffer[i + begin];
 			}
+			string str = Encoding.ASCII.GetString(data);
 			if(BytesAvailableCallback!= null) BytesAvailableCallback(data, clientId);
-			DataAvailableCallback(Encoding.ASCII.GetString(data), clientId);
+			DataAvailableCallback(str, clientId);
 		}
 	}
 }

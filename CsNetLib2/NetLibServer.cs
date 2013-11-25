@@ -59,11 +59,12 @@ namespace CsNetLib2
 
 			lock (Clients) {
 				Clients.Add(client.ClientId, client);
+				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
 			}
 			var stream = client.NetworkStream;
 
 			stream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
-
+			Listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
 		}
 		private void ReadCallback(IAsyncResult result)
 		{
