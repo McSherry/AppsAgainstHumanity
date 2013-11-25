@@ -80,8 +80,11 @@ namespace AppsAgainstHumanity.Server.Game
                     {
                         // If the nickname is valid, add the player to the list of players
                         // and send a nickname-accept (NACC) to the client.
-                        this.Players.Add(new Player(args[0], sender));
+                        Player newPlayer = new Player(args[0], sender);
+                        this.Players.Add(newPlayer);
                         _serverWrapper.SendCommand(CommandType.NACC, (string)null, sender);
+                        _senderCLNF(sender);
+                        _senderCLJN(sender, newPlayer);
                     }
                     else if (!_validNick(args[0]))
                     {
@@ -96,6 +99,32 @@ namespace AppsAgainstHumanity.Server.Game
                     // If nickname is neither free nor valid, send NDNY.
                     else _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
                 }
+            }
+        }
+        // sends CLNFs to a client 
+        private void _senderCLNF(long clientID)
+        {
+            string[] playerNames = new string[this.Players.Count];
+            int ctr = 0;
+            if (playerNames.Length > 1)
+            {
+                foreach (Player p in Players)
+                {
+                    if (ctr == p.ClientIdentifier) continue;
+                    playerNames[ctr] = p.Nickname;
+                    ++ctr;
+                }
+
+                _serverWrapper.SendCommand(CommandType.CLNF, playerNames, clientID);
+            }
+        }
+
+        private void _senderCLJN(long joinedClientID, Player joinedPlayer)
+        {
+            foreach (Player p in Players)
+            {
+                if (p.ClientIdentifier == joinedClientID) continue;
+                _serverWrapper.SendCommand(CommandType.CLJN, joinedPlayer.Nickname, p.ClientIdentifier);
             }
         }
 

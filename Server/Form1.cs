@@ -32,7 +32,7 @@ namespace AppsAgainstHumanity.Server
                 xml = sr.ReadToEnd();
             }
             GameParameters gp = new GameParameters() {
-                Players = 2,
+                Players = 10,
                 Cards = new Deck(xml)
             };
             game = new Game.Game(gp);
