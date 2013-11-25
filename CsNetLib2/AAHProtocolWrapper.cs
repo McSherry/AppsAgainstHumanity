@@ -78,11 +78,10 @@ namespace CsNetLib2
 				// Create an array of arguments by splitting the argument on NUL chars, according to the protocol.
 				args = arglist.Split(new char[] { NUL });
 			}
-			// Parse the command into a CommandType, use this as the indexer of the command list, and call the command.
-			// HACK: This will throw an exception when no commandhandler has been set up for the specified command type.
-			// A workaround for this behaviour has not been implemented, as it may aid the programmer in making sure
-			// that they have a handler set up for each command. Graceful checking should be implemented before release.
-			Commands[(CommandType)Enum.Parse(typeof(CommandType), command)](clientId, args);
+			// Parse the command into a CommandType, use this as the indexer of the command list, and call the command,
+            // ensuring that it exists within the Command dictionary first.
+            CommandType ct = (CommandType)Enum.Parse(typeof(CommandType), command);
+            if (Commands.ContainsKey(ct)) Commands[ct](clientId, args);
 		}
 		/// <summary>
 		/// Sends a command with a single argument to the specified client. If the wrapped ITransmittable is a client, 
