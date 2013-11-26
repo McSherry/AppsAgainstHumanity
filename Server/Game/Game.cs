@@ -61,6 +61,7 @@ namespace AppsAgainstHumanity.Server.Game
         }
 
         // handles any JOIN commands received by the server.
+        // TODO: RESPOND WITH ACKN NOT NACC YOU IDIOT
         private void _handlerJOIN(long sender, string[] args)
         {
             // Game hasn't started, so we can allow the player to join,
@@ -84,22 +85,22 @@ namespace AppsAgainstHumanity.Server.Game
                         // and send a nickname-accept (NACC) to the client.
                         Player newPlayer = new Player(args[0], sender);
                         this.Players.Add(newPlayer);
-                        _serverWrapper.SendCommand(CommandType.NACC, (string)null, sender);
+                        _serverWrapper.SendCommand(CommandType.ACKN, (string)null, sender);
                         _senderCLNF(sender);
                         _senderCLJN(sender, newPlayer);
                     }
                     else if (!_validNick(args[0]))
                     {
                         // If the nickname is invalid, send NDNY with appropriate text.
-                        _serverWrapper.SendCommand(CommandType.NDNY, "Invalid nickname.", sender);
+                        _serverWrapper.SendCommand(CommandType.REFU, "Nickname contains invalid characters.", sender);
                     }
                     else if (!_freeNick(args[0]))
                     {
                         // If the nickname is already in use, send NDNY with appropriate text.
-                        _serverWrapper.SendCommand(CommandType.NDNY, "Nickname in use.", sender);
+                        _serverWrapper.SendCommand(CommandType.REFU, "Nickname in use.", sender);
                     }
                     // If nickname is neither free nor valid, send NDNY.
-                    else _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
+                    else _serverWrapper.SendCommand(CommandType.REFU, "Nickname refused.", sender);
                 }
             }
             else
