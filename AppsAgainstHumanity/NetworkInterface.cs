@@ -21,7 +21,7 @@ namespace AppsAgainstHumanityClient
 		/// <summary>
 		/// The high-level protocol wrapper
 		/// </summary>
-		private AAHProtocolWrapper ClientWrapper;
+		internal AAHProtocolWrapper ClientWrapper { get; private set; }
 		/// <summary>
 		/// ASCII ETX char
 		/// </summary>
@@ -32,16 +32,6 @@ namespace AppsAgainstHumanityClient
 		{
 			Client = new NetLibClient();
 			ClientWrapper = new AAHProtocolWrapper(Client);
-
-            ClientWrapper.RegisterCommandHandler(CommandType.NDNY, (s, e) =>
-            {
-                System.Windows.Forms.MessageBox.Show(e[0]);
-            });
-		}
-
-		internal void RegisterCommandHandler(CommandType type, CommandHandler handler)
-		{
-			ClientWrapper.RegisterCommandHandler(type, handler);
 		}
 
 		/// <summary>

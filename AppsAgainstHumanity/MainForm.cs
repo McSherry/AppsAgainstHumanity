@@ -14,13 +14,10 @@ namespace AppsAgainstHumanityClient
 	public partial class MainForm : Form
 	{
 		private NetworkInterface NetworkInterface;
-		private CommandProcessor CommandProcessor;
 
 		public MainForm(NetworkInterface networkInterface)
 		{
 			NetworkInterface = networkInterface;
-			CommandProcessor = new CommandProcessor();
-			networkInterface.RegisterCommandHandler(CommandType.REFU, CommandProcessor.ProcessREFU);
 			InitializeComponent();
 		}
 		private void InitializeGame()

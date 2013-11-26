@@ -1,25 +1,55 @@
-﻿//#define bypass
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using CsNetLib2;
+
 namespace AppsAgainstHumanityClient
 {
 	public partial class ConnectionForm : Form
 	{
+		internal delegate void SetConnectButtonStateCallback(bool state);
+
 		private NetworkInterface NetworkInterface;
-		private MainForm MainForm;
 
 		public ConnectionForm()
 		{
 			NetworkInterface = new NetworkInterface();
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.ACKN, ProcessACKN);
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.REFU, ProcessREFU);
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.NDNY, ProcessNDNY);
 			InitializeComponent();
+		}
+		private void ProcessACKN(long sender, string[] arguments)
+		{
+
+		}
+
+		private void SetConnectButtonState(bool state)
+		{
+			if (btn_Connect.InvokeRequired) {
+				Invoke(new SetConnectButtonStateCallback(SetConnectButtonState), new object[] { state });
+			} else {
+				btn_Connect.Enabled = state;
+			}
+		}
+
+		private void ProcessREFU(long sender, string[] arguments)
+		{
+			MessageBox.Show(arguments[0], "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			NetworkInterface.Disconnect();
+			SetConnectButtonState(true);
+		}
+		private void ProcessNDNY(long sender, string[] arguments)
+		{
+			MessageBox.Show(arguments[0], "Server denies nickname", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			NetworkInterface.Disconnect();
+			SetConnectButtonState(true);
 		}
 
 		private async void btn_Connect_Click(object sender, EventArgs e)
@@ -32,25 +62,23 @@ namespace AppsAgainstHumanityClient
 				MessageBox.Show("Username may not be longer than 20 characters", "Invalid username", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				return;
 			}
-#if bypass
-			ShowMainUI();
-			return;
-#else
-			tbx_Nick.Enabled = false;
-			tbx_Host.Enabled = false;
 			btn_Connect.Enabled = false;
 			try {
 				await NetworkInterface.Connect(tbx_Host.Text, tbx_Nick.Text);
-				ShowMainUI();
 			} catch (System.Net.Sockets.SocketException ex) {
 				MessageBox.Show(ex.Message, "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				tbx_Nick.Enabled = true;
-				tbx_Host.Enabled = true;
 				btn_Connect.Enabled = true;
 			}
-#endif
 		}
 
+		private void HandleNickDeny(string reason)
+		{
+
+		}
+		private void HandleNickAccept()
+		{
+
+		}
 		private void ShowMainUI()
 		{
 			base.Hide();
