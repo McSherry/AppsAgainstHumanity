@@ -45,7 +45,13 @@ namespace CsNetLib2
 			Listener = new TcpListener(localaddr, port);
 		}
 
-		public void Start()
+		public void CloseClientConnection(long clientId)
+		{
+			Clients[clientId].TcpClient.Close();
+			Clients.Remove(clientId);
+		}
+
+		public void StartListening()
 		{
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 			Listener.Start();

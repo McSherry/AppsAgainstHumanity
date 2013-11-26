@@ -42,6 +42,7 @@ namespace CsNetLib2
 		public void Disconnect()
 		{
 			client.Close();
+			client = null;
 		}
 		public void SendCallback(IAsyncResult ar)
 		{
@@ -106,8 +107,12 @@ namespace CsNetLib2
 			}
 
 			Protocol.ProcessData(buffer, read, 0);
-
-			networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
+			try {
+				networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
+			} catch (ObjectDisposedException) {
+				Console.WriteLine("Socket closed.");
+				return;
+			}
 		}
 		public void AwaitConnect()
 		{

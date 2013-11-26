@@ -237,7 +237,7 @@ namespace AppsAgainstHumanity.Server.Game
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
 
-            _server.Start();
+            _server.StartListening();
         }
 
         /// <summary>
