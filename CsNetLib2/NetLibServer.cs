@@ -103,17 +103,25 @@ namespace CsNetLib2
 				Console.WriteLine("Remote host closed connection.");
 			}
 		}
-		public void SendBytes(byte[] buffer, long clientId)
+		public bool SendBytes(byte[] buffer, long clientId)
 		{
 			buffer = Protocol.FormatData(buffer);
 			lock (_clients) {
-				_clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
+                try
+                {
+                    _clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
+                    return true;
+                }
+                catch (NullReferenceException nrex)
+                {
+                    return false;
+                }
 			}
 		}
-		public void Send(string data, long clientId)
+		public bool Send(string data, long clientId)
 		{
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
-			SendBytes(buffer, clientId);
+			return SendBytes(buffer, clientId);
 		}
 		private void SendCallback(IAsyncResult ar)
 		{

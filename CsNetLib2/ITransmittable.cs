@@ -8,7 +8,7 @@ namespace CsNetLib2
 {
 	public interface ITransmittable
 	{
-		void Send(string data, long clientId);
+		bool Send(string data, long clientId);
 		event DataAvailabe OnDataAvailable;
 	}
 }

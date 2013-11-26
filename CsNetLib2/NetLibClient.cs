@@ -25,19 +25,27 @@ namespace CsNetLib2
 			client = new TcpClient();
 			client.LingerState.Enabled = true;
 		}
-		public void SendBytes(byte[] buffer)
+		public bool SendBytes(byte[] buffer)
 		{
 			buffer = Protocol.FormatData(buffer);
-			client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
+            try
+            {
+                client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
+                return true;
+            }
+            catch (NullReferenceException nrex)
+            {
+                return false;
+            }
 		}
-		public void Send(string data, long clientId)
+		public bool Send(string data, long clientId)
 		{
-			Send(data);
+			return Send(data);
 		}
-		public void Send(string data)
+		public bool Send(string data)
 		{
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
-			SendBytes(buffer);
+			return SendBytes(buffer);
 		}
 		public void Disconnect()
 		{

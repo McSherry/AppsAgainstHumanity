@@ -123,9 +123,9 @@ namespace CsNetLib2
 		/// when multiple arguments need to be passed.</param>
 		/// <param name="clientId">The ID of the client that should receive the command. This variable is discarded if the wrapped
 		/// ITransmittable is of type NetLibClient, and in that case, may be left at its default value.</param>
-		public void SendCommand(CommandType cmd, string argument, long clientId = 0)
+		public bool SendCommand(CommandType cmd, string argument, long clientId = 0)
 		{
-			SendCommand(cmd, new string[] { argument }, clientId);
+			return SendCommand(cmd, new string[] { argument }, clientId);
 		}
 
 		/// <summary>
@@ -136,17 +136,17 @@ namespace CsNetLib2
 		/// when only one argument needs to be passed. Keep at its default value of null when no arguments should be passed.</param>
 		/// <param name="clientId">The ID of the client that should receive the command. This variable is discarded if the wrapped
 		/// ITransmittable is of type NetLibClient, and in that case, may be left at its default value.</param>
-		public void SendCommand(CommandType cmd, string[] args = null, long clientId = 0)
+		public bool SendCommand(CommandType cmd, string[] args = null, long clientId = 0)
 		{
 			// Remove the previous command still left in the command builder
 			CommandBuilder.Clear();
 			// First append the command
 			CommandBuilder.Append(cmd.ToString());
 			// Now append the parameters, separated by ASCII NULs
-			CommandBuilder.Append(string.Join(NUL.ToString(), args));
+			CommandBuilder.Append(string.Join(NUL.ToString(), args == null ? new [] { String.Empty } : args));
 			string data = CommandBuilder.ToString();
 			Console.WriteLine("[SEND]\t[{0}]\t{1}", clientId, data);
-			Transmitter.Send(data, clientId);
+			return Transmitter.Send(data, clientId);
 		}
 	}
 }

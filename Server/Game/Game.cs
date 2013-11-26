@@ -29,6 +29,34 @@ namespace AppsAgainstHumanity.Server.Game
         private AAHProtocolWrapper _serverWrapper;
         private Thread _gameThread = Thread.CurrentThread;
         private Thread _pingThread;
+        private Round _currRound;
+
+        // use instead of AAHProtocolWrapper.SendCommand()
+        // handles when SendCommand() returns false (e.g. player not available)
+        // and removes player from dicts/lists
+        private void SendCommand(CommandType type, string[] args = null, long clientID = 0)
+        {
+            if (!_serverWrapper.SendCommand(type, args, clientID))
+            {
+                Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
+                Players.Remove(remPlayer);
+                // TODO: Uncomment these before production!
+                // Uncommented for debugging prior to cards being drawn.
+                //DrawnCards.Remove(remPlayer);
+                //_currRound.End();
+
+                foreach (Player p in Players)
+                    _senderCLNF(p.ClientIdentifier);
+            }
+        }
+        private void SendCommand(CommandType type, string arg = null, long clientID = 0)
+        {
+            SendCommand(
+                type,
+                (arg == null ? (string[])null : new string[1] { arg }),
+                clientID
+                );
+        }
 
         /// <summary>
         /// Determines whether the given nickname meets the requirements.
@@ -74,7 +102,7 @@ namespace AppsAgainstHumanity.Server.Game
                 // is equal to the maximum number specified in the parameters, refuse the connection
                 // with the limit-reached message.
                 if (this.Players.Count == this.Parameters.Players)
-                    _serverWrapper.SendCommand(
+                    SendCommand(
                         CommandType.REFU,
                         new string[1] { "Player limit reached." },
                         sender
@@ -87,22 +115,22 @@ namespace AppsAgainstHumanity.Server.Game
                         // and send a nickname-accept (NACC) to the client.
                         Player newPlayer = new Player(args[0], sender);
                         this.Players.Add(newPlayer);
-                        _serverWrapper.SendCommand(CommandType.ACKN, (string)null, sender);
+                        SendCommand(CommandType.ACKN, (string[])null, sender);
                         _senderCLNF(sender);
                         _senderCLJN(sender, newPlayer);
                     }
                     else if (!_validNick(args[0]))
                     {
                         // If the nickname is invalid, send NDNY with appropriate text.
-                        _serverWrapper.SendCommand(CommandType.REFU, "Nickname contains invalid characters.", sender);
+                        SendCommand(CommandType.REFU, "Nickname contains invalid characters.", sender);
                     }
                     else if (!_freeNick(args[0]))
                     {
                         // If the nickname is already in use, send NDNY with appropriate text.
-                        _serverWrapper.SendCommand(CommandType.REFU, "Nickname in use.", sender);
+                        SendCommand(CommandType.REFU, "Nickname in use.", sender);
                     }
                     // If nickname is neither free nor valid, send NDNY.
-                    else _serverWrapper.SendCommand(CommandType.REFU, "Nickname refused.", sender);
+                    else SendCommand(CommandType.REFU, "Nickname refused.", sender);
                 }
             }
             else
@@ -111,7 +139,7 @@ namespace AppsAgainstHumanity.Server.Game
                 // from joining. This is purely to simplify matters. We could
                 // implement game-in-progress joining, but it's far simpler to
                 // just refuse connection attempts.
-                _serverWrapper.SendCommand(
+                SendCommand(
                     CommandType.REFU,
                     "Game in progress; joining prohibited.",
                     sender
@@ -131,7 +159,7 @@ namespace AppsAgainstHumanity.Server.Game
 
                 // We're only expecting one player with the ID, so first element
                 // will be fine.
-                _serverWrapper.SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
+                SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
                 Player p = pn.ElementAt(0);
                 foreach (Player py in Players)
                 {
@@ -143,15 +171,15 @@ namespace AppsAgainstHumanity.Server.Game
             }
             else if (!_validNick(args[0]))
             {
-                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname invalid; unchanged.", sender);
+                SendCommand(CommandType.NDNY, "Nickname invalid; unchanged.", sender);
             }
             else if (!_freeNick(args[0]))
             {
-                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname in use; unchanged.", sender);
+                SendCommand(CommandType.NDNY, "Nickname in use; unchanged.", sender);
             }
             else
             {
-                _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
+                SendCommand(CommandType.NDNY, "Nickname refused.", sender);
             }
         }
         // performs tasks required when a client leaves
@@ -177,16 +205,13 @@ namespace AppsAgainstHumanity.Server.Game
             // necessary.
             string[] playerNames = new string[this.Players.Count];
             int ctr = 0;
-            if (playerNames.Length > 1)
-            {
                 foreach (Player p in Players)
                 {
                     playerNames[ctr] = p.Nickname;
                     ++ctr;
                 }
 
-                _serverWrapper.SendCommand(CommandType.CLNF, playerNames, clientID);
-            }
+            SendCommand(CommandType.CLNF, playerNames, clientID);
         }
         // sends CLJN (Client Join) to other clients, informing them
         // that another player has joined the game.
@@ -195,14 +220,14 @@ namespace AppsAgainstHumanity.Server.Game
             foreach (Player p in Players)
             {
                 if (p.ClientIdentifier == joinedClientID) continue;
-                _serverWrapper.SendCommand(CommandType.CLJN, joinedPlayer.Nickname, p.ClientIdentifier);
+                SendCommand(CommandType.CLJN, joinedPlayer.Nickname, p.ClientIdentifier);
             }
         }
         // Sends CLEX to clients informing them another client has exited
         // the game
         private void _senderCLEX(long clientID, Player exitedPlayer)
         {
-            _serverWrapper.SendCommand(CommandType.CLEX, exitedPlayer.Nickname, clientID);
+            SendCommand(CommandType.CLEX, exitedPlayer.Nickname, clientID);
         }
 
         /// <summary>
@@ -298,7 +323,7 @@ namespace AppsAgainstHumanity.Server.Game
                     {
                         try
                         {
-                            _serverWrapper.SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
+                            SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
                         }
                         catch (NullReferenceException nrex)
                         {
@@ -314,9 +339,9 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 BlackCard roundBlack = _selectBlack();
                 Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
-                Round round = new Round(roundBlack, roundPool, Players, this);
+                _currRound = new Round(roundBlack, roundPool, Players, this);
 
-                Player roundWinner = round.Start();
+                Player roundWinner = _currRound.Start();
                 ++roundWinner.AwesomePoints;
                 // TODO: Verify the above works.
                 // Dunno if returning a player maintains the pass by reference shit

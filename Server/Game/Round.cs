@@ -141,5 +141,13 @@ namespace AppsAgainstHumanity.Server.Game
 
             return tempPlayer;
         }
+
+        /// <summary>
+        /// Forcibly ends the round.
+        /// </summary>
+        public void End()
+        {
+            // TODO: implement
+        }
     }
 }
