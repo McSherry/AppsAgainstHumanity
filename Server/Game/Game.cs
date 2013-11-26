@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 using CsNetLib2;
 
 namespace AppsAgainstHumanity.Server.Game
@@ -27,6 +27,8 @@ namespace AppsAgainstHumanity.Server.Game
         private bool _hasStarted = false;
         private NetLibServer _server;
         private AAHProtocolWrapper _serverWrapper;
+        private Thread _gameThread = Thread.CurrentThread;
+        private Thread _pingThread;
 
         /// <summary>
         /// Determines whether the given nickname meets the requirements.
@@ -129,6 +131,7 @@ namespace AppsAgainstHumanity.Server.Game
 
                 // We're only expecting one player with the ID, so first element
                 // will be fine.
+                _serverWrapper.SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
                 Player p = pn.ElementAt(0);
                 foreach (Player py in Players)
                 {
@@ -137,8 +140,6 @@ namespace AppsAgainstHumanity.Server.Game
                         _senderCLNF(py.ClientIdentifier);
                     }
                 }
-
-                _serverWrapper.SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
             }
             else if (!_validNick(args[0]))
             {
@@ -151,6 +152,20 @@ namespace AppsAgainstHumanity.Server.Game
             else
             {
                 _serverWrapper.SendCommand(CommandType.NDNY, "Nickname refused.", sender);
+            }
+        }
+        // performs tasks required when a client leaves
+        private void _handlerClientLeave(long clientID)
+        {
+            lock (this)
+            {
+                Player p = Players.First(pl => pl.ClientIdentifier == clientID);
+                Players.Remove(p);
+                DrawnCards.Remove(p);
+                foreach (Player pl in Players)
+                {
+                    _senderCLEX(pl.ClientIdentifier, p);
+                }
             }
         }
 
@@ -182,6 +197,12 @@ namespace AppsAgainstHumanity.Server.Game
                 if (p.ClientIdentifier == joinedClientID) continue;
                 _serverWrapper.SendCommand(CommandType.CLJN, joinedPlayer.Nickname, p.ClientIdentifier);
             }
+        }
+        // Sends CLEX to clients informing them another client has exited
+        // the game
+        private void _senderCLEX(long clientID, Player exitedPlayer)
+        {
+            _serverWrapper.SendCommand(CommandType.CLEX, exitedPlayer.Nickname, clientID);
         }
 
         /// <summary>
@@ -235,6 +256,7 @@ namespace AppsAgainstHumanity.Server.Game
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);
 
+
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
 
@@ -266,6 +288,27 @@ namespace AppsAgainstHumanity.Server.Game
         {
             if (!_hasStarted) _hasStarted = true;
             else throw new Exception("This game has already been started. Please create a new instance to start a new game.");
+
+            this._pingThread = new Thread(() =>
+            {
+                System.Timers.Timer t = new System.Timers.Timer(5000);
+                t.Elapsed += (s, e) =>
+                {
+                    foreach (Player p in Players)
+                    {
+                        try
+                        {
+                            _serverWrapper.SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
+                        }
+                        catch (NullReferenceException nrex)
+                        {
+                            _handlerClientLeave(p.ClientIdentifier);
+                        }
+                    }
+                };
+            });
+
+            _pingThread.Start();
 
             while (!_gameWon)
             {

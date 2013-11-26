@@ -11,7 +11,7 @@ namespace CsNetLib2
     public class NetLibServer : ITransmittable
     {
 		private TcpListener Listener;
-		private Dictionary<long, Client> Clients = new Dictionary<long, Client>();
+		private Dictionary<long, NetLibServerInternalClient> _clients = new Dictionary<long, NetLibServerInternalClient>();
 		private ITransferProtocol Protocol;
 
 		public event DataAvailabe OnDataAvailable;
@@ -37,6 +37,12 @@ namespace CsNetLib2
 				}
 			}
 		}
+        public Dictionary<long, NetLibServerInternalClient> Clients
+        {
+            get { return _clients; }
+            set { _clients = value; }
+        }
+
 		public NetLibServer(int port, TransferProtocol protocol)
 			: this(IPAddress.Any, port, protocol) { }
 		public NetLibServer(IPAddress localaddr, int port, TransferProtocol protocol)
@@ -47,8 +53,8 @@ namespace CsNetLib2
 
 		public void CloseClientConnection(long clientId)
 		{
-			Clients[clientId].TcpClient.Close();
-			Clients.Remove(clientId);
+			_clients[clientId].TcpClient.Close();
+			_clients.Remove(clientId);
 		}
 
 		public void StartListening()
@@ -61,10 +67,10 @@ namespace CsNetLib2
 		{
 			var tcpClient = Listener.EndAcceptTcpClient(ar);
 			var buffer = new byte[tcpClient.ReceiveBufferSize];
-			var client = new Client(tcpClient, buffer);
+			var client = new NetLibServerInternalClient(tcpClient, buffer);
 
-			lock (Clients) {
-				Clients.Add(client.ClientId, client);
+			lock (_clients) {
+				_clients.Add(client.ClientId, client);
 				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
 			}
 			var stream = client.NetworkStream;
@@ -74,7 +80,7 @@ namespace CsNetLib2
 		}
 		private void ReadCallback(IAsyncResult result)
 		{
-			var client = result.AsyncState as Client;
+			var client = result.AsyncState as NetLibServerInternalClient;
 			if (client == null) return;
 			var networkStream = client.NetworkStream;
 			int read = 0;
@@ -84,8 +90,8 @@ namespace CsNetLib2
 				Console.WriteLine("Remote host closed connection.");
 			}
 			if (read == 0) {
-				lock (Clients) {
-					Clients[client.ClientId] = null;
+				lock (_clients) {
+					_clients[client.ClientId] = null;
 					return;
 				}
 			}
@@ -100,8 +106,8 @@ namespace CsNetLib2
 		public void SendBytes(byte[] buffer, long clientId)
 		{
 			buffer = Protocol.FormatData(buffer);
-			lock (Clients) {
-				Clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
+			lock (_clients) {
+				_clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
 			}
 		}
 		public void Send(string data, long clientId)
@@ -112,7 +118,7 @@ namespace CsNetLib2
 		private void SendCallback(IAsyncResult ar)
 		{
 			try {
-				Clients[(long)ar.AsyncState].NetworkStream.EndWrite(ar);
+				_clients[(long)ar.AsyncState].NetworkStream.EndWrite(ar);
 			} catch (NullReferenceException) {
 				Console.WriteLine("Failed to send data to client: Remote host closed connection.");
 			}
@@ -122,12 +128,13 @@ namespace CsNetLib2
 		{
 			Listener.Stop();
 		}
-		internal class Client
+		public class NetLibServerInternalClient
 		{
 			private static long MaxClientId = 0;
 			public long ClientId { get; private set; }
 			public TcpClient TcpClient { get; private set; }
 			public byte[] Buffer { get; private set; }
+
 			public NetworkStream NetworkStream {
 				get {
 					try {
@@ -137,7 +144,12 @@ namespace CsNetLib2
 					}
 				} 
 			}
-			public Client(TcpClient client, byte[] buffer)
+            public bool IsAvailable
+            {
+                get { return TcpClient.Connected; }
+            }
+
+			public NetLibServerInternalClient(TcpClient client, byte[] buffer)
 			{
 				TcpClient = client;
 				Buffer = buffer;

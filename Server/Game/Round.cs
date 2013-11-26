@@ -122,13 +122,13 @@ namespace AppsAgainstHumanity.Server.Game
         public Player Start()
         {
             // TODO: REMOVE THIS PLAYER
-            Player tempPlayer = new Player("REMOVE ME", 0);
+            Player tempPlayer = new Player("REMOVE_ME", 0);
 
             // Players are limited in the time they have available to choose.
             // This timeout is in seconds in the parameters, so we have to multiply by 1000
             // to get it into milliseconds, Timer's accepted unit of time.
             // This timer will also be used to limit the Card Czar's choice time.
-            Timer timeoutTimer = new Timer(this._parent.Parameters.TimeoutLimit * 1000);
+            //Timer timeoutTimer = new Timer(this._parent.Parameters.TimeoutLimit * 1000);
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.
