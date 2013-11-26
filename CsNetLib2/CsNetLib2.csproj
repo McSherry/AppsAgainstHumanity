@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AAHProtocolWrapper.cs" />
+    <Compile Include="Command.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="ITransmittable.cs" />

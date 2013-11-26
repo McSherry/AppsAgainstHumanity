@@ -14,6 +14,7 @@ namespace AppsAgainstHumanityClient
 	public partial class ConnectionForm : Form
 	{
 		internal delegate void SetConnectButtonStateCallback(bool state);
+		internal delegate void HideConnectionFormCallback();
 
 		private NetworkInterface NetworkInterface;
 
@@ -27,7 +28,7 @@ namespace AppsAgainstHumanityClient
 		}
 		private void ProcessACKN(long sender, string[] arguments)
 		{
-
+			ShowMainUI();
 		}
 
 		private void SetConnectButtonState(bool state)
@@ -64,7 +65,9 @@ namespace AppsAgainstHumanityClient
 			}
 			btn_Connect.Enabled = false;
 			try {
+				Console.WriteLine("Attempting to connect to the server");
 				await NetworkInterface.Connect(tbx_Host.Text, tbx_Nick.Text);
+				Console.WriteLine("Connection established");
 			} catch (System.Net.Sockets.SocketException ex) {
 				MessageBox.Show(ex.Message, "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				btn_Connect.Enabled = true;
@@ -81,6 +84,10 @@ namespace AppsAgainstHumanityClient
 		}
 		private void ShowMainUI()
 		{
+			if (base.InvokeRequired) {
+				Invoke(new HideConnectionFormCallback(ShowMainUI));
+				return;
+			}
 			base.Hide();
 			new MainForm(NetworkInterface).Show();
 		}

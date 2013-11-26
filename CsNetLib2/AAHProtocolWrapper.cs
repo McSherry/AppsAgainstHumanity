@@ -23,10 +23,20 @@ namespace CsNetLib2
 		/// </summary>
 		private Dictionary<CommandType, CommandHandler> Commands = new Dictionary<CommandType, CommandHandler>();
 		/// <summary>
+		/// A chronological queue of commands that did not have handlers present at the time of firing.
+		/// </summary>
+		private Queue<Command> QueuedCommands = new Queue<Command>();
+		/// <summary>
 		/// Used for building the command strings
 		/// </summary>
 		private StringBuilder CommandBuilder = new StringBuilder();
-
+		/// <summary>
+		/// Checks whether the unhandled command queue contains any commands, and returns the result.
+		/// </summary>
+		public bool HasQueuedCommand
+		{
+			get { return QueuedCommands.Count > 0; }
+		}
 		/// <summary>
 		/// Create a protocol wrapper, to be wrapped around a client or server
 		/// </summary>
@@ -52,6 +62,14 @@ namespace CsNetLib2
 		public void UnregisterCommandHandler(CommandType type)
 		{
 			Commands.Remove(type);
+		}
+		/// <summary>
+		/// Dequeues a command from the unhandled command queue.
+		/// </summary>
+		/// <returns>The command that was dequeued.</returns>
+		public Command GetNextQueuedCommand()
+		{
+			return QueuedCommands.Dequeue();
 		}
 		/// <summary>
 		/// Unregisters all command handlers.
@@ -83,7 +101,10 @@ namespace CsNetLib2
             CommandType ct;
             if (Enum.TryParse(command, out ct))
             {
-                if (Commands.ContainsKey(ct)) Commands[ct](clientId, args);
+				// If a handler for the command has been set up, call it.
+				if (Commands.ContainsKey(ct)) Commands[ct](clientId, args);
+				// If no handler has been set up, put the command in the queue so it can optionally be handled later.
+				else QueuedCommands.Enqueue(new Command { Arguments = args, Sender = clientId, Type = ct });
             }
             else
             {
