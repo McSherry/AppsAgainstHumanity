@@ -29,8 +29,11 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.crd_BlackCard = new AppsAgainstHumanityClient.Card();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.lb_Players = new System.Windows.Forms.ListBox();
 			this.sts_GameStatus = new System.Windows.Forms.StatusStrip();
@@ -40,13 +43,12 @@
 			this.button9 = new System.Windows.Forms.Button();
 			this.tbx_ChatLog = new System.Windows.Forms.TextBox();
 			this.button1 = new System.Windows.Forms.Button();
-			this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
-			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
-			this.crd_BlackCard = new AppsAgainstHumanityClient.Card();
+			this.stl_GameStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox4.SuspendLayout();
+			this.sts_GameStatus.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -59,6 +61,15 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Black card";
 			// 
+			// crd_BlackCard
+			// 
+			this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.crd_BlackCard.Contents = "Card contents go here";
+			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
+			this.crd_BlackCard.Name = "crd_BlackCard";
+			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
+			this.crd_BlackCard.TabIndex = 0;
+			// 
 			// groupBox2
 			// 
 			this.groupBox2.Controls.Add(this.crl_PickedCards);
@@ -69,6 +80,14 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Picked cards";
 			// 
+			// crl_PickedCards
+			// 
+			this.crl_PickedCards.AutoScroll = true;
+			this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
+			this.crl_PickedCards.Name = "crl_PickedCards";
+			this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
+			this.crl_PickedCards.TabIndex = 0;
+			// 
 			// groupBox3
 			// 
 			this.groupBox3.Controls.Add(this.crl_OwnedCards);
@@ -78,6 +97,14 @@
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Your cards";
+			// 
+			// crl_OwnedCards
+			// 
+			this.crl_OwnedCards.AutoScroll = true;
+			this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
+			this.crl_OwnedCards.Name = "crl_OwnedCards";
+			this.crl_OwnedCards.Size = new System.Drawing.Size(767, 120);
+			this.crl_OwnedCards.TabIndex = 0;
 			// 
 			// groupBox4
 			// 
@@ -99,6 +126,8 @@
 			// 
 			// sts_GameStatus
 			// 
+			this.sts_GameStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stl_GameStatusLabel});
 			this.sts_GameStatus.Location = new System.Drawing.Point(0, 582);
 			this.sts_GameStatus.Name = "sts_GameStatus";
 			this.sts_GameStatus.Size = new System.Drawing.Size(938, 22);
@@ -166,30 +195,11 @@
 			this.button1.Text = "Send";
 			this.button1.UseVisualStyleBackColor = true;
 			// 
-			// crl_OwnedCards
+			// stl_GameStatusLabel
 			// 
-			this.crl_OwnedCards.AutoScroll = true;
-			this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
-			this.crl_OwnedCards.Name = "crl_OwnedCards";
-			this.crl_OwnedCards.Size = new System.Drawing.Size(767, 120);
-			this.crl_OwnedCards.TabIndex = 0;
-			// 
-			// crl_PickedCards
-			// 
-			this.crl_PickedCards.AutoScroll = true;
-			this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
-			this.crl_PickedCards.Name = "crl_PickedCards";
-			this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
-			this.crl_PickedCards.TabIndex = 0;
-			// 
-			// crd_BlackCard
-			// 
-			this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.crd_BlackCard.Contents = "Card contents go here";
-			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
-			this.crd_BlackCard.Name = "crd_BlackCard";
-			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
-			this.crd_BlackCard.TabIndex = 0;
+			this.stl_GameStatusLabel.Name = "stl_GameStatusLabel";
+			this.stl_GameStatusLabel.Size = new System.Drawing.Size(118, 17);
+			this.stl_GameStatusLabel.Text = "toolStripStatusLabel1";
 			// 
 			// MainForm
 			// 
@@ -215,6 +225,8 @@
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
+			this.sts_GameStatus.ResumeLayout(false);
+			this.sts_GameStatus.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -237,6 +249,7 @@
 		private System.Windows.Forms.Button button9;
 		private System.Windows.Forms.TextBox tbx_ChatLog;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.ToolStripStatusLabel stl_GameStatusLabel;
 	}
 }
 

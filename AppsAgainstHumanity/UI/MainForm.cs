@@ -47,7 +47,7 @@ namespace AppsAgainstHumanityClient
 				card.Contents = SystemInformation.VerticalScrollBarWidth.ToString();
 				crl_PickedCards.AddCard(card);
 			}
-			sts_GameStatus.Text = "My life is hollow inside";
+			stl_GameStatusLabel.Text = "My life is hollow inside";
 		}
 
 		protected override void OnClosing(CancelEventArgs e)

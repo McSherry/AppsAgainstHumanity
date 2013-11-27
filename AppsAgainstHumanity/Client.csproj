@@ -56,24 +56,24 @@
     <Compile Include="CardList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ChangeNickForm.cs">
+    <Compile Include="UI\ChangeNickForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChangeNickForm.Designer.cs">
+    <Compile Include="UI\ChangeNickForm.Designer.cs">
       <DependentUpon>ChangeNickForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientState.cs" />
-    <Compile Include="ConnectionForm.cs">
+    <Compile Include="UI\ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConnectionForm.Designer.cs">
+    <Compile Include="UI\ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Game.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NetworkInterface.cs" />
@@ -83,13 +83,13 @@
     <EmbeddedResource Include="Card.resx">
       <DependentUpon>Card.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChangeNickForm.resx">
+    <EmbeddedResource Include="UI\ChangeNickForm.resx">
       <DependentUpon>ChangeNickForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConnectionForm.resx">
+    <EmbeddedResource Include="UI\ConnectionForm.resx">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
