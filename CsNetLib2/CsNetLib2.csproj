@@ -45,13 +45,13 @@
     <Compile Include="Events.cs" />
     <Compile Include="ITransmittable.cs" />
     <Compile Include="Transfer\DelimitedProtocol.cs" />
-    <Compile Include="Transfer\ITransferProtocol.cs" />
+    <Compile Include="Transfer\TransferProtocol.cs" />
     <Compile Include="NetLibClient.cs" />
     <Compile Include="NetLibServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transfer\SetSizeProtocol.cs" />
     <Compile Include="Transfer\StreamingProtocol.cs" />
-    <Compile Include="Transfer\TransferProtocol.cs" />
+    <Compile Include="Transfer\TransferProtocols.cs" />
     <Compile Include="Transfer\TransferProtocolFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

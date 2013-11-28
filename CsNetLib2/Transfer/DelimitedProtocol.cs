@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsNetLib2
 {
-	public class DelimitedProtocol : ITransferProtocol
+	public class DelimitedProtocol : TransferProtocol
 	{
 		private DataAvailabe DataAvailableCallback;
 		private BytesAvailable BytesAvailableCallback;
@@ -16,13 +16,15 @@ namespace CsNetLib2
 
 		private byte[] Retain = new byte[0];
 
-		public void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
+		public DelimitedProtocol(Encoding encoding) : base(encoding) { }
+
+		public override void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
 		{
 			DataAvailableCallback = data;
 			BytesAvailableCallback = bytes;
 		}
 
-		public byte[] FormatData(byte[] data)
+		public override byte[] FormatData(byte[] data)
 		{
 			if (data.Contains(Delimiter)) {
 				throw new InvalidOperationException("Data to be sent contains a byte that is used as a delimiter.");
@@ -33,7 +35,7 @@ namespace CsNetLib2
 			return newData;
 		}
 
-		public void ProcessData(byte[] buffer, int read, long clientId)
+		public override void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			if (Retain.Length != 0) { // There's still data left over
 				byte[] oldBuf = buffer; // Temporarily put the new data aside
@@ -60,7 +62,7 @@ namespace CsNetLib2
 			for(int i = 0; i < data.Length; i++){
 				data[i] = buffer[i + begin];
 			}
-			string str = Encoding.ASCII.GetString(data);
+			string str = EncodeText(data);
 			if(BytesAvailableCallback!= null) BytesAvailableCallback(data, clientId);
 			DataAvailableCallback(str, clientId);
 		}

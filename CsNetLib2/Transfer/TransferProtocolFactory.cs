@@ -8,15 +8,15 @@ namespace CsNetLib2
 {
 	class TransferProtocolFactory
 	{
-		public ITransferProtocol CreateTransferProtocol(TransferProtocol protocol)
+		public TransferProtocol CreateTransferProtocol(TransferProtocols protocol, Encoding encoding)
 		{
 			switch (protocol) {
-				case TransferProtocol.Streaming:
-					return new StreamingProtocol();
-				case TransferProtocol.Delimited:
-					return new DelimitedProtocol();
-				case TransferProtocol.SetSize:
-					return new SetSizeProtocol();
+				case TransferProtocols.Streaming:
+					return new StreamingProtocol(encoding);
+				case TransferProtocols.Delimited:
+					return new DelimitedProtocol(encoding);
+				case TransferProtocols.SetSize:
+					return new SetSizeProtocol(encoding);
 				default:
 					return null;
 			}

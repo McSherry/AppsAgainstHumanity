@@ -6,23 +6,25 @@ using System.Threading.Tasks;
 
 namespace CsNetLib2
 {
-	class SetSizeProtocol : ITransferProtocol
+	class SetSizeProtocol : TransferProtocol
 	{
 		private DataAvailabe DataAvailableCallback;
 		private BytesAvailable BytesAvailableCallback;
 
-		public void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
+		public SetSizeProtocol(Encoding encoding) : base(encoding) { }
+
+		public override void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
 		{
 			DataAvailableCallback = data;
 			BytesAvailableCallback = bytes;
 		}
 
-		public byte[] FormatData(byte[] data)
+		public override byte[] FormatData(byte[] data)
 		{
 			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
 		}
 
-		public void ProcessData(byte[] buffer, int read, long clientId)
+		public override void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			throw new NotImplementedException("SetSizeProtocol is not implemented yet");
 		}

@@ -12,7 +12,7 @@ namespace CsNetLib2
     {
 		private TcpListener Listener;
 		private Dictionary<long, NetLibServerInternalClient> _clients = new Dictionary<long, NetLibServerInternalClient>();
-		private ITransferProtocol Protocol;
+		private TransferProtocol Protocol;
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
@@ -43,11 +43,11 @@ namespace CsNetLib2
             set { _clients = value; }
         }
 
-		public NetLibServer(int port, TransferProtocol protocol)
-			: this(IPAddress.Any, port, protocol) { }
-		public NetLibServer(IPAddress localaddr, int port, TransferProtocol protocol)
+		public NetLibServer(int port, TransferProtocols protocol, Encoding encoding)
+			: this(IPAddress.Any, port, protocol, encoding) { }
+		public NetLibServer(IPAddress localaddr, int port, TransferProtocols protocol, Encoding encoding)
 		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
 			Listener = new TcpListener(localaddr, port);
 		}
 
@@ -120,7 +120,7 @@ namespace CsNetLib2
 		}
 		public bool Send(string data, long clientId)
 		{
-			byte[] buffer = Encoding.ASCII.GetBytes(data);
+			byte[] buffer = Protocol.EncodingType.GetBytes(data);
 			return SendBytes(buffer, clientId);
 		}
 		private void SendCallback(IAsyncResult ar)

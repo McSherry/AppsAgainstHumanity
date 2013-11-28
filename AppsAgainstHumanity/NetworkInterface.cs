@@ -42,7 +42,7 @@ namespace AppsAgainstHumanityClient
 		internal async Task Connect(string host, string nick)
 		{
 			try {
-				Task t = Client.Connect(host, 11235, TransferProtocol.Delimited);
+				Task t = Client.Connect(host, 11235, TransferProtocols.Delimited, Encoding.ASCII);
 				Client.Delimiter = ETX;
 				await t;
 			} catch (Exception e) {

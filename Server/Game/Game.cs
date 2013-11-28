@@ -277,7 +277,7 @@ namespace AppsAgainstHumanity.Server.Game
             this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
-            this._server = new NetLibServer(PORT, TransferProtocol.Delimited);
+            this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);
 

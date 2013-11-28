@@ -15,7 +15,7 @@ namespace CsNetLib2
 	{
 		private TcpClient client;
 		private byte[] buffer;
-		private ITransferProtocol Protocol;
+		private TransferProtocol Protocol;
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
@@ -44,7 +44,7 @@ namespace CsNetLib2
 		}
 		public bool Send(string data)
 		{
-			byte[] buffer = Encoding.ASCII.GetBytes(data);
+			byte[] buffer = Protocol.EncodingType.GetBytes(data);
 			return SendBytes(buffer);
 		}
 		public void Disconnect()
@@ -83,16 +83,16 @@ namespace CsNetLib2
 			}
 		}
 
-		public void ConnectBlocking(string hostname, int port, TransferProtocol protocol)
+		public void ConnectBlocking(string hostname, int port, TransferProtocols protocol, Encoding encoding)
 		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 			client.Connect(hostname, port);
 		}
 
-		public async Task Connect(string hostname, int port, TransferProtocol protocol)
+		public async Task Connect(string hostname, int port, TransferProtocols protocol, Encoding encoding)
 		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
 			Task t = client.ConnectAsync(hostname, port);
 			await t;

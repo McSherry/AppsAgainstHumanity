@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CsNetLib2
 {
-	class Program
+	public enum TransferProtocols
 	{
-		static void Main(string[] args)
-		{
-		}
+		Streaming,
+		Delimited,
+		SetSize
 	}
 }

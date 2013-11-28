@@ -6,29 +6,31 @@ using System.Threading.Tasks;
 
 namespace CsNetLib2
 {
-	public class StreamingProtocol : ITransferProtocol
+	public class StreamingProtocol : TransferProtocol
 	{
 		private DataAvailabe DataAvailableCallback;
 		private BytesAvailable BytesAvailableCallback;
 
-		public void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
+		public StreamingProtocol(Encoding encoding) : base(encoding) { }
+
+		public override void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
 		{
 			DataAvailableCallback = data;
 			BytesAvailableCallback = bytes;
 		}
 
-		public byte[] FormatData(byte[] data)
+		public override byte[] FormatData(byte[] data)
 		{
 			return data; // Streaming protocol doesn't care about formatting
 		}
 
-		public void ProcessData(byte[] buffer, int read, long clientId)
+		public override void ProcessData(byte[] buffer, int read, long clientId)
 		{
 			if (BytesAvailableCallback != null) {
 				BytesAvailableCallback(buffer, clientId);
 			}
 			if (DataAvailableCallback != null) {
-				DataAvailableCallback(Encoding.ASCII.GetString(buffer), clientId);
+				DataAvailableCallback(EncodeText(buffer), clientId);
 			}
 		}
 	}
