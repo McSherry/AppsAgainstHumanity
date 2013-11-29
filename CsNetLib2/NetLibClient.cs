@@ -10,6 +10,7 @@ using System.Net.Sockets;
 namespace CsNetLib2
 {
 	public delegate void ClientDataAvailable(string data);
+	public delegate void Disconnected();
 
 	public class NetLibClient : ITransmittable
 	{
@@ -19,7 +20,16 @@ namespace CsNetLib2
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
+		public event Disconnected OnDisconnect;
 
+		public bool Connected { get { return client.Connected; } }
+
+		private void ProcessDisconnect()
+		{
+			if (OnDisconnect != null) {
+				OnDisconnect();
+			}
+		}
 		public NetLibClient()
 		{
 			client = new TcpClient();
@@ -57,7 +67,7 @@ namespace CsNetLib2
 			try {
 				client.GetStream().EndWrite(ar);
 			} catch (ObjectDisposedException) {
-				Console.WriteLine("Socket closed.");
+				ProcessDisconnect();
 			}
 		}
 
@@ -106,7 +116,7 @@ namespace CsNetLib2
 			try {
 				networkStream = client.GetStream();
 			} catch (ObjectDisposedException) {
-				Console.WriteLine("Socket closed.");
+				ProcessDisconnect();
 				return;
 			}
 			var read = networkStream.EndRead(result);
@@ -118,7 +128,7 @@ namespace CsNetLib2
 			try {
 				networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
 			} catch (ObjectDisposedException) {
-				Console.WriteLine("Socket closed.");
+				ProcessDisconnect();
 				return;
 			}
 		}
