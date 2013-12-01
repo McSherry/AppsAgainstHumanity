@@ -45,7 +45,7 @@ namespace AppsAgainstHumanity.Server.Game
                 //DrawnCards.Remove(remPlayer);
                 //_currRound.End();
 
-                foreach (Player p in Players)
+                foreach (Player p in Players.ToList())
                     _senderCLNF(p.ClientIdentifier);
             }
         }
@@ -85,7 +85,7 @@ namespace AppsAgainstHumanity.Server.Game
         private bool _freeNick(string nick)
         {
             bool dupeNickEncountered = false;
-            foreach (Player p in Players)
+            foreach (Player p in Players.ToList())
                 dupeNickEncountered = p.Nickname.ToLower() == nick.ToLower() ? true : dupeNickEncountered;
             return !dupeNickEncountered;
         }
@@ -123,14 +123,18 @@ namespace AppsAgainstHumanity.Server.Game
                     {
                         // If the nickname is invalid, send NDNY with appropriate text.
                         SendCommand(CommandType.REFU, "Nickname contains invalid characters.", sender);
+                        // Close the connection after refusing.
+                        //_server.Clients[sender].TcpClient.Close();
                     }
                     else if (!_freeNick(args[0]))
                     {
                         // If the nickname is already in use, send NDNY with appropriate text.
                         SendCommand(CommandType.REFU, "Nickname in use.", sender);
+                        //_server.Clients[sender].TcpClient.Close();
                     }
                     // If nickname is neither free nor valid, send NDNY.
                     else SendCommand(CommandType.REFU, "Nickname refused.", sender);
+                    //_server.Clients[sender].TcpClient.Close();
                 }
             }
             else
@@ -153,15 +157,11 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 // LINQ is much nicer than a foreach loop with a condition in it, no?
                 // TODO: Account for when a NICK is sent after a JOIN was denied.
-                var pn = from play in Players
-                           where play.ClientIdentifier == sender
-                           select play;
-
+                Player p = Players.First(pn => pn.ClientIdentifier == sender);
                 // We're only expecting one player with the ID, so first element
                 // will be fine.
                 SendCommand(CommandType.NACC, "Nickname changed successfully.", sender);
-                Player p = pn.ElementAt(0);
-                foreach (Player py in Players)
+                foreach (Player py in Players.ToList())
                 {
                     if (py != p)
                     {
@@ -190,7 +190,7 @@ namespace AppsAgainstHumanity.Server.Game
                 Player p = Players.First(pl => pl.ClientIdentifier == clientID);
                 Players.Remove(p);
                 DrawnCards.Remove(p);
-                foreach (Player pl in Players)
+                foreach (Player pl in Players.ToList())
                 {
                     _senderCLEX(pl.ClientIdentifier, p);
                 }
@@ -205,11 +205,11 @@ namespace AppsAgainstHumanity.Server.Game
             // necessary.
             string[] playerNames = new string[this.Players.Count];
             int ctr = 0;
-                foreach (Player p in Players)
-                {
-                    playerNames[ctr] = p.Nickname;
-                    ++ctr;
-                }
+            foreach (Player p in Players.ToList())
+            {
+                playerNames[ctr] = p.Nickname;
+                ++ctr;
+            }
 
             SendCommand(CommandType.CLNF, playerNames, clientID);
         }
@@ -217,7 +217,7 @@ namespace AppsAgainstHumanity.Server.Game
         // that another player has joined the game.
         private void _senderCLJN(long joinedClientID, Player joinedPlayer)
         {
-            foreach (Player p in Players)
+            foreach (Player p in Players.ToList())
             {
                 if (p.ClientIdentifier == joinedClientID) continue;
                 SendCommand(CommandType.CLJN, joinedPlayer.Nickname, p.ClientIdentifier);
@@ -319,7 +319,7 @@ namespace AppsAgainstHumanity.Server.Game
                 System.Timers.Timer t = new System.Timers.Timer(5000);
                 t.Elapsed += (s, e) =>
                 {
-                    foreach (Player p in Players)
+                    foreach (Player p in Players.ToList())
                     {
                         try
                         {
