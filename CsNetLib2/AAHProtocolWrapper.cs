@@ -125,7 +125,7 @@ namespace CsNetLib2
 		/// ITransmittable is of type NetLibClient, and in that case, may be left at its default value.</param>
 		public bool SendCommand(CommandType cmd, string argument, long clientId = 0)
 		{
-			return SendCommand(cmd, new string[] { argument }, clientId);
+			return SendCommand(cmd, argument == null ? (string[])null : new string[] { argument }, clientId);
 		}
 
 		public bool SendCommand(CommandType cmd, long clientId)

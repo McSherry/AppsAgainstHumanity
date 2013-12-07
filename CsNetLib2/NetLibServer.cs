@@ -116,7 +116,7 @@ namespace CsNetLib2
                     _clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
                     return true;
                 }
-                catch (NullReferenceException nrex)
+                catch (NullReferenceException)
                 {
                     return false;
                 }
