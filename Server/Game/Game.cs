@@ -102,11 +102,17 @@ namespace AppsAgainstHumanity.Server.Game
                 // is equal to the maximum number specified in the parameters, refuse the connection
                 // with the limit-reached message.
                 if (this.Players.Count == this.Parameters.Players)
+                {
                     SendCommand(
                         CommandType.REFU,
                         new string[1] { "Player limit reached." },
                         sender
                         );
+                    // Close the connection after refusing.
+                    _server.Clients[sender].TcpClient.Close();
+                    // Remove client after disconnecting
+                    _server.Clients.Remove(sender);
+                }
                 else
                 {
                     if (_validNick(args[0]) && _freeNick(args[0]))
@@ -124,17 +130,28 @@ namespace AppsAgainstHumanity.Server.Game
                         // If the nickname is invalid, send NDNY with appropriate text.
                         SendCommand(CommandType.REFU, "Nickname contains invalid characters.", sender);
                         // Close the connection after refusing.
-                        //_server.Clients[sender].TcpClient.Close();
+                        _server.Clients[sender].TcpClient.Close();
+                        // Remove client after disconnecting
+                        _server.Clients.Remove(sender);
                     }
                     else if (!_freeNick(args[0]))
                     {
                         // If the nickname is already in use, send NDNY with appropriate text.
                         SendCommand(CommandType.REFU, "Nickname in use.", sender);
-                        //_server.Clients[sender].TcpClient.Close();
+                        // Close the connection after refusing.
+                        _server.Clients[sender].TcpClient.Close();
+                        // Remove client after disconnecting
+                        _server.Clients.Remove(sender);
                     }
                     // If nickname is neither free nor valid, send NDNY.
-                    else SendCommand(CommandType.REFU, "Nickname refused.", sender);
-                    //_server.Clients[sender].TcpClient.Close();
+                    else
+                    {
+                        SendCommand(CommandType.REFU, "Nickname refused.", sender);
+                        // Close the connection after refusing.
+                        _server.Clients[sender].TcpClient.Close();
+                        // Remove client after disconnecting
+                        _server.Clients.Remove(sender);
+                    }
                 }
             }
             else
@@ -148,6 +165,10 @@ namespace AppsAgainstHumanity.Server.Game
                     "Game in progress; joining prohibited.",
                     sender
                     );
+                // Close the connection after refusing.
+                _server.Clients[sender].TcpClient.Close();
+                // Remove client after disconnecting
+                _server.Clients.Remove(sender);
             }
         }
         // handles NICK requests from clients.
