@@ -44,6 +44,7 @@
     <Compile Include="CommandType.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="ITransmittable.cs" />
+    <Compile Include="NetLib.cs" />
     <Compile Include="Transfer\DelimitedProtocol.cs" />
     <Compile Include="Transfer\TransferProtocol.cs" />
     <Compile Include="NetLibClient.cs" />

@@ -47,7 +47,7 @@ namespace CsNetLib2
 			: this(IPAddress.Any, port, protocol, encoding) { }
 		public NetLibServer(IPAddress localaddr, int port, TransferProtocols protocol, Encoding encoding)
 		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding, new Action<string>(Log));
 			Listener = new TcpListener(localaddr, port);
 		}
 
@@ -55,6 +55,10 @@ namespace CsNetLib2
 		{
 			_clients[clientId].TcpClient.Close();
 			_clients.Remove(clientId);
+		}
+
+		private void Log(string message)
+		{
 		}
 
 		public void StartListening()

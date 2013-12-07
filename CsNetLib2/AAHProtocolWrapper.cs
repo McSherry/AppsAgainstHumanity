@@ -128,6 +128,11 @@ namespace CsNetLib2
 			return SendCommand(cmd, new string[] { argument }, clientId);
 		}
 
+		public bool SendCommand(CommandType cmd, long clientId)
+		{
+			return SendCommand(cmd, new string[0], clientId);
+		}
+
 		/// <summary>
 		/// Sends a command to the specified client. If the wrapped ITransmittable is a client,  the clientId variable is discarded.
 		/// </summary>
@@ -136,14 +141,17 @@ namespace CsNetLib2
 		/// when only one argument needs to be passed. Keep at its default value of null when no arguments should be passed.</param>
 		/// <param name="clientId">The ID of the client that should receive the command. This variable is discarded if the wrapped
 		/// ITransmittable is of type NetLibClient, and in that case, may be left at its default value.</param>
-		public bool SendCommand(CommandType cmd, string[] args = null, long clientId = 0)
+		public bool SendCommand(CommandType cmd, string[] args, long clientId = 0)
 		{
+			if (args == null) {
+				throw new ArgumentNullException("The the arguments parameter may not be null.");
+			}
 			// Remove the previous command still left in the command builder
 			CommandBuilder.Clear();
 			// First append the command
 			CommandBuilder.Append(cmd.ToString());
 			// Now append the parameters, separated by ASCII NULs
-			CommandBuilder.Append(string.Join(NUL.ToString(), args == null ? new [] { String.Empty } : args));
+			CommandBuilder.Append(string.Join(NUL.ToString(), args));
 			string data = CommandBuilder.ToString();
 			Console.WriteLine("[SEND]\t[{0}]\t{1}", clientId, data);
 			return Transmitter.Send(data, clientId);

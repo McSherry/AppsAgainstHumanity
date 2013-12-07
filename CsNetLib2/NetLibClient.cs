@@ -11,6 +11,7 @@ namespace CsNetLib2
 {
 	public delegate void ClientDataAvailable(string data);
 	public delegate void Disconnected();
+	public delegate void LogEvent(string data);
 
 	public class NetLibClient : ITransmittable
 	{
@@ -21,19 +22,43 @@ namespace CsNetLib2
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
 		public event Disconnected OnDisconnect;
+		public event LogEvent OnLogEvent;
 
 		public bool Connected { get { return client.Connected; } }
+		public byte Delimiter
+		{
+			get
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					return protocol.Delimiter;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+			set
+			{
+				try {
+					var protocol = (DelimitedProtocol)Protocol;
+					protocol.Delimiter = value;
+				} catch (InvalidCastException) {
+					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
+				}
+			}
+		}
+
+		private void Log(string message)
+		{
+			if (OnLogEvent != null) {
+				OnLogEvent(message);
+			}
+		}
 
 		private void ProcessDisconnect()
 		{
 			if (OnDisconnect != null) {
 				OnDisconnect();
 			}
-		}
-		public NetLibClient()
-		{
-			client = new TcpClient();
-			client.LingerState.Enabled = true;
 		}
 		public bool SendBytes(byte[] buffer)
 		{
@@ -60,7 +85,6 @@ namespace CsNetLib2
 		public void Disconnect()
 		{
 			client.Close();
-			client = null;
 		}
 		public void SendCallback(IAsyncResult ar)
 		{
@@ -70,40 +94,11 @@ namespace CsNetLib2
 				ProcessDisconnect();
 			}
 		}
-
-		public byte Delimiter
-		{
-			get
-			{
-				try {
-					var protocol = (DelimitedProtocol)Protocol;
-					return protocol.Delimiter;
-				} catch (InvalidCastException) {
-					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
-				}
-			}
-			set
-			{
-				try {
-					var protocol = (DelimitedProtocol)Protocol;
-					protocol.Delimiter = value;
-				} catch (InvalidCastException) {
-					throw new InvalidOperationException("Unable to set the delimiter: Protocol is not of type DelimitedProtocol");
-				}
-			}
-		}
-
-		public void ConnectBlocking(string hostname, int port, TransferProtocols protocol, Encoding encoding)
-		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
-			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
-			client.Connect(hostname, port);
-		}
-
 		public async Task Connect(string hostname, int port, TransferProtocols protocol, Encoding encoding)
 		{
-			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding);
+			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding, new Action<string>(Log));
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
+			client = new TcpClient();
 			Task t = client.ConnectAsync(hostname, port);
 			await t;
 			NetworkStream stream = client.GetStream();
@@ -112,6 +107,7 @@ namespace CsNetLib2
 		}
 		private void ReadCallback(IAsyncResult result)
 		{
+			Log("TRACE--> Read callback");
 			NetworkStream networkStream = null;
 			try {
 				networkStream = client.GetStream();
@@ -119,11 +115,17 @@ namespace CsNetLib2
 				ProcessDisconnect();
 				return;
 			}
-			var read = networkStream.EndRead(result);
+			int read;
+			try {
+				read = networkStream.EndRead(result);
+			} catch (System.IO.IOException) {
+				ProcessDisconnect();
+				return;
+			}
 			if (read == 0) {
 				client.Close();
 			}
-
+			Log("TRACE--> Protocol handoff");
 			Protocol.ProcessData(buffer, read, 0);
 			try {
 				networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);

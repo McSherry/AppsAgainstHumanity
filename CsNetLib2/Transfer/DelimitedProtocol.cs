@@ -16,7 +16,11 @@ namespace CsNetLib2
 
 		private byte[] Retain = new byte[0];
 
-		public DelimitedProtocol(Encoding encoding) : base(encoding) { }
+		private Action<string> logCallback;
+
+		public DelimitedProtocol(Encoding encoding, Action<string> logCallback) : base(encoding) {
+			this.logCallback = logCallback;
+		}
 
 		public override void AddEventCallbacks(DataAvailabe data, BytesAvailable bytes)
 		{
@@ -37,16 +41,23 @@ namespace CsNetLib2
 
 		public override void ProcessData(byte[] buffer, int read, long clientId)
 		{
+			logCallback(string.Format("TRACE--> Protocol takeover: buffer size: {0}, delimiter: {1}, {2} bytes read", buffer.Length, Delimiter, read));
 			if (Retain.Length != 0) { // There's still data left over
 				byte[] oldBuf = buffer; // Temporarily put the new data aside
 				buffer = new byte[read + Retain.Length]; // Expand the buffer to fit both the old and the new data
 				Array.Copy(Retain, buffer, Retain.Length); // Put the old data in first
 				Array.Copy(oldBuf, 0, buffer, Retain.Length, read); // Now put the new data back in
 			}
+			//var set = buffer.Where(b => b != 0).Select(b => string.Format("{0:X2}", b));
+			var set = buffer.Where(b => b != 0).Select(b => (char)b);
+			var dmp = string.Join("", set);
+
+			logCallback("TRACE--> Buffer dump: " + dmp);
 
 			int beginIndex = 0; // This is where the next message starts
 			for (int i = beginIndex; i < read; i++) { // Iterate over buffer
 				if (buffer[i] == Delimiter) { // We've found a delimiter
+					logCallback("     --> Message Processing");
 					ProcessMessage(buffer, beginIndex == 0 ? beginIndex : beginIndex + 1, i, clientId); // Process a message from the begin index to the current position
 					beginIndex = i; // Since we've found a new delimiter, set the begin index equal to its location
 				}
