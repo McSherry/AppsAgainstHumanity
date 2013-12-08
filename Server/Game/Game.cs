@@ -357,8 +357,24 @@ namespace AppsAgainstHumanity.Server.Game
             if (!_hasStarted) _hasStarted = true;
             else throw new Exception("This game has already been started. Please create a new instance to start a new game.");
 
+            foreach (Player p in Players.ToList())
+                // Indicates that the game has started.
+                SendCommand(CommandType.GSTR, (string[])null, p.ClientIdentifier);
+
+            // Used to keep track of the Card Czar. A random number at the start of the round,
+            // then incremented by one (mod number of players) in each following round.
+            int czarCtr = _RNG.Next(Players.Count);
+            // Game loop, which will terminate once the Awesome Point limit for a single player
+            // is reached.
             while (!_gameWon)
             {
+                foreach (Player p in Players.ToList())
+                {
+                    // Sends the CZAR command with nickname to all players, informing them of who the
+                    // Card Czar is for this round.
+                    SendCommand(CommandType.CZAR, Players[czarCtr].Nickname, p.ClientIdentifier);
+                }
+
                 BlackCard roundBlack = _selectBlack();
                 Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
                 _currRound = new Round(roundBlack, roundPool, Players, this);
@@ -368,6 +384,12 @@ namespace AppsAgainstHumanity.Server.Game
                 // TODO: Verify the above works.
                 // Dunno if returning a player maintains the pass by reference shit
                 // which would allow modification of that player's class.
+
+                // Increments the Card Czar counter by one, rolling over to zero if the number goes
+                // above the number of players. This causes Czars to be chosen sequentially. Since the
+                // counter is out of loop, the foreach at the start of the loop will choose the player
+                // indicated by the counter at the point below this comment.
+                czarCtr = ++czarCtr % Players.Count;
             }
 
             // Stop pinging, as the game is over now
