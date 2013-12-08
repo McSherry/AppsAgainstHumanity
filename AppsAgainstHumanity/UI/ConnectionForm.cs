@@ -13,9 +13,6 @@ namespace AppsAgainstHumanityClient
 {
 	public partial class ConnectionForm : Form
 	{
-		internal delegate void SetConnectButtonStateCallback(bool state);
-		internal delegate void HideConnectionFormCallback();
-
 		private NetworkInterface NetworkInterface;
 
 		public ConnectionForm()
@@ -26,15 +23,25 @@ namespace AppsAgainstHumanityClient
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.NDNY, ProcessNDNY);
 			InitializeComponent();
 		}
+
+		/// <summary>
+		/// Handler for ACKN. When an ACKN is received, close this form and show the main form
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="arguments"></param>
 		private void ProcessACKN(long sender, string[] arguments)
 		{
 			ShowMainUI();
 		}
 
+		/// <summary>
+		/// Thread-safe wrapper for setting the state of the connect button
+		/// </summary>
+		/// <param name="state"></param>
 		private void SetConnectButtonState(bool state)
 		{
 			if (btn_Connect.InvokeRequired) {
-				Invoke(new SetConnectButtonStateCallback(SetConnectButtonState), new object[] { state });
+				Invoke(new Action<bool>(SetConnectButtonState), new object[] { state });
 			} else {
 				btn_Connect.Enabled = state;
 			}
@@ -73,22 +80,15 @@ namespace AppsAgainstHumanityClient
 				btn_Connect.Enabled = true;
 			}
 		}
-
-		private void HandleNickDeny(string reason)
-		{
-
-		}
-		private void HandleNickAccept()
-		{
-
-		}
 		private void ShowMainUI()
 		{
 			if (base.InvokeRequired) {
-				Invoke(new HideConnectionFormCallback(ShowMainUI));
+				Invoke(new Action(ShowMainUI));
 				return;
 			}
 			base.Hide();
+			// Make sure the now-hidden connection form won't process any network events anymore
+			NetworkInterface.ClientWrapper.UnregisterAllHandlers();
 			new MainForm(NetworkInterface).Show();
 		}
 		private void btn_Exit_Click(object sender, EventArgs e)

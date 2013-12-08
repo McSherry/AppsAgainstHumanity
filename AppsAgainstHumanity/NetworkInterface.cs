@@ -17,7 +17,7 @@ namespace AppsAgainstHumanityClient
 		/// <summary>
 		/// The low-level TCP client
 		/// </summary>
-		private NetLibClient Client;
+		public NetLibClient Client { get; private set; }
 		/// <summary>
 		/// The high-level protocol wrapper
 		/// </summary>
@@ -26,7 +26,6 @@ namespace AppsAgainstHumanityClient
 		/// ASCII ETX char
 		/// </summary>
 		private const byte ETX = 3;
-
 
 		internal NetworkInterface()
 		{

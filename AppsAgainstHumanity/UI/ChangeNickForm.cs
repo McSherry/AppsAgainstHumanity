@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace AppsAgainstHumanityClient
 {
+	/// <summary>
+	/// Displayed when the player wants to change their nickname.
+	/// </summary>
 	public partial class ChangeNickForm : Form
 	{
 		public ChangeNickForm()
@@ -26,6 +29,7 @@ namespace AppsAgainstHumanityClient
 			} else {
 				Nick = tbx_NewNick.Text;
 				DialogResult = DialogResult.OK;
+				// TODO: Send NICK command and check for replies
 			}
 		}
 	}

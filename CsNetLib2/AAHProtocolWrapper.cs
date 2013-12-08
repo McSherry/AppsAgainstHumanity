@@ -13,7 +13,7 @@ namespace CsNetLib2
 		/// <summary>
 		/// Handles sending and receiving data
 		/// </summary>
-		private ITransmittable Transmitter;
+		public ITransmittable Transmitter { get; private set; }
 		/// <summary>
 		/// ASCII NUL char
 		/// </summary>
@@ -96,6 +96,10 @@ namespace CsNetLib2
 				// Create an array of arguments by splitting the argument on NUL chars, according to the protocol.
 				args = arglist.Split(new char[] { NUL });
 			}
+			if (command == "PING") {
+				SendCommand(CommandType.PONG, 0);
+			}
+
 			// Attempt to parse the command into a CommandType. If it succeeds, verify that a handler has been
             // registered for said command. If one has been registered, call it. If one has not, don't.
             CommandType ct;

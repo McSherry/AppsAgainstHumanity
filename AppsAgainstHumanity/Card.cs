@@ -16,13 +16,6 @@ namespace AppsAgainstHumanityClient
 		public const int CardSpacing = 6;
 		public const int CardFullWidth = CardWidth + CardSpacing;
 		public const int CardFullHeight = CardFullWidth;
-
-
-		public Card()
-		{
-			InitializeComponent();
-		}
-
 		public string Contents
 		{
 			get
@@ -39,12 +32,19 @@ namespace AppsAgainstHumanityClient
 			get;
 			private set;
 		}
+		public bool Selectable { get; set; }
+
+		public Card(bool selectable)
+		{
+			Selectable = selectable;
+			InitializeComponent();
+		}
 
 		private void Card_Click(object sender, EventArgs e)
 		{
 			if (Selected) {
 				BackColor = SystemColors.ControlLightLight;
-			} else {
+			} else if(Selectable) {
 				BackColor = Color.FromArgb(225, 225, 255);
 			}
 			Selected = !Selected;

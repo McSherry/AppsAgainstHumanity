@@ -15,7 +15,7 @@ namespace CsNetLib2
 
 	public class NetLibClient : ITransmittable
 	{
-		private TcpClient client;
+		public TcpClient Client { get; private set; }
 		private byte[] buffer;
 		private TransferProtocol Protocol;
 
@@ -24,7 +24,7 @@ namespace CsNetLib2
 		public event Disconnected OnDisconnect;
 		public event LogEvent OnLogEvent;
 
-		public bool Connected { get { return client.Connected; } }
+		public bool Connected { get { return Client.Connected; } }
 		public byte Delimiter
 		{
 			get
@@ -56,6 +56,7 @@ namespace CsNetLib2
 
 		private void ProcessDisconnect()
 		{
+			Client.Close();
 			if (OnDisconnect != null) {
 				OnDisconnect();
 			}
@@ -63,15 +64,15 @@ namespace CsNetLib2
 		public bool SendBytes(byte[] buffer)
 		{
 			buffer = Protocol.FormatData(buffer);
-            try
-            {
-                client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
-                return true;
-            }
-            catch (NullReferenceException nrex)
-            {
-                return false;
-            }
+			try {
+				Client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
+				return true;
+			} catch (NullReferenceException nrex) {
+				return false;
+			} catch (InvalidOperationException) {
+				ProcessDisconnect();
+				return false;
+			}
 		}
 		public bool Send(string data, long clientId)
 		{
@@ -84,12 +85,12 @@ namespace CsNetLib2
 		}
 		public void Disconnect()
 		{
-			client.Close();
+			Client.Close();
 		}
 		public void SendCallback(IAsyncResult ar)
 		{
 			try {
-				client.GetStream().EndWrite(ar);
+				Client.GetStream().EndWrite(ar);
 			} catch (ObjectDisposedException) {
 				ProcessDisconnect();
 			}
@@ -98,19 +99,19 @@ namespace CsNetLib2
 		{
 			Protocol = new TransferProtocolFactory().CreateTransferProtocol(protocol, encoding, new Action<string>(Log));
 			Protocol.AddEventCallbacks(OnDataAvailable, OnBytesAvailable);
-			client = new TcpClient();
-			Task t = client.ConnectAsync(hostname, port);
+			Client = new TcpClient();
+			Task t = Client.ConnectAsync(hostname, port);
 			await t;
-			NetworkStream stream = client.GetStream();
-			buffer = new byte[client.ReceiveBufferSize];
-			stream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
+			NetworkStream stream = Client.GetStream();
+			buffer = new byte[Client.ReceiveBufferSize];
+			stream.BeginRead(buffer, 0, buffer.Length, ReadCallback, Client);
 		}
 		private void ReadCallback(IAsyncResult result)
 		{
 			Log("TRACE--> Read callback");
 			NetworkStream networkStream = null;
 			try {
-				networkStream = client.GetStream();
+				networkStream = Client.GetStream();
 			} catch (ObjectDisposedException) {
 				ProcessDisconnect();
 				return;
@@ -123,12 +124,12 @@ namespace CsNetLib2
 				return;
 			}
 			if (read == 0) {
-				client.Close();
+				Client.Close();
 			}
 			Log("TRACE--> Protocol handoff");
 			Protocol.ProcessData(buffer, read, 0);
 			try {
-				networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, client);
+				networkStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, Client);
 			} catch (ObjectDisposedException) {
 				ProcessDisconnect();
 				return;
@@ -136,7 +137,7 @@ namespace CsNetLib2
 		}
 		public void AwaitConnect()
 		{
-			while (!client.Connected) {
+			while (!Client.Connected) {
 				System.Threading.Thread.Sleep(5);
 			}
 		}
