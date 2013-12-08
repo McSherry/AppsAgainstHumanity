@@ -42,7 +42,6 @@ namespace AppsAgainstHumanity.Server.Game
             this.BlackCard = blackCard;
             this.WhiteCardPool = pool;
             this.RoundSeed = new Crypto.SRand();
-            this.Players = parent.Players;
             this._parent = parent;
 
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
@@ -71,7 +70,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The list of currently connected players.
         /// </summary>
-        public List<Player> Players { get; internal set; }
+        public List<Player> Players
+        {
+            get { return _parent.Players; }
+        }
         /// <summary>
         /// The white cards available to send to players this round.
         /// </summary>
@@ -127,10 +129,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <returns>The player who has won this round.</returns>
         public Player Start()
         {
-            // TODO: REMOVE THIS PLAYER
-            Player tempPlayer = new Player("REMOVE_ME", 0);
             bool allPlayersSubmitted = false;
-
             // Players are limited in the time they have available to choose.
             // This timeout is in seconds in the parameters, so we have to multiply by 1000
             // to get it into milliseconds, Timer's accepted unit of time.
@@ -138,12 +137,36 @@ namespace AppsAgainstHumanity.Server.Game
             Timer timeoutTimer = new Timer(this._parent.Parameters.TimeoutLimit * 1000);
             timeoutTimer.Elapsed += (s, e) =>
             {
+                var hasntPlayed =
+                    from p in HasPlayedList
+                    where p.Value == false
+                    select p;
+
+                foreach (KeyValuePair<Player, bool> pl in hasntPlayed)
+                {
+                    _parent.SendCommand(CsNetLib2.CommandType.CRTO, (string[])null, pl.Key.ClientIdentifier);
+                }
+
                 allPlayersSubmitted = true;
             };
 
-            // Wait for all players to submit cards, or until
-            // the timeout elapses.
+            // TODO: REMOVE THIS PLAYER
+            Player tempPlayer = new Player("REMOVE_ME", 0);
+
+            foreach (Player p in Players.ToList())
+            {
+                _parent.SendCommand(CsNetLib2.CommandType.RSTR, (string[])null, p.ClientIdentifier);
+                SendRandomCards(p);
+            }
+
+            
+            timeoutTimer.Start();
+
+            // Wait for all players to submit cards, or until the timeout elapses.
             while (!allPlayersSubmitted) ;
+            // Stop the timeout timer, as another will be created next round and
+            // we no longer require this one.
+            timeoutTimer.Stop();
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.

@@ -238,6 +238,11 @@ namespace AppsAgainstHumanity.Server.Game
             Player p = Players.First(pl => pl.ClientIdentifier == sender);
             _senderRMSG(p, args[0]);
         }
+        // handles PICKs from clients + fires event
+        private void _handlerPICK(long sender, string[] args)
+        {
+            if (OnPlayerPick != null) OnPlayerPick.Invoke(Players.First(pl => pl.ClientIdentifier == sender), 
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -374,6 +379,7 @@ namespace AppsAgainstHumanity.Server.Game
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
             _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
+            _serverWrapper.RegisterCommandHandler(CommandType.PICK, OnPlayerPick);
 
             _server.StartListening();
         }
@@ -389,6 +395,7 @@ namespace AppsAgainstHumanity.Server.Game
 
         public delegate void ClientMessageEventHandler(Player sender, string message);
         public delegate void PlayerEventHandler(Player p);
+        public delegate void PlayerCardEventHandler(Player p, int cardId);
         /// <summary>
         /// Fired when a valid message is received from a client.
         /// </summary>
@@ -401,6 +408,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// Fired when a player leaves the game.
         /// </summary>
         public event PlayerEventHandler OnPlayerLeave;
+        /// <summary>
+        /// Fired when a player picks a card. No checks as to whether a round is
+        /// current in play, only criterion is the receival of a PICK command.
+        /// </summary>
+        public event PlayerCardEventHandler OnPlayerPick;
 
         /// <summary>
         /// The parameters the game is currently configured to use.
@@ -437,6 +449,20 @@ namespace AppsAgainstHumanity.Server.Game
                 // Used to keep track of the Card Czar. A random number at the start of the round,
                 // then incremented by one (mod number of players) in each following round.
                 int czarCtr = _RNG.Next(Players.Count);
+
+                foreach (Player p in Players.ToList())
+                {
+                    // Draw 10 white cards per player, and send them to the player. These are the
+                    // 10 cards drawn at the beginning of a game.
+                    DrawnCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
+                    DrawnCards.Add(p, _selectWhites(10));
+                    foreach (KeyValuePair<int, WhiteCard> card in DrawnCards[p].ToList())
+                        SendCommand(
+                            CommandType.WHTE,
+                            new string[2] { card.Key.ToString(), card.Value.Text.ToString() },
+                            p.ClientIdentifier
+                        );
+                }
                 // Game loop, which will terminate once the Awesome Point limit for a single player
                 // is reached.
                 while (!_gameWon)
@@ -449,6 +475,8 @@ namespace AppsAgainstHumanity.Server.Game
                     }
 
                     BlackCard roundBlack = _selectBlack();
+                    // The cards which will be given to players at the start of this round.
+                    // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
                     _currRound = new Round(roundBlack, roundPool, this);
 

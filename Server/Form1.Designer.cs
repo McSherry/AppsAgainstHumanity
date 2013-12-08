@@ -33,7 +33,17 @@
             this.broadcastBtn = new System.Windows.Forms.Button();
             this.cardDeckCBox = new System.Windows.Forms.ComboBox();
             this.gameMonitorGBox = new System.Windows.Forms.GroupBox();
+            this.connectedPlayersListBox = new System.Windows.Forms.ListBox();
             this.gameConfigGBox = new System.Windows.Forms.GroupBox();
+            this.serverStatusIndicLbl = new System.Windows.Forms.Label();
+            this.serverStatusIndicRect = new System.Windows.Forms.Panel();
+            this.gameRulesetCBox = new System.Windows.Forms.ComboBox();
+            this.gameRulesetLbl = new System.Windows.Forms.Label();
+            this.serverStartBtn = new System.Windows.Forms.Button();
+            this.deckReloadBtn = new System.Windows.Forms.Button();
+            this.czarSelectCBox = new System.Windows.Forms.ComboBox();
+            this.czarSelectLbl = new System.Windows.Forms.Label();
+            this.allowChatCheckBox = new System.Windows.Forms.CheckBox();
             this.timeoutKickCheckBox = new System.Windows.Forms.CheckBox();
             this.allowGamblingCheckBox = new System.Windows.Forms.CheckBox();
             this.timeoutLimitCBox = new System.Windows.Forms.NumericUpDown();
@@ -44,16 +54,6 @@
             this.playerLimitLbl = new System.Windows.Forms.Label();
             this.gameStopBtn = new System.Windows.Forms.Button();
             this.gameStartBtn = new System.Windows.Forms.Button();
-            this.allowChatCheckBox = new System.Windows.Forms.CheckBox();
-            this.czarSelectLbl = new System.Windows.Forms.Label();
-            this.czarSelectCBox = new System.Windows.Forms.ComboBox();
-            this.deckReloadBtn = new System.Windows.Forms.Button();
-            this.connectedPlayersListBox = new System.Windows.Forms.ListBox();
-            this.serverStartBtn = new System.Windows.Forms.Button();
-            this.gameRulesetLbl = new System.Windows.Forms.Label();
-            this.gameRulesetCBox = new System.Windows.Forms.ComboBox();
-            this.serverStatusIndicRect = new System.Windows.Forms.Panel();
-            this.serverStatusIndicLbl = new System.Windows.Forms.Label();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -111,7 +111,6 @@
             this.cardDeckCBox.Location = new System.Drawing.Point(73, 23);
             this.cardDeckCBox.Name = "cardDeckCBox";
             this.cardDeckCBox.Size = new System.Drawing.Size(368, 21);
-            this.cardDeckCBox.Sorted = true;
             this.cardDeckCBox.TabIndex = 5;
             // 
             // gameMonitorGBox
@@ -126,6 +125,15 @@
             this.gameMonitorGBox.TabIndex = 6;
             this.gameMonitorGBox.TabStop = false;
             this.gameMonitorGBox.Text = "Game Monitor";
+            // 
+            // connectedPlayersListBox
+            // 
+            this.connectedPlayersListBox.FormattingEnabled = true;
+            this.connectedPlayersListBox.Location = new System.Drawing.Point(12, 19);
+            this.connectedPlayersListBox.Name = "connectedPlayersListBox";
+            this.connectedPlayersListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.connectedPlayersListBox.Size = new System.Drawing.Size(197, 147);
+            this.connectedPlayersListBox.TabIndex = 5;
             // 
             // gameConfigGBox
             // 
@@ -156,6 +164,106 @@
             this.gameConfigGBox.TabIndex = 7;
             this.gameConfigGBox.TabStop = false;
             this.gameConfigGBox.Text = "Game Configuration";
+            // 
+            // serverStatusIndicLbl
+            // 
+            this.serverStatusIndicLbl.AutoSize = true;
+            this.serverStatusIndicLbl.ForeColor = System.Drawing.Color.Red;
+            this.serverStatusIndicLbl.Location = new System.Drawing.Point(413, 132);
+            this.serverStatusIndicLbl.Name = "serverStatusIndicLbl";
+            this.serverStatusIndicLbl.Size = new System.Drawing.Size(40, 13);
+            this.serverStatusIndicLbl.TabIndex = 22;
+            this.serverStatusIndicLbl.Text = "Offline.";
+            // 
+            // serverStatusIndicRect
+            // 
+            this.serverStatusIndicRect.BackColor = System.Drawing.Color.Red;
+            this.serverStatusIndicRect.Location = new System.Drawing.Point(391, 130);
+            this.serverStatusIndicRect.Name = "serverStatusIndicRect";
+            this.serverStatusIndicRect.Size = new System.Drawing.Size(17, 17);
+            this.serverStatusIndicRect.TabIndex = 21;
+            // 
+            // gameRulesetCBox
+            // 
+            this.gameRulesetCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gameRulesetCBox.Enabled = false;
+            this.gameRulesetCBox.FormattingEnabled = true;
+            this.gameRulesetCBox.Items.AddRange(new object[] {
+            "Standard",
+            "Rebooting the Universe",
+            "Packing Heat",
+            "Rando Cardrissian",
+            "God Is Dead",
+            "Survival of the Fittest",
+            "Serious Business"});
+            this.gameRulesetCBox.Location = new System.Drawing.Point(327, 92);
+            this.gameRulesetCBox.Name = "gameRulesetCBox";
+            this.gameRulesetCBox.Size = new System.Drawing.Size(220, 21);
+            this.gameRulesetCBox.TabIndex = 20;
+            // 
+            // gameRulesetLbl
+            // 
+            this.gameRulesetLbl.AutoSize = true;
+            this.gameRulesetLbl.Location = new System.Drawing.Point(247, 96);
+            this.gameRulesetLbl.Name = "gameRulesetLbl";
+            this.gameRulesetLbl.Size = new System.Drawing.Size(74, 13);
+            this.gameRulesetLbl.TabIndex = 19;
+            this.gameRulesetLbl.Text = "Game Ruleset";
+            // 
+            // serverStartBtn
+            // 
+            this.serverStartBtn.Location = new System.Drawing.Point(391, 160);
+            this.serverStartBtn.Name = "serverStartBtn";
+            this.serverStartBtn.Size = new System.Drawing.Size(156, 23);
+            this.serverStartBtn.TabIndex = 18;
+            this.serverStartBtn.Text = "Start Server";
+            this.serverStartBtn.UseVisualStyleBackColor = true;
+            this.serverStartBtn.Click += new System.EventHandler(this.serverStartBtn_Click);
+            // 
+            // deckReloadBtn
+            // 
+            this.deckReloadBtn.Location = new System.Drawing.Point(447, 21);
+            this.deckReloadBtn.Name = "deckReloadBtn";
+            this.deckReloadBtn.Size = new System.Drawing.Size(100, 23);
+            this.deckReloadBtn.TabIndex = 17;
+            this.deckReloadBtn.Text = "Reload Decks";
+            this.deckReloadBtn.UseVisualStyleBackColor = true;
+            this.deckReloadBtn.Click += new System.EventHandler(this.deckReloadBtn_Click);
+            // 
+            // czarSelectCBox
+            // 
+            this.czarSelectCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.czarSelectCBox.Enabled = false;
+            this.czarSelectCBox.FormattingEnabled = true;
+            this.czarSelectCBox.Items.AddRange(new object[] {
+            "Sequential",
+            "Random"});
+            this.czarSelectCBox.Location = new System.Drawing.Point(115, 92);
+            this.czarSelectCBox.Name = "czarSelectCBox";
+            this.czarSelectCBox.Size = new System.Drawing.Size(121, 21);
+            this.czarSelectCBox.TabIndex = 16;
+            // 
+            // czarSelectLbl
+            // 
+            this.czarSelectLbl.AutoSize = true;
+            this.czarSelectLbl.Location = new System.Drawing.Point(9, 96);
+            this.czarSelectLbl.Name = "czarSelectLbl";
+            this.czarSelectLbl.Size = new System.Drawing.Size(100, 13);
+            this.czarSelectLbl.TabIndex = 15;
+            this.czarSelectLbl.Text = "Card Czar Selection";
+            // 
+            // allowChatCheckBox
+            // 
+            this.allowChatCheckBox.AutoSize = true;
+            this.allowChatCheckBox.Checked = true;
+            this.allowChatCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allowChatCheckBox.Enabled = false;
+            this.allowChatCheckBox.Location = new System.Drawing.Point(267, 130);
+            this.allowChatCheckBox.Name = "allowChatCheckBox";
+            this.allowChatCheckBox.Size = new System.Drawing.Size(108, 17);
+            this.allowChatCheckBox.TabIndex = 14;
+            this.allowChatCheckBox.Text = "Allow Player Chat";
+            this.allowChatCheckBox.UseVisualStyleBackColor = true;
             // 
             // timeoutKickCheckBox
             // 
@@ -299,115 +407,6 @@
             this.gameStartBtn.Text = "Start Game";
             this.gameStartBtn.UseVisualStyleBackColor = true;
             this.gameStartBtn.Click += new System.EventHandler(this.gameStartBtn_Click);
-            // 
-            // allowChatCheckBox
-            // 
-            this.allowChatCheckBox.AutoSize = true;
-            this.allowChatCheckBox.Checked = true;
-            this.allowChatCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.allowChatCheckBox.Enabled = false;
-            this.allowChatCheckBox.Location = new System.Drawing.Point(267, 130);
-            this.allowChatCheckBox.Name = "allowChatCheckBox";
-            this.allowChatCheckBox.Size = new System.Drawing.Size(108, 17);
-            this.allowChatCheckBox.TabIndex = 14;
-            this.allowChatCheckBox.Text = "Allow Player Chat";
-            this.allowChatCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // czarSelectLbl
-            // 
-            this.czarSelectLbl.AutoSize = true;
-            this.czarSelectLbl.Location = new System.Drawing.Point(9, 96);
-            this.czarSelectLbl.Name = "czarSelectLbl";
-            this.czarSelectLbl.Size = new System.Drawing.Size(100, 13);
-            this.czarSelectLbl.TabIndex = 15;
-            this.czarSelectLbl.Text = "Card Czar Selection";
-            // 
-            // czarSelectCBox
-            // 
-            this.czarSelectCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.czarSelectCBox.Enabled = false;
-            this.czarSelectCBox.FormattingEnabled = true;
-            this.czarSelectCBox.Items.AddRange(new object[] {
-            "Sequential",
-            "Random"});
-            this.czarSelectCBox.Location = new System.Drawing.Point(115, 92);
-            this.czarSelectCBox.Name = "czarSelectCBox";
-            this.czarSelectCBox.Size = new System.Drawing.Size(121, 21);
-            this.czarSelectCBox.TabIndex = 16;
-            // 
-            // deckReloadBtn
-            // 
-            this.deckReloadBtn.Location = new System.Drawing.Point(447, 21);
-            this.deckReloadBtn.Name = "deckReloadBtn";
-            this.deckReloadBtn.Size = new System.Drawing.Size(100, 23);
-            this.deckReloadBtn.TabIndex = 17;
-            this.deckReloadBtn.Text = "Reload Decks";
-            this.deckReloadBtn.UseVisualStyleBackColor = true;
-            this.deckReloadBtn.Click += new System.EventHandler(this.deckReloadBtn_Click);
-            // 
-            // connectedPlayersListBox
-            // 
-            this.connectedPlayersListBox.FormattingEnabled = true;
-            this.connectedPlayersListBox.Location = new System.Drawing.Point(12, 19);
-            this.connectedPlayersListBox.Name = "connectedPlayersListBox";
-            this.connectedPlayersListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.connectedPlayersListBox.Size = new System.Drawing.Size(197, 147);
-            this.connectedPlayersListBox.TabIndex = 5;
-            // 
-            // serverStartBtn
-            // 
-            this.serverStartBtn.Location = new System.Drawing.Point(391, 160);
-            this.serverStartBtn.Name = "serverStartBtn";
-            this.serverStartBtn.Size = new System.Drawing.Size(156, 23);
-            this.serverStartBtn.TabIndex = 18;
-            this.serverStartBtn.Text = "Start Server";
-            this.serverStartBtn.UseVisualStyleBackColor = true;
-            this.serverStartBtn.Click += new System.EventHandler(this.serverStartBtn_Click);
-            // 
-            // gameRulesetLbl
-            // 
-            this.gameRulesetLbl.AutoSize = true;
-            this.gameRulesetLbl.Location = new System.Drawing.Point(247, 96);
-            this.gameRulesetLbl.Name = "gameRulesetLbl";
-            this.gameRulesetLbl.Size = new System.Drawing.Size(74, 13);
-            this.gameRulesetLbl.TabIndex = 19;
-            this.gameRulesetLbl.Text = "Game Ruleset";
-            // 
-            // gameRulesetCBox
-            // 
-            this.gameRulesetCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.gameRulesetCBox.Enabled = false;
-            this.gameRulesetCBox.FormattingEnabled = true;
-            this.gameRulesetCBox.Items.AddRange(new object[] {
-            "Standard",
-            "Rebooting the Universe",
-            "Packing Heat",
-            "Rando Cardrissian",
-            "God Is Dead",
-            "Survival of the Fittest",
-            "Serious Business"});
-            this.gameRulesetCBox.Location = new System.Drawing.Point(327, 92);
-            this.gameRulesetCBox.Name = "gameRulesetCBox";
-            this.gameRulesetCBox.Size = new System.Drawing.Size(220, 21);
-            this.gameRulesetCBox.TabIndex = 20;
-            // 
-            // serverStatusIndicRect
-            // 
-            this.serverStatusIndicRect.BackColor = System.Drawing.Color.Red;
-            this.serverStatusIndicRect.Location = new System.Drawing.Point(391, 130);
-            this.serverStatusIndicRect.Name = "serverStatusIndicRect";
-            this.serverStatusIndicRect.Size = new System.Drawing.Size(17, 17);
-            this.serverStatusIndicRect.TabIndex = 21;
-            // 
-            // serverStatusIndicLbl
-            // 
-            this.serverStatusIndicLbl.AutoSize = true;
-            this.serverStatusIndicLbl.ForeColor = System.Drawing.Color.Red;
-            this.serverStatusIndicLbl.Location = new System.Drawing.Point(413, 132);
-            this.serverStatusIndicLbl.Name = "serverStatusIndicLbl";
-            this.serverStatusIndicLbl.Size = new System.Drawing.Size(40, 13);
-            this.serverStatusIndicLbl.TabIndex = 22;
-            this.serverStatusIndicLbl.Text = "Offline.";
             // 
             // mainForm
             // 
