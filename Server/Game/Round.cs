@@ -36,21 +36,27 @@ namespace AppsAgainstHumanity.Server.Game
         public Round(
             BlackCard blackCard,
             Dictionary<int, WhiteCard> pool,
-            List<Player> players,
             Game parent
             ) 
         {
             this.BlackCard = blackCard;
             this.WhiteCardPool = pool;
             this.RoundSeed = new Crypto.SRand();
-            this.Players = players;
+            this.Players = parent.Players;
+            this._parent = parent;
 
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
+            this.HasPlayedList = new Dictionary<Player, bool>();
 
-            foreach (Player p in players)
+            foreach (Player p in Players.ToList())
             {
                 this.HasPlayedList.Add(p, false);
 
+                this._parent.SendCommand(
+                    CsNetLib2.CommandType.BLCK,
+                    new string[1] { this.BlackCard.Text },
+                    p.ClientIdentifier
+                );
                 /* TODO:
                  * 1. Send the black card for this round to each player
                  * 2. Use NetLib wrapper's "BLCK" command.
@@ -123,12 +129,21 @@ namespace AppsAgainstHumanity.Server.Game
         {
             // TODO: REMOVE THIS PLAYER
             Player tempPlayer = new Player("REMOVE_ME", 0);
+            bool allPlayersSubmitted = false;
 
             // Players are limited in the time they have available to choose.
             // This timeout is in seconds in the parameters, so we have to multiply by 1000
             // to get it into milliseconds, Timer's accepted unit of time.
             // This timer will also be used to limit the Card Czar's choice time.
-            //Timer timeoutTimer = new Timer(this._parent.Parameters.TimeoutLimit * 1000);
+            Timer timeoutTimer = new Timer(this._parent.Parameters.TimeoutLimit * 1000);
+            timeoutTimer.Elapsed += (s, e) =>
+            {
+                allPlayersSubmitted = true;
+            };
+
+            // Wait for all players to submit cards, or until
+            // the timeout elapses.
+            while (!allPlayersSubmitted) ;
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.
