@@ -38,19 +38,25 @@ namespace AppsAgainstHumanity.Server.Game
             if (args == null) args = new string[1] { String.Empty };
             if (!_serverWrapper.SendCommand(type, args, clientID))
             {
-                Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
-                Players.Remove(remPlayer);
-                // Close the connection after refusing.
-                _server.Clients[clientID].TcpClient.Close();
-                // Remove client after disconnecting
-                _server.Clients.Remove(clientID);
-                // TODO: Uncomment these before production!
-                // Uncommented for debugging prior to cards being drawn.
-                //DrawnCards.Remove(remPlayer);
-                //_currRound.End();
+                try
+                {
+                    Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
+                    Players.Remove(remPlayer);
+                    // Close the connection after refusing.
+                    //_server.Clients[clientID].TcpClient.Close();
+                    // Remove client after disconnecting
+                    //_server.Clients.Remove(clientID);
+                    // TODO: Uncomment these before production!
+                    // Uncommented for debugging prior to cards being drawn.
+                    //DrawnCards.Remove(remPlayer);
+                    //_currRound.End();
 
-                foreach (Player p in Players.ToList())
-                    _senderCLNF(p.ClientIdentifier);
+                    foreach (Player p in Players.ToList())
+                        _senderCLNF(p.ClientIdentifier);
+                }
+                // Players.First() found no match, probably because there are no players
+                // we'll ignore it and continue.
+                catch (InvalidOperationException) { }
             }
         }
         private void SendCommand(CommandType type, string arg = null, long clientID = 0)
@@ -302,15 +308,15 @@ namespace AppsAgainstHumanity.Server.Game
             this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
-            _pingTimer = new System.Timers.Timer(1000);
+            _pingTimer = new System.Timers.Timer(5000);
             _pingTimer.Elapsed += (s, e) =>
             {
                 // Sends a PING to each player.
                 // As SendCommand wraps over the actual function and handles removals,
                 // a PING which fails to deliver will be automatically handed by the
                 // method and will have the player removed.
-                foreach (Player p in Players)
-                    SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier)
+                foreach (Player p in Players.ToList())
+                    SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
             };
             _pingTimer.Start();
 
