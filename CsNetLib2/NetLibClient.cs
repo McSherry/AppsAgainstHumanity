@@ -67,7 +67,7 @@ namespace CsNetLib2
 			try {
 				Client.GetStream().BeginWrite(buffer, 0, buffer.Length, SendCallback, null);
 				return true;
-			} catch (NullReferenceException nrex) {
+			} catch (NullReferenceException) {
 				return false;
 			} catch (InvalidOperationException) {
 				ProcessDisconnect();
