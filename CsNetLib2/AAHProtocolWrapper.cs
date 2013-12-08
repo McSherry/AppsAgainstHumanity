@@ -144,7 +144,7 @@ namespace CsNetLib2
 		public bool SendCommand(CommandType cmd, string[] args, long clientId = 0)
 		{
 			if (args == null) {
-				throw new ArgumentNullException("The the arguments parameter may not be null.");
+				args = new string[0];
 			}
 			// Remove the previous command still left in the command builder
 			CommandBuilder.Clear();

@@ -8,6 +8,8 @@ using System.Net.Sockets;
 
 namespace CsNetLib2
 {
+	public delegate void ClientDisconnected(long clientId);
+
     public class NetLibServer : ITransmittable
     {
 		private TcpListener Listener;
@@ -16,6 +18,7 @@ namespace CsNetLib2
 
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
+		public event ClientDisconnected OnClientDisconnected;
 		public byte Delimiter
 		{
 			get
@@ -51,6 +54,15 @@ namespace CsNetLib2
 			Listener = new TcpListener(localaddr, port);
 		}
 
+		private void HandleDisconnect(long clientId)
+		{
+			Console.WriteLine("Client #{0} disconnected", clientId);
+			lock (_clients) {
+				_clients[clientId].TcpClient.Close();
+				Clients.Remove(clientId);
+			}
+			if (OnClientDisconnected != null) OnClientDisconnected(clientId);
+		}
 		public void CloseClientConnection(long clientId)
 		{
 			_clients[clientId].TcpClient.Close();
@@ -59,6 +71,7 @@ namespace CsNetLib2
 
 		private void Log(string message)
 		{
+			// TODO: remove this or something or maybe add decent logging support
 		}
 
 		public void StartListening()
@@ -91,7 +104,8 @@ namespace CsNetLib2
 			try {
 				read = networkStream.EndRead(result);
 			} catch (System.IO.IOException) {
-				Console.WriteLine("Remote host closed connection.");
+				HandleDisconnect(client.ClientId);
+				return;
 			}
 			if (read == 0) {
 				lock (_clients) {
@@ -103,23 +117,26 @@ namespace CsNetLib2
 
 			try {
 				networkStream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
-			}catch(System.IO.IOException){
-				Console.WriteLine("Remote host closed connection.");
+			} catch (System.IO.IOException) {
+				HandleDisconnect(client.ClientId);
+			} catch (ObjectDisposedException) {
+				Console.WriteLine("Read callback dropped because client #{0} has disconnected.", (long)client.ClientId);
 			}
 		}
 		public bool SendBytes(byte[] buffer, long clientId)
 		{
 			buffer = Protocol.FormatData(buffer);
 			lock (_clients) {
-                try
-                {
-                    _clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
-                    return true;
-                }
-                catch (NullReferenceException)
-                {
-                    return false;
-                }
+				try {
+					_clients[clientId].NetworkStream.BeginWrite(buffer, 0, buffer.Length, SendCallback, clientId);
+					return true;
+				} catch (KeyNotFoundException) {
+					return false;
+				} catch (NullReferenceException) {
+					HandleDisconnect(clientId);
+					return false;
+				}
+					
 			}
 		}
 		public bool Send(string data, long clientId)
@@ -132,7 +149,12 @@ namespace CsNetLib2
 			try {
 				_clients[(long)ar.AsyncState].NetworkStream.EndWrite(ar);
 			} catch (NullReferenceException) {
+				HandleDisconnect((long)ar.AsyncState);
 				Console.WriteLine("Failed to send data to client: Remote host closed connection.");
+			} catch (ObjectDisposedException) {
+				Console.WriteLine("Send callback dropped because client #{0} has disconnected.", (long)ar.AsyncState);
+			} catch (KeyNotFoundException) {
+				Console.WriteLine("Send callback dropped because no client with ID {0} exists.", (long)ar.AsyncState);
 			}
 
 		}
@@ -149,11 +171,13 @@ namespace CsNetLib2
 
 			public NetworkStream NetworkStream {
 				get {
-					try {
+					//try {
 						return TcpClient.GetStream();
-					}catch(InvalidOperationException){
+					/*}catch(InvalidOperationException){
+						Console.WriteLine("I'm not sure what triggers this, please check and comment appropriately"); // Might be thrown when a client is disconnected? Maybe fire an event in that case?
+						System.Diagnostics.Debugger.Break(); // TODO: Remove these before production
 						return null;
-					}
+					}*/
 				} 
 			}
             public bool IsAvailable
