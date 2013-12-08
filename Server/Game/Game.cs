@@ -29,11 +29,12 @@ namespace AppsAgainstHumanity.Server.Game
         private AAHProtocolWrapper _serverWrapper;
         private System.Timers.Timer _pingTimer;
         private Round _currRound;
+        private Thread _gameThread;
 
         // use instead of AAHProtocolWrapper.SendCommand()
         // handles when SendCommand() returns false (e.g. player not available)
         // and removes player from dicts/lists
-        private void SendCommand(CommandType type, string[] args = null, long clientID = 0)
+        internal void SendCommand(CommandType type, string[] args = null, long clientID = 0)
         {
             if (args == null) args = new string[1] { String.Empty };
             if (!_serverWrapper.SendCommand(type, args, clientID))
@@ -59,7 +60,7 @@ namespace AppsAgainstHumanity.Server.Game
                 catch (InvalidOperationException) { }
             }
         }
-        private void SendCommand(CommandType type, string arg = null, long clientID = 0)
+        internal void SendCommand(CommandType type, string arg = null, long clientID = 0)
         {
             SendCommand(
                 type,
@@ -134,6 +135,8 @@ namespace AppsAgainstHumanity.Server.Game
                         SendCommand(CommandType.ACKN, (string[])null, sender);
                         _senderCLNF(sender);
                         _senderCLJN(sender, newPlayer);
+
+                        if (this.OnPlayerJoin != null) this.OnPlayerJoin.Invoke(newPlayer);
                     }
                     else if (!_validNick(args[0]))
                     {
@@ -216,16 +219,24 @@ namespace AppsAgainstHumanity.Server.Game
         // performs tasks required when a client leaves
         private void _handlerClientLeave(long clientID)
         {
-            lock (this)
+            Player p = Players.First(pl => pl.ClientIdentifier == clientID);
+            Players.Remove(p);
+            DrawnCards.Remove(p);
+
+            foreach (Player pl in Players.ToList())
             {
-                Player p = Players.First(pl => pl.ClientIdentifier == clientID);
-                Players.Remove(p);
-                DrawnCards.Remove(p);
-                foreach (Player pl in Players.ToList())
-                {
-                    _senderCLEX(pl.ClientIdentifier, p);
-                }
+                _senderCLEX(pl.ClientIdentifier, p);
             }
+
+            if (this.OnPlayerLeave != null) this.OnPlayerLeave.Invoke(p);
+        }
+        // handles SMSG requests received by the server
+        // these are chat requests, the server acts as a relay
+        // between clients
+        private void _handlerSMSG(long sender, string[] args)
+        {
+            Player p = Players.First(pl => pl.ClientIdentifier == sender);
+            _senderRMSG(p, args[0]);
         }
 
         // sends CLNFs to a client 
@@ -259,6 +270,38 @@ namespace AppsAgainstHumanity.Server.Game
         private void _senderCLEX(long clientID, Player exitedPlayer)
         {
             SendCommand(CommandType.CLEX, exitedPlayer.Nickname, clientID);
+        }
+        // relays the contents of SMSG to other clients in the form
+        // of an RMSG
+        private void _senderRMSG(Player sender, string message)
+        {
+            if (message.Length > 200)
+            {
+                // If message length is over 200 chars, return an error (UNRG) to the client which
+                // send the message.
+                SendCommand(CommandType.UNRG, "Messages have a 200-character limit.", sender.ClientIdentifier);
+                return;
+            }
+
+            this.OnClientMessageReceived.Invoke(sender, message);
+            foreach (Player p in Players.ToList())
+            {
+                SendCommand(CommandType.RMSG, new string[2] { sender.Nickname, message }, p.ClientIdentifier);
+            }
+        }
+        // Send a broadcast from the server to all clients. No character
+        // limit is enforced here.
+        private void _senderBDCS(string message)
+        {
+            // ensure there are actually players to send the broadcast to
+            if (Players.Count > 0)
+            {
+                foreach (Player p in Players.ToList())
+                {
+                    SendCommand(CommandType.BDCS, new string[1] { message }, p.ClientIdentifier);
+                }
+            }
+            else return;
         }
 
         /// <summary>
@@ -318,7 +361,10 @@ namespace AppsAgainstHumanity.Server.Game
                 foreach (Player p in Players.ToList())
                     SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
             };
-            _pingTimer.Start();
+            // TODO: Re-enable this at production!
+            // Pings disabled because they spam the console
+            // and this is annoying during debugging.
+            //_pingTimer.Start();
 
 
             this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
@@ -327,9 +373,34 @@ namespace AppsAgainstHumanity.Server.Game
             
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
+            _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
 
             _server.StartListening();
         }
+
+        /// <summary>
+        /// Broadcasts a message from the server to all players.
+        /// </summary>
+        /// <param name="message">The message to broadcast.</param>
+        public void Broadcast(string message)
+        {
+            _senderBDCS(message);
+        }
+
+        public delegate void ClientMessageEventHandler(Player sender, string message);
+        public delegate void PlayerEventHandler(Player p);
+        /// <summary>
+        /// Fired when a valid message is received from a client.
+        /// </summary>
+        public event ClientMessageEventHandler OnClientMessageReceived;
+        /// <summary>
+        /// Fired when a player joins the game.
+        /// </summary>
+        public event PlayerEventHandler OnPlayerJoin;
+        /// <summary>
+        /// Fired when a player leaves the game.
+        /// </summary>
+        public event PlayerEventHandler OnPlayerLeave;
 
         /// <summary>
         /// The parameters the game is currently configured to use.
@@ -357,43 +428,58 @@ namespace AppsAgainstHumanity.Server.Game
             if (!_hasStarted) _hasStarted = true;
             else throw new Exception("This game has already been started. Please create a new instance to start a new game.");
 
-            foreach (Player p in Players.ToList())
-                // Indicates that the game has started.
-                SendCommand(CommandType.GSTR, (string[])null, p.ClientIdentifier);
-
-            // Used to keep track of the Card Czar. A random number at the start of the round,
-            // then incremented by one (mod number of players) in each following round.
-            int czarCtr = _RNG.Next(Players.Count);
-            // Game loop, which will terminate once the Awesome Point limit for a single player
-            // is reached.
-            while (!_gameWon)
+            _gameThread = new Thread(() =>
             {
                 foreach (Player p in Players.ToList())
+                    // Indicates that the game has started.
+                    SendCommand(CommandType.GSTR, (string[])null, p.ClientIdentifier);
+
+                // Used to keep track of the Card Czar. A random number at the start of the round,
+                // then incremented by one (mod number of players) in each following round.
+                int czarCtr = _RNG.Next(Players.Count);
+                // Game loop, which will terminate once the Awesome Point limit for a single player
+                // is reached.
+                while (!_gameWon)
                 {
-                    // Sends the CZAR command with nickname to all players, informing them of who the
-                    // Card Czar is for this round.
-                    SendCommand(CommandType.CZAR, Players[czarCtr].Nickname, p.ClientIdentifier);
+                    foreach (Player p in Players.ToList())
+                    {
+                        // Sends the CZAR command with nickname to all players, informing them of who the
+                        // Card Czar is for this round.
+                        SendCommand(CommandType.CZAR, Players[czarCtr].Nickname, p.ClientIdentifier);
+                    }
+
+                    BlackCard roundBlack = _selectBlack();
+                    Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
+                    _currRound = new Round(roundBlack, roundPool, this);
+
+                    Player roundWinner = _currRound.Start();
+                    ++roundWinner.AwesomePoints;
+                    // TODO: Verify the above works.
+                    // Dunno if returning a player maintains the pass by reference shit
+                    // which would allow modification of that player's class.
+
+                    // Increments the Card Czar counter by one, rolling over to zero if the number goes
+                    // above the number of players. This causes Czars to be chosen sequentially. Since the
+                    // counter is out of loop, the foreach at the start of the loop will choose the player
+                    // indicated by the counter at the point below this comment.
+                    // TODO: Uncomment this!
+                    //czarCtr = ++czarCtr % Players.Count;
                 }
 
-                BlackCard roundBlack = _selectBlack();
-                Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
-                _currRound = new Round(roundBlack, roundPool, Players, this);
+                // Stop pinging, as the game is over now
+                _pingTimer.Stop();
+            });
 
-                Player roundWinner = _currRound.Start();
-                ++roundWinner.AwesomePoints;
-                // TODO: Verify the above works.
-                // Dunno if returning a player maintains the pass by reference shit
-                // which would allow modification of that player's class.
+            _gameThread.Start();
+        }
+        public void Stop()
+        {
+            _gameThread.Abort();
 
-                // Increments the Card Czar counter by one, rolling over to zero if the number goes
-                // above the number of players. This causes Czars to be chosen sequentially. Since the
-                // counter is out of loop, the foreach at the start of the loop will choose the player
-                // indicated by the counter at the point below this comment.
-                czarCtr = ++czarCtr % Players.Count;
+            foreach (Player p in Players.ToList())
+            {
+                SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
             }
-
-            // Stop pinging, as the game is over now
-            _pingTimer.Stop();
         }
     }
 }

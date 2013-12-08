@@ -94,11 +94,11 @@ namespace AppsAgainstHumanity.Server.Game
             }
             set
             {
-                if (value > 0 && value < 60)
+                if (value > 15 && value < 60)
                     _timeoutLimit = value;
-                else if (value < 0)
+                else if (value < 15)
                     throw new ArgumentException
-                    ("Timeout value cannot be less than zero.");
+                    ("Timeout value cannot be less than fifteen.");
                 else if (value > 60)
                     throw new ArgumentException
                     ("Timeout value cannot be longer than 60 seconds.");

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AGH Server")]
+[assembly: AssemblyProduct("AppsAgainstHumanity Server")]
 [assembly: AssemblyCopyright("Copyright © Liam McSherry, Johan Geluk 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
