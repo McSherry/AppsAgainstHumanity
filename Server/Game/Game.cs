@@ -27,8 +27,7 @@ namespace AppsAgainstHumanity.Server.Game
         private bool _hasStarted = false;
         private NetLibServer _server;
         private AAHProtocolWrapper _serverWrapper;
-        private Thread _gameThread = Thread.CurrentThread;
-        private Thread _pingThread;
+        private System.Timers.Timer _pingTimer;
         private Round _currRound;
 
         // use instead of AAHProtocolWrapper.SendCommand()
@@ -36,10 +35,15 @@ namespace AppsAgainstHumanity.Server.Game
         // and removes player from dicts/lists
         private void SendCommand(CommandType type, string[] args = null, long clientID = 0)
         {
+            if (args == null) args = new string[1] { String.Empty };
             if (!_serverWrapper.SendCommand(type, args, clientID))
             {
                 Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
                 Players.Remove(remPlayer);
+                // Close the connection after refusing.
+                _server.Clients[clientID].TcpClient.Close();
+                // Remove client after disconnecting
+                _server.Clients.Remove(clientID);
                 // TODO: Uncomment these before production!
                 // Uncommented for debugging prior to cards being drawn.
                 //DrawnCards.Remove(remPlayer);
@@ -53,7 +57,7 @@ namespace AppsAgainstHumanity.Server.Game
         {
             SendCommand(
                 type,
-                (arg == null ? (string[])null : new string[1] { arg }),
+                (arg == null ? new string[1] { String.Empty } : new string[1] { arg }),
                 clientID
                 );
         }
@@ -298,11 +302,23 @@ namespace AppsAgainstHumanity.Server.Game
             this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
+            _pingTimer = new System.Timers.Timer(1000);
+            _pingTimer.Elapsed += (s, e) =>
+            {
+                // Sends a PING to each player.
+                // As SendCommand wraps over the actual function and handles removals,
+                // a PING which fails to deliver will be automatically handed by the
+                // method and will have the player removed.
+                foreach (Player p in Players)
+                    SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier)
+            };
+            _pingTimer.Start();
+
+
             this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);
-
-
+            
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
 
@@ -335,27 +351,6 @@ namespace AppsAgainstHumanity.Server.Game
             if (!_hasStarted) _hasStarted = true;
             else throw new Exception("This game has already been started. Please create a new instance to start a new game.");
 
-            this._pingThread = new Thread(() =>
-            {
-                System.Timers.Timer t = new System.Timers.Timer(5000);
-                t.Elapsed += (s, e) =>
-                {
-                    foreach (Player p in Players.ToList())
-                    {
-                        try
-                        {
-                            SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
-                        }
-                        catch (NullReferenceException nrex)
-                        {
-                            _handlerClientLeave(p.ClientIdentifier);
-                        }
-                    }
-                };
-            });
-
-            _pingThread.Start();
-
             while (!_gameWon)
             {
                 BlackCard roundBlack = _selectBlack();
@@ -368,6 +363,9 @@ namespace AppsAgainstHumanity.Server.Game
                 // Dunno if returning a player maintains the pass by reference shit
                 // which would allow modification of that player's class.
             }
+
+            // Stop pinging, as the game is over now
+            _pingTimer.Stop();
         }
     }
 }
