@@ -39,8 +39,30 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.GSTR, (sender, arguments) =>
 			{
-				stl_GameStatusLabel.Text = "The game has started";
+				SetGameStatusLabel("The game has started");
 			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.BLCK, (sender, arguments) =>
+			{
+				SetBlackCard(arguments[0], int.Parse(arguments[1]));
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.WHTE, (sender, arguments) =>
+			{
+				AddCard(crl_OwnedCards, arguments[0], arguments[1]);
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RSTR, (sender, arguments) =>
+			{
+				// TODO: Handle RSTR
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
+			{
+				SetGameStatusLabel("You are the Card Czar! Wait for the other players to submit their cards, then pick the one you like best.");
+				SetSelectability(crl_OwnedCards, false);
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.PICK, (sender, arguments) =>
+			{
+				AddCard(crl_PickedCards, arguments[0], "");
+			});
+
 			// Check for any commands that got queued up while the connection form was being displayed
 			while (NetworkInterface.ClientWrapper.HasQueuedCommand) {
 				var cmd = NetworkInterface.ClientWrapper.GetNextQueuedCommand();
@@ -53,25 +75,40 @@ namespace AppsAgainstHumanityClient
 			}
 
 			InitializeComponent();
-			InitializeGame();
+		}
+
+		private void SetSelectability(CardList cl, bool selectable)
+		{
+			if (cl.InvokeRequired) {
+				Invoke(new Action<CardList, bool>(SetSelectability), cl, selectable);
+			} else {
+				cl.CanSelectCards = selectable;
+			}
+		}
+
+		private void AddCard(CardList cl, string id, string text)
+		{
+			if (cl.InvokeRequired) {
+				Invoke(new Action<CardList, string, string>(AddCard), cl, id, text);
+			} else {
+				cl.AddCard(new Card(text, id));
+			}
+		}
+
+		private void SetBlackCard(string text, int pickNum)
+		{
+			if (crd_BlackCard.InvokeRequired) {
+				Invoke(new Action<string, int>(SetBlackCard), text, pickNum);
+			} else {
+				crd_BlackCard.CardText = text;
+				crd_BlackCard.PickNum = pickNum;
+			}
 		}
 
 		private void SetGameStatusLabel(string text)
 		{
 			stl_GameStatusLabel.Text = text;
 		}
-
-		private void InitializeGame()
-		{
-			// TODO: Remove before production
-			for (int i = 0; i < 13; i++) {
-				var card = new Card(false);
-				card.Contents = SystemInformation.VerticalScrollBarWidth.ToString();
-				crl_PickedCards.AddCard(card);
-			}
-			SetGameStatusLabel("My life is hollow inside");
-		}
-
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			// TODO: Send disconnect request to server to attempt a clean disconnect

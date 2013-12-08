@@ -83,7 +83,8 @@ namespace AppsAgainstHumanityClient
 		private void ShowMainUI()
 		{
 			if (base.InvokeRequired) {
-				Invoke(new Action(ShowMainUI));
+				Action act = new Action(ShowMainUI);
+				Invoke(act);
 				return;
 			}
 			base.Hide();

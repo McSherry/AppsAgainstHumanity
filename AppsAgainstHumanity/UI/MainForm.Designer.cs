@@ -28,7 +28,7 @@
 		private void InitializeComponent()
 		{
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.crd_BlackCard = new AppsAgainstHumanityClient.Card(false);
+			this.crd_BlackCard = new AppsAgainstHumanityClient.BlackCard();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -63,7 +63,7 @@
 			// crd_BlackCard
 			// 
 			this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.crd_BlackCard.Contents = "Card contents go here";
+			this.crd_BlackCard.CardText = "Card contents go here";
 			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
 			this.crd_BlackCard.Name = "crd_BlackCard";
 			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
@@ -238,7 +238,7 @@
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.ListBox lb_Players;
-		private Card crd_BlackCard;
+		private BlackCard crd_BlackCard;
 		private CardList crl_PickedCards;
 		private CardList crl_OwnedCards;
 		private System.Windows.Forms.StatusStrip sts_GameStatus;

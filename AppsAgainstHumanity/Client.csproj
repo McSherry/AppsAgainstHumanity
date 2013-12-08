@@ -47,13 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Card.cs">
+    <Compile Include="UserControls\BlackCard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Card.Designer.cs">
+    <Compile Include="UserControls\Card.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Card.Designer.cs">
       <DependentUpon>Card.cs</DependentUpon>
     </Compile>
-    <Compile Include="CardList.cs">
+    <Compile Include="UserControls\CardList.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\ChangeNickForm.cs">
@@ -80,7 +83,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Card.resx">
+    <EmbeddedResource Include="UserControls\Card.resx">
       <DependentUpon>Card.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ChangeNickForm.resx">

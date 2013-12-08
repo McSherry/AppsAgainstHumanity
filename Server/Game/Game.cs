@@ -241,7 +241,8 @@ namespace AppsAgainstHumanity.Server.Game
         // handles PICKs from clients + fires event
         private void _handlerPICK(long sender, string[] args)
         {
-            if (OnPlayerPick != null) OnPlayerPick.Invoke(Players.First(pl => pl.ClientIdentifier == sender), 
+			// TODO: Add more robust int parsing
+			if (OnPlayerPick != null) OnPlayerPick.Invoke(Players.First(pl => pl.ClientIdentifier == sender), int.Parse(args[0]));
         }
 
         // sends CLNFs to a client 
@@ -379,7 +380,7 @@ namespace AppsAgainstHumanity.Server.Game
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
             _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
-            _serverWrapper.RegisterCommandHandler(CommandType.PICK, OnPlayerPick);
+            _serverWrapper.RegisterCommandHandler(CommandType.PICK, _handlerPICK);
 
             _server.StartListening();
         }
