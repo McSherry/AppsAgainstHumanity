@@ -77,7 +77,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <returns>Whether the nickname is valid.</returns>
         private bool _validNick(string nick)
         {
-            char[] validNickChars = 
+            char[] validNickChars =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_|".ToCharArray();
 
             bool hasEncounteredInvalid = false;
@@ -375,7 +375,7 @@ namespace AppsAgainstHumanity.Server.Game
             this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);
-            
+
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
             _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
