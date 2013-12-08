@@ -25,5 +25,12 @@ namespace AppsAgainstHumanityClient
 				Players.Add(new Player(name));
 			}
 		}
+
+		internal void RemovePlayer(string name)
+		{
+			var pred = Players.Where(p => p.Name == name);
+
+			Players.RemoveAll(p => p.Name == name);
+		}
 	}
 }

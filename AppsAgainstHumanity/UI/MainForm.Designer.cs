@@ -27,9 +27,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.crd_BlackCard = new AppsAgainstHumanityClient.Card();
+			this.crd_BlackCard = new AppsAgainstHumanityClient.Card(false);
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.crl_PickedCards = new AppsAgainstHumanityClient.CardList();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -37,13 +36,13 @@
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.lb_Players = new System.Windows.Forms.ListBox();
 			this.sts_GameStatus = new System.Windows.Forms.StatusStrip();
+			this.stl_GameStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tbx_Chat = new System.Windows.Forms.TextBox();
 			this.btn_GameAction = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.button9 = new System.Windows.Forms.Button();
 			this.tbx_ChatLog = new System.Windows.Forms.TextBox();
 			this.button1 = new System.Windows.Forms.Button();
-			this.stl_GameStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -134,6 +133,12 @@
 			this.sts_GameStatus.TabIndex = 1;
 			this.sts_GameStatus.Text = "statusStrip1";
 			// 
+			// stl_GameStatusLabel
+			// 
+			this.stl_GameStatusLabel.Name = "stl_GameStatusLabel";
+			this.stl_GameStatusLabel.Size = new System.Drawing.Size(118, 17);
+			this.stl_GameStatusLabel.Text = "toolStripStatusLabel1";
+			// 
 			// tbx_Chat
 			// 
 			this.tbx_Chat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -143,6 +148,7 @@
 			this.tbx_Chat.Size = new System.Drawing.Size(864, 20);
 			this.tbx_Chat.TabIndex = 6;
 			this.tbx_Chat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbx_Chat_KeyDown);
+			this.tbx_Chat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbx_Chat_KeyPress);
 			// 
 			// btn_GameAction
 			// 
@@ -183,7 +189,6 @@
 			this.tbx_ChatLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbx_ChatLog.Size = new System.Drawing.Size(938, 120);
 			this.tbx_ChatLog.TabIndex = 0;
-			this.tbx_ChatLog.Text = resources.GetString("tbx_ChatLog.Text");
 			// 
 			// button1
 			// 
@@ -194,12 +199,6 @@
 			this.button1.TabIndex = 10;
 			this.button1.Text = "Send";
 			this.button1.UseVisualStyleBackColor = true;
-			// 
-			// stl_GameStatusLabel
-			// 
-			this.stl_GameStatusLabel.Name = "stl_GameStatusLabel";
-			this.stl_GameStatusLabel.Size = new System.Drawing.Size(118, 17);
-			this.stl_GameStatusLabel.Text = "toolStripStatusLabel1";
 			// 
 			// MainForm
 			// 
