@@ -13,6 +13,8 @@ namespace AppsAgainstHumanityClient
 			get;
 			set;
 		}
+		public BlackCard()
+			: base() { }
 
 		public BlackCard(string text = null, string id = null, int pickNum = 0)
 			:base(text, id)

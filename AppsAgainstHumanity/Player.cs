@@ -19,10 +19,6 @@ namespace AppsAgainstHumanityClient
 		/// The player's nickname. Also used to identify the player.
 		/// </summary>
 		public string Name { get; private set; }
-		/// <summary>
-		/// True if the player is currently the Card Czar, false otherwise.
-		/// </summary>
-		public bool CardCzar { get; set; }
 
 		public Player(string name)
 		{

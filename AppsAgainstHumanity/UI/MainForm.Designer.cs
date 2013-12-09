@@ -66,6 +66,8 @@
 			this.crd_BlackCard.CardText = "Card contents go here";
 			this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
 			this.crd_BlackCard.Name = "crd_BlackCard";
+			this.crd_BlackCard.PickNum = 0;
+			this.crd_BlackCard.SelectionIndex = 0;
 			this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
 			this.crd_BlackCard.TabIndex = 0;
 			// 
@@ -82,7 +84,9 @@
 			// crl_PickedCards
 			// 
 			this.crl_PickedCards.AutoScroll = true;
+			this.crl_PickedCards.CanSelectCards = false;
 			this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
+			this.crl_PickedCards.MaxSelectNum = 0;
 			this.crl_PickedCards.Name = "crl_PickedCards";
 			this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
 			this.crl_PickedCards.TabIndex = 0;
@@ -100,7 +104,9 @@
 			// crl_OwnedCards
 			// 
 			this.crl_OwnedCards.AutoScroll = true;
+			this.crl_OwnedCards.CanSelectCards = false;
 			this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
+			this.crl_OwnedCards.MaxSelectNum = 0;
 			this.crl_OwnedCards.Name = "crl_OwnedCards";
 			this.crl_OwnedCards.Size = new System.Drawing.Size(767, 120);
 			this.crl_OwnedCards.TabIndex = 0;
@@ -158,6 +164,7 @@
 			this.btn_GameAction.TabIndex = 7;
 			this.btn_GameAction.Text = "Submit Selected";
 			this.btn_GameAction.UseVisualStyleBackColor = true;
+			this.btn_GameAction.Click += new System.EventHandler(this.btn_GameAction_Click);
 			// 
 			// button2
 			// 

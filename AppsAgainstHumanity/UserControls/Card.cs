@@ -48,7 +48,12 @@ namespace AppsAgainstHumanityClient
 			private set;
 		}
 
+		public Card()
+		{
+			InitializeComponent();
+		}
 		public Card(string text = null, string id = null)
+			:base()
 		{
 			InitializeComponent();
 			Id = id;

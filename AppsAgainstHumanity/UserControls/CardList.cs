@@ -12,7 +12,7 @@ namespace AppsAgainstHumanityClient
 	class CardList : Panel
 	{
 		private List<Card> Cards = new List<Card>();
-		private List<Card> SelectedCards = new List<Card>();
+		public List<Card> SelectedCards { get; private set; }
 		private int CardsPerRow;
 		public bool CanSelectCards { get; set; }
 		public int MaxSelectNum { get; set; }
@@ -20,6 +20,7 @@ namespace AppsAgainstHumanityClient
 		public CardList()
 			: base()
 		{
+			SelectedCards = new List<Card>();
 			base.AutoScroll = true;
 		}
 
@@ -58,6 +59,8 @@ namespace AppsAgainstHumanityClient
 
 			if (SelectedCards.Contains(card)) {
 				SelectedCards.Remove(card);
+			} else if (SelectedCards.Count == MaxSelectNum) {
+				SelectedCards.RemoveAt(0);
 			}
 			SelectedCards.Add(card);
 			card.SelectionIndex = SelectedCards.Count;

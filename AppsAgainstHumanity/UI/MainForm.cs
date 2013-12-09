@@ -16,8 +16,10 @@ namespace AppsAgainstHumanityClient
 		private NetworkInterface NetworkInterface;
 		private Game Game = new Game();
 
-		public MainForm(NetworkInterface networkInterface)
+		public MainForm(NetworkInterface networkInterface, string yourName)
 		{
+			Game.YourName = yourName;
+
 			NetworkInterface = networkInterface;
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CLNF, (sender, arguments) =>
 			{
@@ -55,8 +57,11 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
 			{
-				SetGameStatusLabel("You are the Card Czar! Wait for the other players to submit their cards, then pick the one you like best.");
-				SetSelectability(crl_OwnedCards, false);
+				if (arguments[0] == Game.YourName) {
+					SetGameStatusLabel("You are the Card Czar! Wait for the other players to submit their cards, then pick the one you like best.");
+					SetSelectability(crl_OwnedCards, false);
+				}
+				Game.CardCzar = Game.GetPlayer(arguments[0]);
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.PICK, (sender, arguments) =>
 			{
@@ -102,6 +107,7 @@ namespace AppsAgainstHumanityClient
 			} else {
 				crd_BlackCard.CardText = text;
 				crd_BlackCard.PickNum = pickNum;
+				crl_OwnedCards.MaxSelectNum = crd_BlackCard.PickNum;
 			}
 		}
 
@@ -188,6 +194,23 @@ namespace AppsAgainstHumanityClient
 			if (tbx_Chat.Text.Length == 200 && e.KeyChar != 8) {
 				e.Handled = true;
 				System.Media.SystemSounds.Beep.Play();
+			}
+		}
+
+		private void btn_GameAction_Click(object sender, EventArgs e)
+		{
+			if(crl_PickedCards.SelectedCards.Count != 0){
+				if (crl_PickedCards.SelectedCards.Count == crl_PickedCards.MaxSelectNum) {
+					foreach (var card in crl_PickedCards.SelectedCards) {
+						NetworkInterface.ClientWrapper.SendCommand(CommandType.PICK, card.Id);
+					}
+				} else {
+					MessageBox.Show(string.Format("Please pick {0} cards.", crl_PickedCards.MaxSelectNum), "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+			} else if (Game.CardCzar.Name == Game.YourName) {
+
+			} else {
+
 			}
 		}
 	}

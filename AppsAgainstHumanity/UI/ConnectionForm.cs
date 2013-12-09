@@ -90,7 +90,7 @@ namespace AppsAgainstHumanityClient
 			base.Hide();
 			// Make sure the now-hidden connection form won't process any network events anymore
 			NetworkInterface.ClientWrapper.UnregisterAllHandlers();
-			new MainForm(NetworkInterface).Show();
+			new MainForm(NetworkInterface, tbx_Nick.Text).Show();
 		}
 		private void btn_Exit_Click(object sender, EventArgs e)
 		{
