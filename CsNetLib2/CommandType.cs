@@ -27,6 +27,7 @@ namespace CsNetLib2
         WHTE,
         CZAR,
         PICK,
+        BLNK,
         CZPK,
         REVL,
         PNTS,
