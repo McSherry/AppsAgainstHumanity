@@ -185,27 +185,32 @@ namespace AppsAgainstHumanity.Server
         }
         private void gameStopBtn_Click(object sender, EventArgs e)
         {
-            game.Stop();
-            this.serverStatusIndicLbl.ForeColor = Color.Red;
-            this.serverStatusIndicLbl.Text = "Offline.";
-            this.serverStatusIndicRect.BackColor = Color.Red;
+            if (game != null)
+            {
+                if (game.HasStarted) game.Stop(stopServer: false);
+                game.Stop(stopServer: true);
 
-            #region set form elements to enabled/disabled
-            cardDeckCBox.Enabled = true;
-            deckReloadBtn.Enabled = true;
-            playerLimitBox.Enabled = true;
-            awesomePointsLimitBox.Enabled = true;
-            timeoutLimitCBox.Enabled = true;
-            // TODO: Uncomment these when implemented.
-            //czarSelectCBox.Enabled = true;
-            //gameRulesetCBox.Enabled = true;
-            //allowGamblingCheckBox.Enabled = true;
-            //allowChatCheckBox.Enabled = true;
-            //timeoutKickCheckBox.Enabled = true;
-            serverStartBtn.Enabled = true;
-            gameStartBtn.Enabled = false;
-            gameStopBtn.Enabled = false;
-            #endregion
+                this.serverStatusIndicLbl.ForeColor = Color.Red;
+                this.serverStatusIndicLbl.Text = "Offline.";
+                this.serverStatusIndicRect.BackColor = Color.Red;
+
+                #region set form elements to enabled/disabled
+                cardDeckCBox.Enabled = true;
+                deckReloadBtn.Enabled = true;
+                playerLimitBox.Enabled = true;
+                awesomePointsLimitBox.Enabled = true;
+                timeoutLimitCBox.Enabled = true;
+                // TODO: Uncomment these when implemented.
+                //czarSelectCBox.Enabled = true;
+                //gameRulesetCBox.Enabled = true;
+                //allowGamblingCheckBox.Enabled = true;
+                //allowChatCheckBox.Enabled = true;
+                //timeoutKickCheckBox.Enabled = true;
+                serverStartBtn.Enabled = true;
+                gameStartBtn.Enabled = false;
+                gameStopBtn.Enabled = false;
+                #endregion
+            }
         }
 	}
 }

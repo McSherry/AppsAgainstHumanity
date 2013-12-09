@@ -49,10 +49,17 @@ namespace AppsAgainstHumanity.Server.Game
 
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
             this.HasPlayedList = new Dictionary<Player, bool>();
+            this.PlayedCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
 
             foreach (Player p in Players.ToList())
             {
+                // If the player is this iteration is the Czar, we won't need
+                // to set up a place for them in dictionaries, as they won't
+                // be playing any cards.
+                if (p == cardCzar) continue;
                 this.HasPlayedList.Add(p, false);
+                this.PlayedCards.Add(p, new Dictionary<int, WhiteCard>());
+                //_parent.DrawnCards.Add(p, new Dictionary<int, WhiteCard>());
                 /* TODO:
                  * 1. Send the black card for this round to each player
                  * 2. Use NetLib wrapper's "BLCK" command.
@@ -92,7 +99,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The white cards played by players.
         /// </summary>
-        public Dictionary<Player, List<int>> PlayedCards { get; internal set; }
+        public Dictionary<Player, Dictionary<int, WhiteCard>> PlayedCards { get; internal set; }
 
         /// <summary>
         /// Sends a card to a given player. Randomly selected from pool.
@@ -157,6 +164,19 @@ namespace AppsAgainstHumanity.Server.Game
             foreach (Player p in Players.ToList())
             {
                 _parent.SendCommand(CommandType.RSTR, (string[])null, p.ClientIdentifier);
+                
+                // Send information regarding the number of points each player has
+                // to the player currently represented by 'p'. This includes player
+                // 'p', as the server is the only source of authoritative information.
+                foreach (Player pl in Players.ToList())
+                {
+                    _parent.SendCommand(
+                        CommandType.PNTS,
+                        new string[2] { pl.Nickname, pl.AwesomePoints.ToString() },
+                        p.ClientIdentifier
+                    );
+                }
+
                 _parent.SendCommand(
                     CommandType.BLCK,
                     new string[2] { this.BlackCard.Text, this.BlackCard.Pick.ToString() },
@@ -168,7 +188,8 @@ namespace AppsAgainstHumanity.Server.Game
             }
 
             
-            timeoutTimer.Start();
+            // TODO: UNCOMMENT ME FOR PRODUCTION!
+            //timeoutTimer.Start();
 
             // Handles a player's pick.
             // Must determine whether the card ID is valid, and
@@ -182,7 +203,7 @@ namespace AppsAgainstHumanity.Server.Game
                     {
                         // Add this card to the list of cards played by this
                         // player.
-                        PlayedCards[player].Add(id);
+                        PlayedCards[player].Add(id, _parent.DrawnCards[player][id]);
                         // Remove it from the list of cards the player currently
                         // has available to them.
                         _parent.DrawnCards[player].Remove(id);
@@ -192,12 +213,27 @@ namespace AppsAgainstHumanity.Server.Game
                         if (PlayedCards[player].Count == this.BlackCard.Pick)
                             HasPlayedList[player] = true;
 
+                        // Select every player that is not the player
+                        // sending the PICK
+                        var otherPlayers = from pl in Players.ToList()
+                                           where pl != player
+                                           select pl;
+                        foreach (Player p in otherPlayers)
+                        {
+                            // Send a BLNK to each of those players
+                            _parent.SendCommand(
+                                CommandType.BLNK,
+                                (string[])null,
+                                p.ClientIdentifier
+                            );
+                        }
+
                         System.Windows.Forms.MessageBox.Show(
                             String.Format(
                                 "Player {0} picked ID {1} ({2}).",
                                 player.Nickname,
                                 id,
-                                _parent.WhiteCardPool[id].Text
+                                PlayedCards[player].First(c => c.Key == id)
                             ));
                     }
                     else if (HasPlayedList[player])
@@ -221,6 +257,13 @@ namespace AppsAgainstHumanity.Server.Game
                         );
                     }
                 }
+
+                int falseCtr = 0;
+                foreach (KeyValuePair<Player, bool> hP in HasPlayedList.ToList())
+                {
+                    if (!hP.Value) ++falseCtr;
+                }
+                if (falseCtr == 0) allPlayersSubmitted = true;
             };
 
             // Allows PICKs to be received and handled
@@ -229,17 +272,46 @@ namespace AppsAgainstHumanity.Server.Game
             while (!allPlayersSubmitted) ;
             // Stop the timeout timer, as another will be created next round and
             // we no longer require this one.
-            timeoutTimer.Stop();
+            // TODO: UNCOMMENT ME FOR PRODUCTION
+            //timeoutTimer.Stop();
             // Removes PICK handler, so any received PICKs are now dropped.
             _parent.OnPlayerPick -= pickHandler;
 
             foreach (Player p in Players.ToList())
             {
-                //foreach (KeyValuePair<Player, KeyValuePair<int, WhiteCard>> pc in PlayedCards)
-                //{
+                List<KeyValuePair<Player, Dictionary<int, WhiteCard>>> playedCardsList = PlayedCards.ToList();
+                List<Dictionary<int, WhiteCard>> cardPairs = (from cards in playedCardsList
+                                                                select cards.Value).ToList();
 
-                //}
+                for (
+                    int rnd = _cardSelectorRNG.Next(0, cardPairs.Count);
+                    cardPairs.Count > 0;
+                    cardPairs.Remove(cardPairs[rnd]), rnd = _cardSelectorRNG.Next(0, cardPairs.Count)
+                    )
+                {
+
+
+                    IEnumerable<string[]> IDs = from card in cardPairs.ToList()[rnd]
+                                                select new string[2] { card.Key.ToString(), card.Value.Text };
+                    int lengCtr = 0;
+                    foreach (string[] sa in IDs) lengCtr += sa.Length;
+                    string[] finalIds = new string[lengCtr];
+                    lengCtr = 0;
+                    foreach (string[] sa in IDs)
+                    {
+                        sa.CopyTo(finalIds, lengCtr);
+                        lengCtr += sa.Length;
+                    }
+
+                    _parent.SendCommand(
+                        CommandType.REVL,
+                        finalIds,
+                        p.ClientIdentifier
+                    );
+                }
             }
+
+            Console.WriteLine("Break here!");
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.

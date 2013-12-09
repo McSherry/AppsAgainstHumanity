@@ -373,6 +373,7 @@ namespace AppsAgainstHumanity.Server.Game
             this.WhiteCardPool = new Dictionary<int, WhiteCard>();
             this.BlackCardPool = new List<BlackCard>();
             this.Players = new List<Player>();
+            this.DrawnCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
 
             foreach (WhiteCard wc in Parameters.Cards.WhiteCards)
             {
@@ -459,6 +460,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// The white cards currently drawn by each player.
         /// </summary>
         public Dictionary<Player, Dictionary<int, WhiteCard>> DrawnCards { get; internal set; }
+        /// <summary>
+        /// Indicates whether the game has started.
+        /// </summary>
+        public bool HasStarted { get { return _hasStarted; } }
 
         public void Start()
         {
@@ -478,7 +483,6 @@ namespace AppsAgainstHumanity.Server.Game
                 {
                     // Draw 10 white cards per player, and send them to the player. These are the
                     // 10 cards drawn at the beginning of a game.
-                    DrawnCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
                     DrawnCards.Add(p, _selectWhites(10));
                     foreach (KeyValuePair<int, WhiteCard> card in DrawnCards[p].ToList())
                         SendCommand(
@@ -496,7 +500,7 @@ namespace AppsAgainstHumanity.Server.Game
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
-                    _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
+                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
 
                     Player roundWinner = _currRound.Start();
                     ++roundWinner.AwesomePoints;
@@ -518,13 +522,22 @@ namespace AppsAgainstHumanity.Server.Game
 
             _gameThread.Start();
         }
-        public void Stop()
+        public void Stop(bool stopServer = false)
         {
-            _gameThread.Abort();
-
-            foreach (Player p in Players.ToList())
+            if (!stopServer)
             {
-                SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
+                _gameThread.Abort();
+
+                foreach (Player p in Players.ToList())
+                {
+                    SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
+                }
+            }
+            else
+            {
+                if (_hasStarted) Stop();
+                // TODO: FIX EXCEPTION WITH THIS
+                //_server.Stop();
             }
         }
     }
