@@ -55,6 +55,11 @@ namespace AppsAgainstHumanityClient
 			{
 				// TODO: Handle RSTR
 			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CLJN, (sender, arguments) =>
+			{
+				Game.Players.Add(new Player(arguments[0]));
+				UpdatePlayerList();
+			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
 			{
 				if (arguments[0] == Game.YourName) {
@@ -203,11 +208,13 @@ namespace AppsAgainstHumanityClient
 
 		private void btn_GameAction_Click(object sender, EventArgs e)
 		{
-			if(crl_PickedCards.SelectedCards.Count != 0){
-				if (crl_PickedCards.SelectedCards.Count == crl_PickedCards.MaxSelectNum) {
-					foreach (var card in crl_PickedCards.SelectedCards) {
+			if(crl_OwnedCards.SelectedCards.Count != 0){
+				if (crl_OwnedCards.SelectedCards.Count == crl_OwnedCards.MaxSelectNum) {
+					foreach (var card in crl_OwnedCards.SelectedCards) {
 						NetworkInterface.ClientWrapper.SendCommand(CommandType.PICK, card.Id);
 					}
+					btn_GameAction.Enabled = false;
+					SetGameStatusLabel("Please wait for the other players to submit their picks.");
 				} else {
 					MessageBox.Show(string.Format("Please pick {0} cards.", crl_PickedCards.MaxSelectNum), "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}

@@ -14,7 +14,18 @@ namespace AppsAgainstHumanityClient
 		private List<Card> Cards = new List<Card>();
 		public List<Card> SelectedCards { get; private set; }
 		private int CardsPerRow;
-		public bool CanSelectCards { get; set; }
+		private bool canSelectCards;
+		public bool CanSelectCards
+		{
+			get
+			{
+				return canSelectCards;
+			}
+			set
+			{
+				canSelectCards = value;
+			}
+		}
 		public int MaxSelectNum { get; set; }
 
 		public CardList()
@@ -22,6 +33,7 @@ namespace AppsAgainstHumanityClient
 		{
 			SelectedCards = new List<Card>();
 			base.AutoScroll = true;
+			CanSelectCards = true;
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
@@ -48,24 +60,31 @@ namespace AppsAgainstHumanityClient
 
 		private void RecalculateSelectionIndices()
 		{
-			for (int i = 0; i < SelectedCards.Count; i++) {
-				SelectedCards[i].SelectionIndex = i + 1;
+			for (int i = 0; i < Cards.Count; i++) {
+				Card c = Cards[i];
+				if (SelectedCards.Contains(c)) {
+					c.SelectionIndex = SelectedCards.IndexOf(c) + 1;
+					SelectedCards[c.SelectionIndex-1].BackColor = Color.FromArgb(225, 225, 255);
+				} else {
+					c.SelectionIndex = 0;
+					c.BackColor = SystemColors.ControlLightLight;
+				}
 			}
 		}
 
 		void card_Click(object sender, EventArgs e)
 		{
-			var card = (Card)sender;
-
-			if (SelectedCards.Contains(card)) {
-				SelectedCards.Remove(card);
-			} else if (SelectedCards.Count == MaxSelectNum) {
-				SelectedCards.RemoveAt(0);
+			if (CanSelectCards) {
+				var card = (Card)sender;
+				if (SelectedCards.Contains(card)) {
+					SelectedCards.Remove(card);
+				} else if (SelectedCards.Count == MaxSelectNum) {
+					SelectedCards.RemoveAt(0);
+				}
+				SelectedCards.Add(card);
+				card.SelectionIndex = SelectedCards.Count;
+				RecalculateSelectionIndices();
 			}
-			SelectedCards.Add(card);
-			card.SelectionIndex = SelectedCards.Count;
-			card.BackColor = Color.FromArgb(225, 225, 255);
-			RecalculateSelectionIndices();
 		}
 	}
 }

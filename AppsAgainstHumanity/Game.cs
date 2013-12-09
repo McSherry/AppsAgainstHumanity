@@ -42,6 +42,7 @@ namespace AppsAgainstHumanityClient
 
 		internal Player GetPlayer(string name)
 		{
+			
 			return Players.Where(p => p.Name == name).First();
 		}
 	}
