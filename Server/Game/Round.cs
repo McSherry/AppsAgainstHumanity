@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using CsNetLib2;
 
 namespace AppsAgainstHumanity.Server.Game
 {
@@ -36,13 +37,15 @@ namespace AppsAgainstHumanity.Server.Game
         public Round(
             BlackCard blackCard,
             Dictionary<int, WhiteCard> pool,
-            Game parent
+            Game parent,
+            Player cardCzar
             ) 
         {
             this.BlackCard = blackCard;
             this.WhiteCardPool = pool;
             this.RoundSeed = new Crypto.SRand();
             this._parent = parent;
+            this.CardCzar = cardCzar;
 
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
             this.HasPlayedList = new Dictionary<Player, bool>();
@@ -50,12 +53,6 @@ namespace AppsAgainstHumanity.Server.Game
             foreach (Player p in Players.ToList())
             {
                 this.HasPlayedList.Add(p, false);
-
-                this._parent.SendCommand(
-                    CsNetLib2.CommandType.BLCK,
-                    new string[1] { this.BlackCard.Text },
-                    p.ClientIdentifier
-                );
                 /* TODO:
                  * 1. Send the black card for this round to each player
                  * 2. Use NetLib wrapper's "BLCK" command.
@@ -74,6 +71,10 @@ namespace AppsAgainstHumanity.Server.Game
         {
             get { return _parent.Players; }
         }
+        /// <summary>
+        /// The Card Czar for this round.
+        /// </summary>
+        public Player CardCzar { get; private set; }
         /// <summary>
         /// The white cards available to send to players this round.
         /// </summary>
@@ -144,7 +145,7 @@ namespace AppsAgainstHumanity.Server.Game
 
                 foreach (KeyValuePair<Player, bool> pl in hasntPlayed)
                 {
-                    _parent.SendCommand(CsNetLib2.CommandType.CRTO, (string[])null, pl.Key.ClientIdentifier);
+                    _parent.SendCommand(CommandType.CRTO, (string[])null, pl.Key.ClientIdentifier);
                 }
 
                 allPlayersSubmitted = true;
@@ -155,18 +156,90 @@ namespace AppsAgainstHumanity.Server.Game
 
             foreach (Player p in Players.ToList())
             {
-                _parent.SendCommand(CsNetLib2.CommandType.RSTR, (string[])null, p.ClientIdentifier);
+                _parent.SendCommand(CommandType.RSTR, (string[])null, p.ClientIdentifier);
+                _parent.SendCommand(
+                    CommandType.BLCK,
+                    new string[2] { this.BlackCard.Text, this.BlackCard.Pick.ToString() },
+                    p.ClientIdentifier);
+                // Sends the CZAR command with nickname to all players, informing them of who the
+                // Card Czar is for this round.
+                _parent.SendCommand(CommandType.CZAR, CardCzar.Nickname, p.ClientIdentifier);
                 SendRandomCards(p);
             }
 
             
             timeoutTimer.Start();
 
+            // Handles a player's pick.
+            // Must determine whether the card ID is valid, and
+            // whether the player sending the ID actually has
+            // the card.
+            Game.PlayerCardEventHandler pickHandler = (player, ids) =>
+            {
+                foreach (int id in ids)
+                {
+                    if (_parent.DrawnCards[player].ContainsKey(id) && !HasPlayedList[player])
+                    {
+                        // Add this card to the list of cards played by this
+                        // player.
+                        PlayedCards[player].Add(id);
+                        // Remove it from the list of cards the player currently
+                        // has available to them.
+                        _parent.DrawnCards[player].Remove(id);
+                        // If the number of cards the player has played is equal to
+                        // the required amount, set the boolean indicating whether
+                        // they have completed playing cards to true.
+                        if (PlayedCards[player].Count == this.BlackCard.Pick)
+                            HasPlayedList[player] = true;
+
+                        System.Windows.Forms.MessageBox.Show(
+                            String.Format(
+                                "Player {0} picked ID {1} ({2}).",
+                                player.Nickname,
+                                id,
+                                _parent.WhiteCardPool[id].Text
+                            ));
+                    }
+                    else if (HasPlayedList[player])
+                    {
+                        _parent.SendCommand(CommandType.UNRG, "You have already played your cards.", player.ClientIdentifier);
+                    }
+                    else if (!_parent.DrawnCards[player].ContainsKey(id))
+                    {
+                        _parent.SendCommand(
+                            CommandType.UNRG,
+                            "You do not have this card, or the card you attempted to play was invalid.",
+                            player.ClientIdentifier
+                        );
+                    }
+                    else
+                    {
+                        _parent.SendCommand(
+                            CommandType.UNRG,
+                            "Unable to accept given pick.",
+                            player.ClientIdentifier
+                        );
+                    }
+                }
+            };
+
+            // Allows PICKs to be received and handled
+            _parent.OnPlayerPick += pickHandler;
             // Wait for all players to submit cards, or until the timeout elapses.
             while (!allPlayersSubmitted) ;
             // Stop the timeout timer, as another will be created next round and
             // we no longer require this one.
             timeoutTimer.Stop();
+            // Removes PICK handler, so any received PICKs are now dropped.
+            _parent.OnPlayerPick -= pickHandler;
+
+            foreach (Player p in Players.ToList())
+            {
+                //foreach (KeyValuePair<Player, KeyValuePair<int, WhiteCard>> pc in PlayedCards)
+                //{
+
+                //}
+            }
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.

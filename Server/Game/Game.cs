@@ -241,8 +241,32 @@ namespace AppsAgainstHumanity.Server.Game
         // handles PICKs from clients + fires event
         private void _handlerPICK(long sender, string[] args)
         {
-			// TODO: Add more robust int parsing
-			if (OnPlayerPick != null) OnPlayerPick.Invoke(Players.First(pl => pl.ClientIdentifier == sender), int.Parse(args[0]));
+            List<int> cardIds = new List<int>();
+
+            foreach (string s in args)
+            {
+                int cid = 0;
+                if (int.TryParse(s, out cid)) cardIds.Add(cid);
+                else
+                {
+                    SendCommand(
+                        CommandType.UNRG, 
+                        String.Format(
+                            "Malformed Card Identifier {0}.",
+                            s),
+                        sender
+                    );
+                }
+            }
+
+            if (cardIds.Count > 0)
+            {
+                if (OnPlayerPick != null) OnPlayerPick
+                    .Invoke(
+                        Players.First(pl => pl.ClientIdentifier == sender),
+                        cardIds.ToArray()
+                        );
+            }
         }
 
         // sends CLNFs to a client 
@@ -396,7 +420,7 @@ namespace AppsAgainstHumanity.Server.Game
 
         public delegate void ClientMessageEventHandler(Player sender, string message);
         public delegate void PlayerEventHandler(Player p);
-        public delegate void PlayerCardEventHandler(Player p, int cardId);
+        public delegate void PlayerCardEventHandler(Player p, int[] cardIDs);
         /// <summary>
         /// Fired when a valid message is received from a client.
         /// </summary>
@@ -450,7 +474,6 @@ namespace AppsAgainstHumanity.Server.Game
                 // Used to keep track of the Card Czar. A random number at the start of the round,
                 // then incremented by one (mod number of players) in each following round.
                 int czarCtr = _RNG.Next(Players.Count);
-
                 foreach (Player p in Players.ToList())
                 {
                     // Draw 10 white cards per player, and send them to the player. These are the
@@ -468,18 +491,12 @@ namespace AppsAgainstHumanity.Server.Game
                 // is reached.
                 while (!_gameWon)
                 {
-                    foreach (Player p in Players.ToList())
-                    {
-                        // Sends the CZAR command with nickname to all players, informing them of who the
-                        // Card Czar is for this round.
-                        SendCommand(CommandType.CZAR, Players[czarCtr].Nickname, p.ClientIdentifier);
-                    }
 
                     BlackCard roundBlack = _selectBlack();
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
-                    _currRound = new Round(roundBlack, roundPool, this);
+                    _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
 
                     Player roundWinner = _currRound.Start();
                     ++roundWinner.AwesomePoints;

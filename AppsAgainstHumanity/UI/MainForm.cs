@@ -113,7 +113,11 @@ namespace AppsAgainstHumanityClient
 
 		private void SetGameStatusLabel(string text)
 		{
-			stl_GameStatusLabel.Text = text;
+			if (sts_GameStatus.InvokeRequired) {
+				Invoke(new Action<string>(SetGameStatusLabel), text);
+			} else {
+				stl_GameStatusLabel.Text = text;
+			}
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
