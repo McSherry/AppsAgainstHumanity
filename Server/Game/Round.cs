@@ -279,30 +279,51 @@ namespace AppsAgainstHumanity.Server.Game
 
             foreach (Player p in Players.ToList())
             {
+                // These are some fucking ugly types, but we will persevere
                 List<KeyValuePair<Player, Dictionary<int, WhiteCard>>> playedCardsList = PlayedCards.ToList();
+                // Get rid of that list and key value pair, as we don't need the player for this, as
+                // nobody is to know the identity of who chose each card.
                 List<Dictionary<int, WhiteCard>> cardPairs = (from cards in playedCardsList
                                                                 select cards.Value).ToList();
 
                 for (
+                    // In order to randomise the order in which pairs of cards are sent,
+                    // we'll use our handy instance of Random to generate a random number
+                    // between 0 and the length of the list containing pairs whilst
+                    // removing pairs from said list, thus making the list smaller and
+                    // eventually ending the loop.
                     int rnd = _cardSelectorRNG.Next(0, cardPairs.Count);
                     cardPairs.Count > 0;
                     cardPairs.Remove(cardPairs[rnd]), rnd = _cardSelectorRNG.Next(0, cardPairs.Count)
                     )
                 {
 
-
+                    // This is where it gets a bit ugly.
+                    // We're going to put the ID-Text pairs into an enumerable of string arrays,
+                    // as we can easily extract these pairs using LINQ.
                     IEnumerable<string[]> IDs = from card in cardPairs.ToList()[rnd]
                                                 select new string[2] { card.Key.ToString(), card.Value.Text };
+                    // Now we have to make this enumerable of arrays on array, and to do that
+                    // we need to figure out the total length.
                     int lengCtr = 0;
+                    // This first loop finds out our length for us.
                     foreach (string[] sa in IDs) lengCtr += sa.Length;
+                    // We then use this length to define a string array which will, eventually,
+                    // contain all our bundled cards.
                     string[] finalIds = new string[lengCtr];
+                    // Might as well reuse this variable.
                     lengCtr = 0;
+                    // Similarly to the previous foreach loop, we iterate through, using lengCtr
+                    // to keep track of the length of the array. Only this time, we copy the contents
+                    // of string arrays in our enumerable in-between additions to the tracked length.
                     foreach (string[] sa in IDs)
                     {
                         sa.CopyTo(finalIds, lengCtr);
                         lengCtr += sa.Length;
                     }
 
+                    // Since this code spits out a nice string array, all that's left is to send
+                    // the REVL command to each player.
                     _parent.SendCommand(
                         CommandType.REVL,
                         finalIds,
