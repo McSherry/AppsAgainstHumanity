@@ -195,7 +195,7 @@ namespace AppsAgainstHumanity.Server.Game
             // Must determine whether the card ID is valid, and
             // whether the player sending the ID actually has
             // the card.
-            Game.PlayerCardEventHandler pickHandler = (player, ids) =>
+            Game.PlayerCardsEventHandler pickHandler = (player, ids) =>
             {
                 foreach (int id in ids)
                 {
@@ -228,13 +228,13 @@ namespace AppsAgainstHumanity.Server.Game
                             );
                         }
 
-                        System.Windows.Forms.MessageBox.Show(
-                            String.Format(
-                                "Player {0} picked ID {1} ({2}).",
-                                player.Nickname,
-                                id,
-                                PlayedCards[player].First(c => c.Key == id)
-                            ));
+                        //System.Windows.Forms.MessageBox.Show(
+                        //    String.Format(
+                        //        "Player {0} picked ID {1} ({2}).",
+                        //        player.Nickname,
+                        //        id,
+                        //        PlayedCards[player].First(c => c.Key == id)
+                        //    ));
                     }
                     else if (HasPlayedList[player])
                     {
@@ -331,6 +331,36 @@ namespace AppsAgainstHumanity.Server.Game
                     );
                 }
             }
+
+            bool cardCzarHasPicked = false;
+            Game.PlayerCardEventHandler czpkHandler = (player, cardId) =>
+            {
+                // Ensure that the player sending CZPK is actually the Card Czar.
+                if (this.CardCzar != player)
+                {
+                    // If they aren't, respond appropriately and then exit this function.
+                    _parent.SendCommand(CommandType.UNRG, "You are not the Card Czar.", player.ClientIdentifier);
+                    return;
+                }
+
+                // Select the player who played the winning card,
+                // using the card's ID to locate said player.
+                Player rWinner = this.PlayedCards.First(pl => pl.Value.ContainsKey(cardId)).Key;
+
+                foreach (Player p in Players.ToList())
+                {
+                    _parent.SendCommand(
+                        CommandType.RWIN,
+                        new string[2] { rWinner.Nickname, cardId.ToString() },
+                        p.ClientIdentifier
+                    );
+                }
+
+                // We've received the Czar's pick, so we can stop the waiting loop.
+                cardCzarHasPicked = true;
+            };
+            timeoutTimer = new Timer(_parent.Parameters.TimeoutLimit * 1000);
+
 
             Console.WriteLine("Break here!");
 
