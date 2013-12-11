@@ -418,6 +418,7 @@
             this.serverVersionLbl.Size = new System.Drawing.Size(37, 13);
             this.serverVersionLbl.TabIndex = 8;
             this.serverVersionLbl.Text = "v0.0.0";
+            this.serverVersionLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mainForm
             // 
