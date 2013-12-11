@@ -22,7 +22,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// </summary>
         private int _cardSelectorGenerate()
         {
-            return _cardSelectorRNG.Next(this.WhiteCardPool.Count);
+            return _cardSelectorRNG.Next(this.WhiteCardPool.Count - 1);
         }
         /// <summary>
         /// The game this round is a part of.
@@ -108,7 +108,7 @@ namespace AppsAgainstHumanity.Server.Game
         internal void SendRandomCards(Player p)
         {
             List<KeyValuePair<int, WhiteCard>> sendCards = new List<KeyValuePair<int, WhiteCard>>();
-            for (int i = 0; i < BlackCard.Pick; i++)
+            for (int i = 0; i < BlackCard.Draw; i++)
             {
                 // Select a single ID/Card pair using the generator
                 KeyValuePair<int, WhiteCard> wc = WhiteCardPool.ElementAt(_cardSelectorGenerate());
@@ -122,6 +122,14 @@ namespace AppsAgainstHumanity.Server.Game
                 sendCards.Add(wc);
             }
 
+            foreach (KeyValuePair<int, WhiteCard> kvp in sendCards)
+            {
+                _parent.SendCommand(
+                    CommandType.WHTE,
+                    new string[2] { kvp.Key.ToString(), kvp.Value.Text },
+                    p.ClientIdentifier
+                );
+            }
             /* TODO:
              * 1. Replace Player.Client with a wrapper over NetLib
              * 2. Send "WHTE" command to player, with the cards selected
@@ -181,6 +189,7 @@ namespace AppsAgainstHumanity.Server.Game
                     CommandType.BLCK,
                     new string[2] { this.BlackCard.Text, this.BlackCard.Pick.ToString() },
                     p.ClientIdentifier);
+
                 // Sends the CZAR command with nickname to all players, informing them of who the
                 // Card Czar is for this round.
                 _parent.SendCommand(CommandType.CZAR, CardCzar.Nickname, p.ClientIdentifier);
