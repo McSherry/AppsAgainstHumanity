@@ -435,6 +435,7 @@ namespace AppsAgainstHumanity.Server.Game
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
             _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
             _serverWrapper.RegisterCommandHandler(CommandType.PICK, _handlerPICK);
+            _serverWrapper.RegisterCommandHandler(CommandType.CZPK, _handlerCZPK);
 
             _server.StartListening();
         }
@@ -533,21 +534,33 @@ namespace AppsAgainstHumanity.Server.Game
                     BlackCard roundBlack = _selectBlack();
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
-                    Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
+                    Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Draw * Players.Count);
                      _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
 
                     Player roundWinner = _currRound.Start();
-                    ++roundWinner.AwesomePoints;
+                    if (roundWinner == null)
+                    {
+                        // Do something to indicate to other players that the
+                        // Card Czar didn't pick within the alloted time.
+                    }
+                    else
+                    {
+                        ++roundWinner.AwesomePoints;
+                    }
                     // TODO: Verify the above works.
                     // Dunno if returning a player maintains the pass by reference shit
                     // which would allow modification of that player's class.
+
+                    // Cause a 5000ms (5s) delay before the beginning of the next round.
+                    Thread.Sleep(5000);
+
 
                     // Increments the Card Czar counter by one, rolling over to zero if the number goes
                     // above the number of players. This causes Czars to be chosen sequentially. Since the
                     // counter is out of loop, the foreach at the start of the loop will choose the player
                     // indicated by the counter at the point below this comment.
                     // TODO: Uncomment this!
-                    //czarCtr = ++czarCtr % Players.Count;
+                    czarCtr = ++czarCtr % Players.Count;
                 }
 
                 // Stop pinging, as the game is over now

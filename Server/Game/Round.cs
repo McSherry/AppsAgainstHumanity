@@ -333,6 +333,7 @@ namespace AppsAgainstHumanity.Server.Game
             }
 
             bool cardCzarHasPicked = false;
+            Player roundWinner = null;
             Game.PlayerCardEventHandler czpkHandler = (player, cardId) =>
             {
                 // Ensure that the player sending CZPK is actually the Card Czar.
@@ -345,13 +346,13 @@ namespace AppsAgainstHumanity.Server.Game
 
                 // Select the player who played the winning card,
                 // using the card's ID to locate said player.
-                Player rWinner = this.PlayedCards.First(pl => pl.Value.ContainsKey(cardId)).Key;
+                roundWinner = this.PlayedCards.First(pl => pl.Value.ContainsKey(cardId)).Key;
 
                 foreach (Player p in Players.ToList())
                 {
                     _parent.SendCommand(
                         CommandType.RWIN,
-                        new string[2] { rWinner.Nickname, cardId.ToString() },
+                        new string[2] { roundWinner.Nickname, cardId.ToString() },
                         p.ClientIdentifier
                     );
                 }
@@ -359,10 +360,20 @@ namespace AppsAgainstHumanity.Server.Game
                 // We've received the Czar's pick, so we can stop the waiting loop.
                 cardCzarHasPicked = true;
             };
-            timeoutTimer = new Timer(_parent.Parameters.TimeoutLimit * 1000);
+            // Card Czars are allowed twice the time given to players to choose
+            // a card as winner. Min: 30s Max: 120s
+            Timer czarTimeout = new Timer(_parent.Parameters.TimeoutLimit * 2000);
+            czarTimeout.Elapsed += (s, e) =>
+            {
+                cardCzarHasPicked = true;
+                _parent.SendCommand(CommandType.CZTO, "You did not pick within adequate time.", CardCzar.ClientIdentifier);
+            };
 
-
-            Console.WriteLine("Break here!");
+            czarTimeout.Start();
+            _parent.OnCzarPick += czpkHandler;
+            while (!cardCzarHasPicked) ;
+            _parent.OnCzarPick -= czpkHandler;
+            czarTimeout.Stop();
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.
@@ -373,7 +384,7 @@ namespace AppsAgainstHumanity.Server.Game
              * 6. Remove all played cards from Game.DrawnCards.
              */
 
-            return tempPlayer;
+            return roundWinner;
         }
 
         /// <summary>
