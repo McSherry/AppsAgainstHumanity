@@ -268,6 +268,35 @@ namespace AppsAgainstHumanity.Server.Game
                         );
             }
         }
+        // handles CZPKs from clients + fires event
+        private void _handlerCZPK(long sender, string[] args)
+        {
+            int cardId = 0;
+
+            // If the Card ID we received from CZPK is valid,
+            // fire the event handler and transfer control to
+            // whatever has attached itself to this handler.
+            if (int.TryParse(args[0], out cardId))
+            {
+                if (OnCzarPick != null) OnCzarPick
+                    .Invoke(
+                        Players.First(pl => pl.ClientIdentifier == sender),
+                        cardId
+                    );
+            }
+            // If the ID isn't valid, response to the client which
+            // sent it with an UNRG and drop the CZPK without
+            // firing the event handler.
+            else
+            {
+                SendCommand(
+                    CommandType.UNRG,
+                    "Card identifier was malformed.",
+                    sender
+                );
+            }
+
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -373,6 +402,7 @@ namespace AppsAgainstHumanity.Server.Game
             this.WhiteCardPool = new Dictionary<int, WhiteCard>();
             this.BlackCardPool = new List<BlackCard>();
             this.Players = new List<Player>();
+            this.DrawnCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
 
             foreach (WhiteCard wc in Parameters.Cards.WhiteCards)
             {
@@ -420,7 +450,8 @@ namespace AppsAgainstHumanity.Server.Game
 
         public delegate void ClientMessageEventHandler(Player sender, string message);
         public delegate void PlayerEventHandler(Player p);
-        public delegate void PlayerCardEventHandler(Player p, int[] cardIDs);
+        public delegate void PlayerCardsEventHandler(Player p, int[] cardIDs);
+        public delegate void PlayerCardEventHandler(Player p, int cardID);
         /// <summary>
         /// Fired when a valid message is received from a client.
         /// </summary>
@@ -437,7 +468,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// Fired when a player picks a card. No checks as to whether a round is
         /// current in play, only criterion is the receival of a PICK command.
         /// </summary>
-        public event PlayerCardEventHandler OnPlayerPick;
+        public event PlayerCardsEventHandler OnPlayerPick;
+        /// <summary>
+        /// Fired when a CZPK is received.
+        /// </summary>
+        public event PlayerCardEventHandler OnCzarPick;
 
         /// <summary>
         /// The parameters the game is currently configured to use.
@@ -459,6 +494,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// The white cards currently drawn by each player.
         /// </summary>
         public Dictionary<Player, Dictionary<int, WhiteCard>> DrawnCards { get; internal set; }
+        /// <summary>
+        /// Indicates whether the game has started.
+        /// </summary>
+        public bool HasStarted { get { return _hasStarted; } }
 
         public void Start()
         {
@@ -478,7 +517,6 @@ namespace AppsAgainstHumanity.Server.Game
                 {
                     // Draw 10 white cards per player, and send them to the player. These are the
                     // 10 cards drawn at the beginning of a game.
-                    DrawnCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
                     DrawnCards.Add(p, _selectWhites(10));
                     foreach (KeyValuePair<int, WhiteCard> card in DrawnCards[p].ToList())
                         SendCommand(
@@ -496,7 +534,7 @@ namespace AppsAgainstHumanity.Server.Game
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Pick * Players.Count);
-                    _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
+                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
 
                     Player roundWinner = _currRound.Start();
                     ++roundWinner.AwesomePoints;
@@ -518,13 +556,22 @@ namespace AppsAgainstHumanity.Server.Game
 
             _gameThread.Start();
         }
-        public void Stop()
+        public void Stop(bool stopServer = false)
         {
-            _gameThread.Abort();
-
-            foreach (Player p in Players.ToList())
+            if (!stopServer)
             {
-                SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
+                _gameThread.Abort();
+
+                foreach (Player p in Players.ToList())
+                {
+                    SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
+                }
+            }
+            else
+            {
+                if (_hasStarted) Stop();
+                // TODO: FIX EXCEPTION WITH THIS
+                //_server.Stop();
             }
         }
     }

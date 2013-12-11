@@ -54,6 +54,7 @@
             this.playerLimitLbl = new System.Windows.Forms.Label();
             this.gameStopBtn = new System.Windows.Forms.Button();
             this.gameStartBtn = new System.Windows.Forms.Button();
+            this.serverVersionLbl = new System.Windows.Forms.Label();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -408,12 +409,23 @@
             this.gameStartBtn.UseVisualStyleBackColor = true;
             this.gameStartBtn.Click += new System.EventHandler(this.gameStartBtn_Click);
             // 
+            // serverVersionLbl
+            // 
+            this.serverVersionLbl.AutoSize = true;
+            this.serverVersionLbl.Enabled = false;
+            this.serverVersionLbl.Location = new System.Drawing.Point(12, 438);
+            this.serverVersionLbl.Name = "serverVersionLbl";
+            this.serverVersionLbl.Size = new System.Drawing.Size(37, 13);
+            this.serverVersionLbl.TabIndex = 8;
+            this.serverVersionLbl.Text = "v0.0.0";
+            // 
             // mainForm
             // 
             this.AcceptButton = this.broadcastBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 460);
+            this.Controls.Add(this.serverVersionLbl);
             this.Controls.Add(this.gameConfigGBox);
             this.Controls.Add(this.gameMonitorGBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -429,6 +441,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.awesomePointsLimitBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.playerLimitBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
@@ -461,6 +474,7 @@
         private System.Windows.Forms.Label gameRulesetLbl;
         private System.Windows.Forms.Label serverStatusIndicLbl;
         private System.Windows.Forms.Panel serverStatusIndicRect;
+        private System.Windows.Forms.Label serverVersionLbl;
 	}
 }
 
