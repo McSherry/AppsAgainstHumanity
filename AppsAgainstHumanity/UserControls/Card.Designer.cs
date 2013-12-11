@@ -33,11 +33,11 @@
 			// lbl_CardText
 			// 
 			this.lbl_CardText.AutoSize = true;
-			this.lbl_CardText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lbl_CardText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbl_CardText.Location = new System.Drawing.Point(2, 2);
 			this.lbl_CardText.MaximumSize = new System.Drawing.Size(116, 116);
 			this.lbl_CardText.Name = "lbl_CardText";
-			this.lbl_CardText.Size = new System.Drawing.Size(113, 40);
+			this.lbl_CardText.Size = new System.Drawing.Size(112, 32);
 			this.lbl_CardText.TabIndex = 1;
 			this.lbl_CardText.Text = "Card contents go here";
 			// 
