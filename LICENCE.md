@@ -1,8 +1,8 @@
-				Copyright 2013 (c) Johan Geluk, Liam McSherry
+   Copyright 2013 (c) Johan Geluk, Liam McSherry
 
-								Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
+   Apache License
+   Version 2.0, January 2004
+   http://www.apache.org/licenses/
 
    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
