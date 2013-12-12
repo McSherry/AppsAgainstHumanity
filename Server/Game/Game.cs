@@ -526,6 +526,11 @@ namespace AppsAgainstHumanity.Server.Game
                             p.ClientIdentifier
                         );
                 }
+
+                // A variable passed on to each new round during instantiation. Set to true for the
+                // server to deal new cards to players, false for it to refrain from doing so.
+                // Resets to true after each round is instantiated.
+                bool drawNewWhites = true;
                 // Game loop, which will terminate once the Awesome Point limit for a single player
                 // is reached.
                 while (!_gameWon)
@@ -535,13 +540,38 @@ namespace AppsAgainstHumanity.Server.Game
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Draw * Players.Count);
-                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
+                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr], drawNewWhites);
+                    // Reset whether new white cards should be drawn. Done after each round is instantiated.
+                     drawNewWhites = true;
 
                     Player roundWinner = _currRound.Start();
                     if (roundWinner == null)
                     {
-                        // Do something to indicate to other players that the
-                        // Card Czar didn't pick within the alloted time.
+                        foreach (Player p in Players.ToList())
+                        {
+                            // Inform player via broadcast that the round was skipped.
+                            SendCommand(
+                                CommandType.BDCS,
+                                "Card Czar failed to pick within given time. This round will be skipped.",
+                                p.ClientIdentifier
+                            );
+                        }
+                        // Select only the players who have played cards.
+                        foreach (KeyValuePair<Player, bool> playedPlayer in _currRound.HasPlayedList.Where(pl => pl.Value))
+                        {
+                            foreach (KeyValuePair<int, WhiteCard> kvp in _currRound.PlayedCards[playedPlayer.Key].ToList())
+                            {
+                                // Return cards to players.
+                                SendCommand(
+                                    CommandType.WHTE,
+                                    new string[2] { kvp.Key.ToString(), kvp.Value.Text.ToString() },
+                                    playedPlayer.Key.ClientIdentifier
+                                );
+                            }
+                        }
+
+                        // Stop the server from sending a new white card in the next round.
+                        drawNewWhites = false;
                     }
                     else
                     {

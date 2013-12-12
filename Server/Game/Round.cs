@@ -10,12 +10,10 @@ namespace AppsAgainstHumanity.Server.Game
 {
     public class Round
     {
-        // The round state. Values below.
-        // -1   =   Not started
-        //  0   =   Dealing white cards
-        //  1   =   Accepting white card picks from players
-        //  2   =   Accepting winner pick from czar
-        private int _gameState = -1;
+        // Whether new white cards should be given to players.
+        // May be disabled if a round is skipped and played
+        // cards are returned to players.
+        private bool _drawNewWhites;
         private Random _cardSelectorRNG;
         /// <summary>
         /// Generates a random number within the bounds of the white card pool's length.
@@ -34,11 +32,15 @@ namespace AppsAgainstHumanity.Server.Game
         /// </summary>
         /// <param name="blackCard">The black card to play this round.</param>
         /// <param name="pool">The pool of white cards to use this round.</param>
+        /// <param name="cardCzar">The player chosen as Card Czar for this round.</param>
+        /// <param name="parent">The instance of game which instantiated this round.</param>
+        /// <param name="drawNewWhites">Whether to deal new white cards to players. True by default.</param>
         public Round(
             BlackCard blackCard,
             Dictionary<int, WhiteCard> pool,
             Game parent,
-            Player cardCzar
+            Player cardCzar,
+            bool drawNewWhites = true
             ) 
         {
             this.BlackCard = blackCard;
@@ -47,6 +49,7 @@ namespace AppsAgainstHumanity.Server.Game
             this._parent = parent;
             this.CardCzar = cardCzar;
 
+            this._drawNewWhites = drawNewWhites;
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
             this.HasPlayedList = new Dictionary<Player, bool>();
             this.PlayedCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
@@ -193,7 +196,8 @@ namespace AppsAgainstHumanity.Server.Game
                 // Sends the CZAR command with nickname to all players, informing them of who the
                 // Card Czar is for this round.
                 _parent.SendCommand(CommandType.CZAR, CardCzar.Nickname, p.ClientIdentifier);
-                SendRandomCards(p);
+
+                if (_drawNewWhites) SendRandomCards(p);
             }
 
             
