@@ -547,11 +547,51 @@ namespace AppsAgainstHumanity.Server.Game
                     {
                         ++roundWinner.AwesomePoints;
                     }
-                    // TODO: Verify the above works.
-                    // Dunno if returning a player maintains the pass by reference shit
-                    // which would allow modification of that player's class.
+
+                    // Check whether a player has the number of points required to win the game.
+                    // This will result in maybeWinner being NULL if no such player exists.
+                    Player maybeWinner = Players.FirstOrDefault(pl => pl.AwesomePoints == Parameters.PointsLimit);
+                    if (maybeWinner != null)
+                    {
+                        // We've got a winner, so we no longer require this game loop.
+                        // Setting _gameWon to true will end the loop after this
+                        // iteration finishes.
+                        _gameWon = true;
+
+                        foreach (Player p in Players.ToList())
+                        {
+                            // Inform each player of the winner of the current game.
+                            SendCommand(
+                                CommandType.GWIN,
+                                maybeWinner.Nickname,
+                                p.ClientIdentifier
+                            );
+                            // Request that clients gracefully disconnect.
+                            SendCommand(
+                                CommandType.DISC,
+                                (string[])null,
+                                p.ClientIdentifier
+                            );
+                        }
+
+                        // Give clients a 2.5s grace period within which to disconnect.
+                        Thread.Sleep(2500);
+                        // After the grace period is up, we'll forcefully kill the
+                        // thread. The exact method may change in future, but this
+                        // is what we're doing for now.
+                        _gameThread.Abort();
+                    }
 
                     // Cause a 5000ms (5s) delay before the beginning of the next round.
+                    // Before the delay, inform each player of the delay via a broadcast.
+                    foreach (Player p in Players.ToList())
+                    {
+                        SendCommand(
+                            CommandType.BDCS,
+                            "The next round will begin in 5 seconds.",
+                            p.ClientIdentifier
+                        );
+                    }
                     Thread.Sleep(5000);
 
 
