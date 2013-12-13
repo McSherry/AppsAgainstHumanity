@@ -604,6 +604,8 @@ namespace AppsAgainstHumanity.Server.Game
                             );
                         }
 
+                        // Stop pinging, as the game is over now
+                        _pingTimer.Stop();
                         // Give clients a 2.5s grace period within which to disconnect.
                         Thread.Sleep(2500);
                         // After the grace period is up, we'll forcefully kill the
@@ -624,17 +626,25 @@ namespace AppsAgainstHumanity.Server.Game
                     }
                     Thread.Sleep(5000);
 
-
-                    // Increments the Card Czar counter by one, rolling over to zero if the number goes
-                    // above the number of players. This causes Czars to be chosen sequentially. Since the
-                    // counter is out of loop, the foreach at the start of the loop will choose the player
-                    // indicated by the counter at the point below this comment.
-                    // TODO: Uncomment this!
-                    czarCtr = ++czarCtr % Players.Count;
+                    // Handle the various methods of Card Czar selection available to
+                    // server administrators.
+                    switch (Parameters.CzarSelection)
+                    {
+                        default:
+                        case CzarSelection.Sequential:
+                            // Increments the Card Czar counter by one, rolling over to zero if the number goes
+                            // above the number of players. This causes Czars to be chosen sequentially. Since the
+                            // counter is out of loop, the foreach at the start of the loop will choose the player
+                            // indicated by the counter at the point below this comment.
+                            czarCtr = ++czarCtr % Players.Count;
+                            break;
+                        case CzarSelection.Random:
+                            // Generate a random number that between zero and the number of players in the server.
+                            // We have to do (Players.Count - 1) as lists/dicts/arrays are zero-based.
+                            czarCtr = _RNG.Next(0, Players.Count - 1);
+                            break;
+                    }
                 }
-
-                // Stop pinging, as the game is over now
-                _pingTimer.Stop();
             });
 
             _gameThread.Start();

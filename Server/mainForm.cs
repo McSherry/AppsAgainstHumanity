@@ -143,6 +143,7 @@ namespace AppsAgainstHumanity.Server
                 PointsLimit = int.Parse(awesomePointsLimitBox.Value.ToString()),
                 TimeoutLimit = int.Parse(timeoutLimitCBox.Value.ToString()),
                 Ruleset = (GameRuleset)gameRulesetCBox.SelectedIndex,
+                CzarSelection = (CzarSelection)czarSelectCBox.SelectedIndex,
                 AllowGambling = allowGamblingCheckBox.Checked
             };
 
