@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -83,9 +85,18 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="UserControls\Card.resx">
-      <DependentUpon>Card.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="UserControls\OldPickedCardList2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\PickedCardList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\TestCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TestCard.Designer.cs">
+      <DependentUpon>TestCard.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\ChangeNickForm.resx">
       <DependentUpon>ChangeNickForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -105,6 +116,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UserControls\Card.resx">
+      <DependentUpon>Card.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TestCard.resx">
+      <DependentUpon>TestCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -114,6 +132,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\OpenSans-Bold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

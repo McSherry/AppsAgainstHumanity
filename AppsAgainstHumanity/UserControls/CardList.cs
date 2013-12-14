@@ -11,7 +11,7 @@ namespace AppsAgainstHumanityClient
 {
 	class CardList : Panel
 	{
-		private List<Card> Cards = new List<Card>();
+		protected List<Card> Cards = new List<Card>();
 		public List<Card> SelectedCards { get; private set; }
 		private int CardsPerRow;
 		private bool canSelectCards;
@@ -33,7 +33,6 @@ namespace AppsAgainstHumanityClient
 		{
 			SelectedCards = new List<Card>();
 			base.AutoScroll = true;
-			CanSelectCards = true;
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
@@ -48,9 +47,7 @@ namespace AppsAgainstHumanityClient
 
 		public void AddCard(Card card)
 		{
-			int x = Cards.Count % CardsPerRow;
-			int y = Cards.Count / CardsPerRow;
-			card.Location = new System.Drawing.Point(x * Card.CardFullWidth, y * Card.CardFullHeight);
+			PutAt(card, Cards.Count);
 			card.Click += card_Click;
 			Cards.Add(card);
 			base.SuspendLayout();
@@ -58,7 +55,7 @@ namespace AppsAgainstHumanityClient
 			base.ResumeLayout(true);
 		}
 
-		private void RecalculateSelectionIndices()
+		protected virtual void RecalculateSelectionIndices()
 		{
 			for (int i = 0; i < Cards.Count; i++) {
 				Card c = Cards[i];
@@ -71,18 +68,49 @@ namespace AppsAgainstHumanityClient
 				}
 			}
 		}
-
-		void card_Click(object sender, EventArgs e)
+		internal void RemoveCard(Card card)
+		{
+			if (card.InvokeRequired) {
+				Invoke(new Action<Card>(RemoveCard), card);
+			} else {
+				Cards.Remove(card);
+				if(SelectedCards.Contains(card)){
+					SelectedCards.Remove(card);
+				}
+				base.SuspendLayout();
+				base.Controls.Remove(card);
+				base.ResumeLayout(true);
+			}
+			ReflowCards();
+		}
+		private void PutAt(Card card, int index)
+		{
+			int x = index % CardsPerRow;
+			int y = index / CardsPerRow;
+			card.Location = new System.Drawing.Point(x * Card.CardFullWidth, y * Card.CardFullHeight);
+		}
+		protected void ReflowCards()
+		{
+			base.SuspendLayout();
+			for (int i = 0; i < Cards.Count; i++) {
+				Card c = Cards[i];
+				PutAt(c, i);
+			}
+			base.ResumeLayout(true);
+		}
+		protected virtual void card_Click(object sender, EventArgs e)
 		{
 			if (CanSelectCards) {
 				var card = (Card)sender;
 				if (SelectedCards.Contains(card)) {
 					SelectedCards.Remove(card);
-				} else if (SelectedCards.Count == MaxSelectNum) {
-					SelectedCards.RemoveAt(0);
+				} else{
+					if (SelectedCards.Count == MaxSelectNum) {
+						SelectedCards.RemoveAt(0);
+					}
+					SelectedCards.Add(card);
+					card.SelectionIndex = SelectedCards.Count;
 				}
-				SelectedCards.Add(card);
-				card.SelectionIndex = SelectedCards.Count;
 				RecalculateSelectionIndices();
 			}
 		}

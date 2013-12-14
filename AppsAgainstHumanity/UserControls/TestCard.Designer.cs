@@ -1,6 +1,6 @@
 ﻿namespace AppsAgainstHumanityClient
 {
-	partial class Card
+	partial class TestCard
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -38,7 +38,7 @@
 			this.lbl_CardText.MaximumSize = new System.Drawing.Size(116, 116);
 			this.lbl_CardText.Name = "lbl_CardText";
 			this.lbl_CardText.Size = new System.Drawing.Size(112, 32);
-			this.lbl_CardText.TabIndex = 2;
+			this.lbl_CardText.TabIndex = 1;
 			this.lbl_CardText.Text = "Card contents go here";
 			// 
 			// Card
@@ -57,5 +57,6 @@
 		#endregion
 
 		private System.Windows.Forms.Label lbl_CardText;
+
 	}
 }

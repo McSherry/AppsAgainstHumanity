@@ -86,6 +86,7 @@ namespace CsNetLib2
 		public void Disconnect()
 		{
 			Client.Close();
+			Console.WriteLine();
 		}
 		public void SendCallback(IAsyncResult ar)
 		{

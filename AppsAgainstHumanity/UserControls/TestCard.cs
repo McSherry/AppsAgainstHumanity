@@ -10,20 +10,8 @@ using System.Windows.Forms;
 
 namespace AppsAgainstHumanityClient
 {
-	public partial class Card : UserControl
+	public partial class TestCard : UserControl
 	{
-		public Card()
-		{
-			InitializeComponent();
-		}
-		public Card(string text = null, string id = null)
-			:base()
-		{
-			InitializeComponent();
-			Id = id;
-			CardText = text;
-		}
-
 		public const int CardWidth = 120;
 		public const int CardSpacing = 6;
 		public const int CardFullWidth = CardWidth + CardSpacing;
@@ -57,9 +45,27 @@ namespace AppsAgainstHumanityClient
 			get;
 			private set;
 		}
-		public override string ToString()
+
+		public TestCard()
 		{
-			return Id + ": " + CardText;
+			InitializeComponent();
 		}
+		public TestCard(string text = null, string id = null)
+			:base()
+		{
+			InitializeComponent();
+			Id = id;
+			CardText = text;
+		}
+
+		/*private void Card_Click(object sender, EventArgs e)
+		{
+			if (Selected) {
+				BackColor = SystemColors.ControlLightLight;
+			} else if(Selectable) {
+				BackColor = Color.FromArgb(225, 225, 255);
+			}
+			Selected = !Selected;
+		}*/
 	}
 }

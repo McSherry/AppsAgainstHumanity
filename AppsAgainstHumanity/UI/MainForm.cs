@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.IO;
+using System.Drawing.Text;
 using CsNetLib2;
 
 namespace AppsAgainstHumanityClient
@@ -15,6 +17,8 @@ namespace AppsAgainstHumanityClient
 	{
 		private NetworkInterface NetworkInterface;
 		private Game Game = new Game();
+		private PrivateFontCollection PrivateFont = new PrivateFontCollection();
+		private const string Version = "100";
 
 		public MainForm(NetworkInterface networkInterface, string yourName)
 		{
@@ -49,28 +53,76 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.WHTE, (sender, arguments) =>
 			{
-				AddCard(crl_OwnedCards, arguments[0], arguments[1]);
+				AddCard(crl_OwnedCards, arguments[0], arguments[1]); // Add a white card to the player's deck
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RSTR, (sender, arguments) =>
 			{
-				// TODO: Handle RSTR
+				crl_PickedCards.Clear();
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CLJN, (sender, arguments) =>
 			{
-				Game.Players.Add(new Player(arguments[0]));
-				UpdatePlayerList();
+				Game.Players.Add(new Player(arguments[0])); // Add a new player to the Game
+				UpdatePlayerList(); // Make sure the new player shows up in the player list
+				AddChatLine("<NOTICE> " + arguments[0] + " has joined the game.");
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.BLNK, (sender, arguments) =>
+			{
+				AddCard(crl_PickedCards, "", ""); // Add a blank (upside down) card to indicate a card has been picked
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.REVL, (sender, arguments) =>
+			{
+				crl_PickedCards.RemoveBlanks();
+				//ClearPickedCardList(); // Remove all blank cards from the picked card list
+				for(int i = 0; i < arguments.Length; i++){
+					if (!crl_PickedCards.HasCardWithId(arguments[i])) {
+						AddCard(crl_PickedCards, arguments[i], arguments[++i]); // Add all revealed cards to the picked card list
+					} else {
+						i++;
+					}
+					SetGameStatusLabel("Please wait for the Card Czar to make their decision.");
+				}
+				if (Game.CardCzar.Name == Game.YourName) {
+					SetSelectability(crl_PickedCards, true); // Allow the Card Czar to select from the picked card list
+					crl_PickedCards.GroupNumber = arguments.Length / 2; // Set the group number for the picked card list so cards are selected in groups
+					crl_PickedCards.MaxSelectNum = 1; // Allow the Card Czar to only select one group at a time
+					SetGameStatusLabel("All players have submitted their choice, pick the one you like best.");
+					SetGameActionButton(true);
+				}
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
 			{
 				if (arguments[0] == Game.YourName) {
 					SetGameStatusLabel("You are the Card Czar! Wait for the other players to submit their cards, then pick the one you like best.");
-					SetSelectability(crl_OwnedCards, false);
+					SetSelectability(crl_OwnedCards, false); // Prevent the Card Czar from being able to pick from his deck
+					SetGameActionButton(false); // Prevent the Card Czar from picking a card before the white cards have been revealed
+				} else {
+					SetGameStatusLabel("The round has started. Pick the card you think fits best with the current Black Card and click 'submit selected'");
+					SetSelectability(crl_OwnedCards, true); // Make sure everybody who isn't the Card Czar can select their cards
+					SetGameActionButton(true); // Allow everybody who isn't the Card Czar to use the action button
 				}
 				Game.CardCzar = Game.GetPlayer(arguments[0]);
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.PICK, (sender, arguments) =>
 			{
 				AddCard(crl_PickedCards, arguments[0], "");
+			});
+			/*NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.META, (sender, arguments) =>
+			{
+				if (arguments.Length == 0) {
+					networkInterface.ClientWrapper.SendCommand(CommandType.META, version);
+				}
+			});*/
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RWIN, (sender, arguments) =>
+			{
+				Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
+				UpdatePlayerList();
+				AddChatLine("<NOTICE> " + arguments[0] + " wins the round!");
+				SetGameStatusLabel(arguments[0] + " has won the round. Please wait for the next round to begin.");
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.GWIN, (sender, arguments) =>
+			{
+				SetGameActionButton(false);
+				SetGameStatusLabel("The game has ended.");
 			});
 
 			// Check for any commands that got queued up while the connection form was being displayed
@@ -83,10 +135,18 @@ namespace AppsAgainstHumanityClient
 					throw new InvalidOperationException("Command type " + cmd.Type.ToString() + " was unexpected at this time.");
 				}
 			}
+			networkInterface.ClientWrapper.SendCommand(CommandType.META);
 
 			InitializeComponent();
 		}
-
+		private void SetGameActionButton(bool enabled)
+		{
+			if (btn_GameAction.InvokeRequired) {
+				Invoke(new Action<bool>(SetGameActionButton), enabled);
+			} else {
+				btn_GameAction.Enabled = enabled;
+			}
+		}
 		private void SetSelectability(CardList cl, bool selectable)
 		{
 			if (cl.InvokeRequired) {
@@ -95,7 +155,6 @@ namespace AppsAgainstHumanityClient
 				cl.CanSelectCards = selectable;
 			}
 		}
-
 		private void AddCard(CardList cl, string id, string text)
 		{
 			if (cl.InvokeRequired) {
@@ -104,7 +163,6 @@ namespace AppsAgainstHumanityClient
 				cl.AddCard(new Card(text, id));
 			}
 		}
-
 		private void SetBlackCard(string text, int pickNum)
 		{
 			if (crd_BlackCard.InvokeRequired) {
@@ -212,16 +270,35 @@ namespace AppsAgainstHumanityClient
 				if (crl_OwnedCards.SelectedCards.Count == crl_OwnedCards.MaxSelectNum) {
 					foreach (var card in crl_OwnedCards.SelectedCards) {
 						NetworkInterface.ClientWrapper.SendCommand(CommandType.PICK, card.Id);
+						AddCard(crl_PickedCards, card.Id, card.CardText);
+						crl_OwnedCards.RemoveCard(card);
 					}
-					btn_GameAction.Enabled = false;
+					SetGameActionButton(false);
 					SetGameStatusLabel("Please wait for the other players to submit their picks.");
 				} else {
 					MessageBox.Show(string.Format("Please pick {0} cards.", crl_PickedCards.MaxSelectNum), "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			} else if (Game.CardCzar.Name == Game.YourName) {
-
+				NetworkInterface.ClientWrapper.SendCommand(CommandType.CZPK, crl_PickedCards.SelectedCards.First().Id);
+				SetGameActionButton(false);
 			} else {
 
+			}
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			Stream fontStream = this.GetType().Assembly.GetManifestResourceStream("OpenSans-Bold.ttf");
+
+			byte[] fontdata = new byte[fontStream.Length];
+
+			fontStream.Read(fontdata, 0, (int)fontStream.Length);
+			fontStream.Close();
+
+			unsafe {
+				fixed (byte* pFontData = fontdata) {
+					PrivateFont.AddMemoryFont((System.IntPtr)pFontData, fontdata.Length);
+				}
 			}
 		}
 	}
