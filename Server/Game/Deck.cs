@@ -113,7 +113,7 @@ namespace AppsAgainstHumanity.Server.Game
                                 // By default, a black card allows a player to draw a single (1) card
                                 // However, some require a player draws two cards. If a black card has
                                 // the "xd" (eXtra Draw) attribute, two cards should be drawn.
-                                extraDraw ? 1 : 2
+                                extraDraw ? 2 : 1
                                 )
                             );
                     }

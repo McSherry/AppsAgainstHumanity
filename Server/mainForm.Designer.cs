@@ -234,7 +234,6 @@
             // czarSelectCBox
             // 
             this.czarSelectCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.czarSelectCBox.Enabled = false;
             this.czarSelectCBox.FormattingEnabled = true;
             this.czarSelectCBox.Items.AddRange(new object[] {
             "Sequential",

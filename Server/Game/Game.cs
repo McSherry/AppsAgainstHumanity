@@ -526,6 +526,11 @@ namespace AppsAgainstHumanity.Server.Game
                             p.ClientIdentifier
                         );
                 }
+
+                // A variable passed on to each new round during instantiation. Set to true for the
+                // server to deal new cards to players, false for it to refrain from doing so.
+                // Resets to true after each round is instantiated.
+                bool drawNewWhites = true;
                 // Game loop, which will terminate once the Awesome Point limit for a single player
                 // is reached.
                 while (!_gameWon)
@@ -535,36 +540,111 @@ namespace AppsAgainstHumanity.Server.Game
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Draw * Players.Count);
-                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr]);
+                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr], drawNewWhites);
+                    // Reset whether new white cards should be drawn. Done after each round is instantiated.
+                     drawNewWhites = true;
 
                     Player roundWinner = _currRound.Start();
                     if (roundWinner == null)
                     {
-                        // Do something to indicate to other players that the
-                        // Card Czar didn't pick within the alloted time.
+                        foreach (Player p in Players.ToList())
+                        {
+                            // Inform player via broadcast that the round was skipped.
+                            SendCommand(
+                                CommandType.BDCS,
+                                "Card Czar failed to pick within given time. This round will be skipped.",
+                                p.ClientIdentifier
+                            );
+                        }
+                        // Select only the players who have played cards.
+                        foreach (KeyValuePair<Player, bool> playedPlayer in _currRound.HasPlayedList.Where(pl => pl.Value))
+                        {
+                            foreach (KeyValuePair<int, WhiteCard> kvp in _currRound.PlayedCards[playedPlayer.Key].ToList())
+                            {
+                                // Return cards to players.
+                                SendCommand(
+                                    CommandType.WHTE,
+                                    new string[2] { kvp.Key.ToString(), kvp.Value.Text.ToString() },
+                                    playedPlayer.Key.ClientIdentifier
+                                );
+                            }
+                        }
+
+                        // Stop the server from sending a new white card in the next round.
+                        drawNewWhites = false;
                     }
                     else
                     {
                         ++roundWinner.AwesomePoints;
                     }
-                    // TODO: Verify the above works.
-                    // Dunno if returning a player maintains the pass by reference shit
-                    // which would allow modification of that player's class.
+
+                    // Check whether a player has the number of points required to win the game.
+                    // This will result in maybeWinner being NULL if no such player exists.
+                    Player maybeWinner = Players.FirstOrDefault(pl => pl.AwesomePoints == Parameters.PointsLimit);
+                    if (maybeWinner != null)
+                    {
+                        // We've got a winner, so we no longer require this game loop.
+                        // Setting _gameWon to true will end the loop after this
+                        // iteration finishes.
+                        _gameWon = true;
+
+                        foreach (Player p in Players.ToList())
+                        {
+                            // Inform each player of the winner of the current game.
+                            SendCommand(
+                                CommandType.GWIN,
+                                maybeWinner.Nickname,
+                                p.ClientIdentifier
+                            );
+                            // Request that clients gracefully disconnect.
+                            SendCommand(
+                                CommandType.DISC,
+                                (string[])null,
+                                p.ClientIdentifier
+                            );
+                        }
+
+                        // Stop pinging, as the game is over now
+                        _pingTimer.Stop();
+                        // Give clients a 2.5s grace period within which to disconnect.
+                        Thread.Sleep(2500);
+                        // After the grace period is up, we'll forcefully kill the
+                        // thread. The exact method may change in future, but this
+                        // is what we're doing for now.
+                        _gameThread.Abort();
+                    }
 
                     // Cause a 5000ms (5s) delay before the beginning of the next round.
+                    // Before the delay, inform each player of the delay via a broadcast.
+                    foreach (Player p in Players.ToList())
+                    {
+                        SendCommand(
+                            CommandType.BDCS,
+                            "The next round will begin in 5 seconds.",
+                            p.ClientIdentifier
+                        );
+                    }
                     Thread.Sleep(5000);
 
-
-                    // Increments the Card Czar counter by one, rolling over to zero if the number goes
-                    // above the number of players. This causes Czars to be chosen sequentially. Since the
-                    // counter is out of loop, the foreach at the start of the loop will choose the player
-                    // indicated by the counter at the point below this comment.
-                    // TODO: Uncomment this!
-                    czarCtr = ++czarCtr % Players.Count;
+                    // Handle the various methods of Card Czar selection available to
+                    // server administrators.
+                    switch (Parameters.CzarSelection)
+                    {
+                        default:
+                        case CzarSelection.Sequential:
+                            // Increments the Card Czar counter by one, rolling over to zero if the number goes
+                            // above the number of players. This causes Czars to be chosen sequentially. Since the
+                            // counter is out of loop, the foreach at the start of the loop will choose the player
+                            // indicated by the counter at the point below this comment.
+                            czarCtr = ++czarCtr % Players.Count;
+                            break;
+                        case CzarSelection.Random:
+                            // Generate a random number that between zero and the number of players in the server.
+                            // We have to do (Players.Count - 1) as lists/dicts/arrays are zero-based.
+                            czarCtr = _RNG.Next(0, Players.Count - 1);
+                            break;
+                    }
                 }
-
-                // Stop pinging, as the game is over now
-                _pingTimer.Stop();
             });
 
             _gameThread.Start();

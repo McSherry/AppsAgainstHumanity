@@ -53,6 +53,21 @@ namespace AppsAgainstHumanity.Server.Game
     }
 
     /// <summary>
+    /// How the server should select Card Czars each round.
+    /// </summary>
+    public enum CzarSelection
+    {
+        /// <summary>
+        /// Cycle through players in the order that they joined.
+        /// </summary>
+        Sequential = 0,
+        /// <summary>
+        /// Pick a random player each round to be the Card Czar.
+        /// </summary>
+        Random = 1
+    }
+
+    /// <summary>
     /// A class containing all the parameters for a game of Cards Against Humanity.
     /// </summary>
     public class GameParameters
@@ -61,6 +76,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// The ruleset the server should adhere to.
         /// </summary>
         public GameRuleset Ruleset { get; set; }
+        /// <summary>
+        /// How the server should select Card Czars for each round of the game.
+        /// </summary>
+        public CzarSelection CzarSelection { get; set; }
         /// <summary>
         /// The deck of cards to be used in this game.
         /// </summary>
