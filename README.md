@@ -1,4 +1,4 @@
-# Apps Against Humanity - A Free App for Horrible People
+# Apps Against Humanity <br />A Free App for Horrible People
 Apps Against Humanity (AAH) is an online version of the Cards Against Humanity (CAH) card game. It was written as a fun side project, and is intended to allow anyone to play CAH with anyone else, provided each person has a connection to the Internet.
 
 ### Licences
