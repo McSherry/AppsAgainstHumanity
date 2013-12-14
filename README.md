@@ -6,6 +6,8 @@ Apps Against Humanity is licensed under multiple licences. The code itself is li
 
 Apps Against Humanity, Copyright 2013 (c) Johan Geluk, Liam McSherry
 
+_Cards Against Humanity_ is a trademark of Cards Against Humanity, LLC. Apps Against Humanity is in no way associated.
+
 ###Contributing
 Whilst AAH is mainly a side project, some contributions are appreciated. Additional decks, such as those from _Crabs Adjust Humidity_ and others in that vein, are appreciated, as well as corrections (typos, etc) to current decks of cards.
 
