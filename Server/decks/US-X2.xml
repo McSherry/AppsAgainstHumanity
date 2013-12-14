@@ -2,9 +2,9 @@
 <deck type="1"> <!-- Card Pack = 0 | Addon Pack = 1 -->
   <!--
       Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
-      The texts herein are a reproduction of the official Cards Against Humanity game Expansion pack 1.
+      The texts herein are a reproduction of the official Cards Against Humanity - The Second Expansion pack.
   -->
-  <name>Cards Against Humanity - Expansion Pack 1</name>
+  <name>Cards Against Humanity - The Second Expansion</name>
   <count white="75" black="25"/>
   <cards>
     <white>
