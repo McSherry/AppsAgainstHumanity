@@ -66,7 +66,7 @@ namespace AppsAgainstHumanity.Server
             _fillDeckSelectBox();
             #endregion
 
-            this.serverVersionLbl.Text = Metadata.Version;
+            //this.serverVersionLbl.Text = Metadata.Version;
 		}
 
         private void _receivedMessageHandler(Player sender, string message)
