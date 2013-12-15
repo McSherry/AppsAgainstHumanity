@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1"> <!-- Card Pack = 0 | Addon Pack = 1 -->
+	<!--
+		Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+		The texts herein are a reproduction of the official Cards Against Humanity - The First Expansion pack.
+	-->
+	<name>Cards Against Humanity - The First Expansion</name>
+	<count white="100" black="22"/>
+	<cards>
+		<white>
+			<card>This guy!</card>
+			<card>Ladles.</card>
+			<card>24-hour media coverage.</card>
+			<card>A beached whale.</card>
+			<card>A big black dick.</card>
+			<card>A bloody pacifier.</card>
+			<card>A crappy little hand.</card>
+			<card>A low standard of living.</card>
+			<card>A nuanced critique.</card>
+			<card>A panty raid.</card>
+			<card>A passionate Latino lover.</card>
+			<card>A plunger to the face.</card>
+			<card>A rival dojo.</card>
+			<card>A smiling black man, a Latina businesswoman, a cool Asian, and some whites.</card>
+			<card>A web of lies.</card>
+			<card>A woman scorned.</card>
+			<card>An atomic wedgie.</card>
+			<card>Appreciative snapping.</card>
+			<card>Apologizing.</card>
+			<card>Ashton Kutcher.</card>
+			<card>Beating your wives.</card>
+			<card>Being a busy adult with many important things to do.</card>
+			<card>Being a dinosaur.</card>
+			<card>Blaxploitation.</card>
+			<card>Bosnian chicken farmers.</card>
+			<card>Breaking nip slip news.</card>
+			<card>Carnies.</card>
+			<card>Clams.</card>
+			<card>Clenched butt cheeks.</card>
+			<card>Coughing into a vagina.</card>
+			<card>Cutting.</card>
+			<card>Dancing with a broom.</card>
+			<card>Deflowering the princess.</card>
+			<card>Dorito breath.</card>
+			<card>Eating an albino.</card>
+			<card>Enormous Scandinavian women.</card>
+			<card>Fabricating statistics.</card>
+			<card>Finding a skeleton.</card>
+			<card>Gandalf.</card>
+			<card>Genetically engineered super-soldiers.</card>
+			<card>George Clooney's musk.</card>
+			<card>Getting abducted by Peter Pan.</card>
+			<card>Getting in her pants, politely.</card>
+			<card>Gladiatorial combat.</card>
+			<card>Good grammar.</card>
+			<card>Having a penis.</card>
+			<card>Hipsters.</card>
+			<card>Historical revisionism.</card>
+			<card>Insatiable bloodlust.</card>
+			<card>Jafar.</card>
+			<card>Jean-Claude Van Damme in slow motion.</card>
+			<card>Jean-Claude Van Damme.</card>
+			<card>Just the tip.</card>
+			<card>Leveling up.</card>
+			<card>Literally eating shit.</card>
+			<card>Mad hacky-sack skills.</card>
+			<card>Making the penises kiss.</card>
+			<card>Media coverage.</card>
+			<card>Medieval Times® Dinner & Tournament.</card>
+			<card>Mom.</card>
+			<card>Moral ambiguity.</card>
+			<card>My machete.</card>
+			<card>Neil Patrick Harris.</card>
+			<card>NOOOOOOOOO!!!</card>
+			<card>Nubile slave boys.</card>
+			<card>Ominous background music.</card>
+			<card>One thousand Slim Jims.</card>
+			<card>Overpowering your father.</card>
+			<card>Panty raids.</card>
+			<card>Pistol-whipping a hostage.</card>
+			<card>Quiche.</card>
+			<card>Quivering jowls.</card>
+			<card>Revenge fucking.</card>
+			<card>Ripping into a man's chest and pulling out his still-beating heart.</card>
+			<card>Ryan Gosling riding in on a white horse.</card>
+			<card>Santa Claus.</card>
+			<card>Savagely beating a mascot.</card>
+			<card>Scrotum tickling.</card>
+			<card>Sexual humiliation.</card>
+			<card>Sexy Siamese twins.</card>
+			<card>Shaft.</card>
+			<card>Slow motion.</card>
+			<card>Space muffins.</card>
+			<card>Statistically validated stereotypes.</card>
+			<card>Stockholm syndrome.</card>
+			<card>Sudden Poop Explosion Disease.</card>
+			<card>Suicidal thoughts.</card>
+			<card>Syphilitic insanity.</card>
+			<card>The boners of the elderly.</card>
+			<card>The economy.</card>
+			<card>The Fanta® girls.</card>
+			<card>The four arms of Vishnu.</card>
+			<card>The gulags.</card>
+			<card>The harsh light of day.</card>
+			<card>The hiccups.</card>
+			<card>The Ooze.</card>
+			<card>The shambling corpse of Larry King.</card>
+			<card>Tripping balls.</card>
+			<card>Words, words, words.</card>
+			<card>Zeus's sexual appetites.</card>
+		</white>
+		<black>
+			<!-- 
+				Black Attributes:
+					pick  - Number of cards, integer value.
+					xd    - Whether to draw an extra card (draw 2 cards). Implicitly false.
+			-->
+			<card pick="2">An international tribunal has found _____ guilty of _____.</card>
+			<card pick="1">And I would have gotten away with it, too, if it hadn't been for _____!</card>
+			<card pick="2">Dear Sir or Madam, We regret to inform you that the Office of _____ has denied your request for _____.</card>
+			<card pick="1">He who controls __________ controls the world.</card>
+			<card pick="1">I learned the hard way that you can't cheer up a grieving friend with _____.</card>
+			<card pick="2">In a pinch, _____ can be a suitable substitute for _____.</card>
+			<card pick="1">In his new self-produced album, Kanye West raps over the sounds of _____.</card>
+			<card pick="1">In its new tourism campaign, Detroit proudly proclaims that it has finally eliminated _____.</card>
+			<card pick="1">In Rome, there are whisperings that the Vatican has a secret room devoted to _____.</card>
+			<card pick="1">In the distant future, historians will agree that _____ marked the beginning of America's decline.</card>
+			<card pick="2">Michael Bay's new three-hour action epic pits _____ against _____.</card>
+			<card pick="1">My plan for world domination begins with __________.</card>
+			<card pick="1">This season on Man vs. Wild, Bear Grylls must survive the depths of the Amazon with only _____ and his wits.</card>
+			<card pick="1">Science will never explain the origin of __________.</card>
+			<card pick="1">The CIA now interrogates enemy agents by repeatedly subjecting them to _____.</card>
+			<card pick="1">The socialist governments of Scandinavia have declared that access to _____ is a basic human right.</card>
+			<card pick="1">What brought the orgy to a grinding halt?</card>
+			<card pick="1">What has been making life difficult at the nudist colony?</card>
+			<card pick="1">What's the gift that keeps on giving?</card>
+			<card pick="1">When all else fails, I can always masturbate to __________.</card>
+			<card pick="1">When I pooped, what came out of my butt?</card>
+		</black>
+	</cards>
+</deck>
