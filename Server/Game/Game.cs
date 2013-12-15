@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
 using CsNetLib2;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace AppsAgainstHumanity.Server.Game
 {
@@ -109,6 +112,79 @@ namespace AppsAgainstHumanity.Server.Game
             // assuming the player limit has not yet been reached.
             if (!_hasStarted)
             {
+                // Whether we've received a META response.
+                bool metaRespRec = false, continuePostMeta = false;
+                CommandHandler metaInequality = (s, e) =>
+                {
+                    // End the loop waiting for a response.
+                    metaRespRec = true;
+                    // Set continuePostMeta to false so that the
+                    // client is refused.
+                    continuePostMeta = false;
+
+                    if (e[0] == ">")
+                    {
+                        SendCommand(
+                            CommandType.REFU,
+                            "Outdated server.",
+                            sender
+                        );
+                    }
+                    else if (e[0] == "<")
+                    {
+                        SendCommand(
+                            CommandType.REFU,
+                            "Outdated client.",
+                            sender
+                        );
+                    }
+                };
+                CommandHandler metaEquality = (s, e) =>
+                {
+                    // End the loop waiting for a response.
+                    metaRespRec = true;
+                    // Allow the client to continue past META check.
+                    continuePostMeta = true;
+                };
+                // Clients are given a 1500ms (1.5s) grace period
+                // in which they can respond to a META from the server.
+                // If they fail to respond within this time, they
+                // are refused.
+                var metaWaitTimer = new System.Timers.Timer(1500);
+                metaWaitTimer.Elapsed += (s, e) =>
+                {
+                    // End the loop waiting for a response.
+                    metaRespRec = true;
+                    // Refuse the client.
+                    SendCommand(
+                        CommandType.REFU,
+                        "Failed to respond with metadata in time.",
+                        sender
+                    );
+                };
+
+                // Send request for information to client.
+                SendCommand(CommandType.META, (string[])null, sender);
+                // Add handlers to events.
+                this._OnMETAEqualVersion += metaEquality;
+                this._OnMETAInequalVersion += metaInequality;
+                // Start grace period timer.
+                metaWaitTimer.Start();
+                // Wait for a META to be received, or for the grace period
+                // to expire.
+                while (metaRespRec) ;
+                // Remove handlers from events.
+                this._OnMETAInequalVersion -= metaInequality;
+                this._OnMETAEqualVersion -= metaEquality;
+                // Stop the grace period timer.
+                metaWaitTimer.Stop();
+
+                // If the client did not respond to our request for metadata,
+                // if that metadata did not satisfy requirements, do not allow
+                // the JOIN handler to progress further, as the client has
+                // already been refused.
+                if (!continuePostMeta) return;
+
                 // If the length of this class's property Players (number of connected players)
                 // is equal to the maximum number specified in the parameters, refuse the connection
                 // with the limit-reached message.
@@ -297,6 +373,110 @@ namespace AppsAgainstHumanity.Server.Game
             }
 
         }
+        // handles METAs from clients
+        private void _handlerMETA(long sender, string[] args)
+        {
+            // determine whether META has been sent with or without parameters.
+            if (String.IsNullOrEmpty(args[0]) || String.IsNullOrWhiteSpace(args[0]))
+            {
+                // Construct an XML document containing all the metadata we're
+                // going to send to the client. XDocument is a fairly friendly,
+                // if a little ugly, way of doing it, so we'll use it.
+                XDocument metaResp = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement(
+                        "meta",
+                        new XElement(
+                            "version",
+                            Metadata.VersionIdentifier
+                        ),
+                        new XElement(
+                            "playermax",
+                            Parameters.Players
+                        ),
+                        new XElement(
+                            "players",
+                            this.Players.Count
+                        ),
+                        new XElement(
+                            "ruleset",
+                            (int)Parameters.Ruleset
+                        ),
+                        new XElement(
+                            "aplimit",
+                            Parameters.PointsLimit
+                        ),
+                        new XElement(
+                            "timeout",
+                            Parameters.TimeoutLimit
+                        )
+                    )
+                );
+
+                // Respond with the XML generated from the above, encoded into Base64.
+                SendCommand(
+                    CommandType.META,
+                    new string[1] { Convert.ToBase64String(Encoding.UTF8.GetBytes(metaResp.ToString())) },
+                    sender
+                );
+            }
+            else
+            {
+                int clientVersID;
+                // Attempt to parse the version ID sent by the client into an integer.
+                if (int.TryParse(args[0], out clientVersID))
+                {
+                    // The client's patch number.
+                    int clientPatch = (clientVersID % 100);
+                    // The client's version number without the patch number.
+                    int clientVerSansPatch = clientVersID - clientPatch;
+                    // The server's version number without the patch number.
+                    int serverVerSansPatch = Metadata.VersionIdentifier - Metadata.PatchVersion;
+
+                    if (clientVerSansPatch > serverVerSansPatch)
+                    {
+                        // If the server and client's version identifiers, excluding patch number,
+                        // do not match, fire the inequal event handler.
+                        if (_OnMETAInequalVersion != null) _OnMETAInequalVersion.Invoke(sender, new string[1] { ">" });
+                    }
+                    else if (clientVerSansPatch < serverVerSansPatch)
+                    {
+                        // If the server and client's version identifiers, excluding patch number,
+                        // do not match, fire the inequal event handler.
+                        if (_OnMETAInequalVersion != null) _OnMETAInequalVersion.Invoke(sender, new string[1] { "<" });
+                    }
+                    else
+                    {
+                        // If they do match, fire the equal event handler.
+                        if (_OnMETAEqualVersion != null) _OnMETAEqualVersion.Invoke(sender, args);
+                    }
+
+                    /*if (clientVerSansPatch > serverVerSansPatch)
+                    {
+                        SendCommand(
+                            CommandType.REFU,
+                            "Outdated server.",
+                            sender
+                        );
+                    }
+                    else if (clientVerSansPatch < serverVerSansPatch)
+                    {
+                        SendCommand(
+                            CommandType.REFU,
+                            "Outdated client.",
+                            sender
+                        );
+                    }
+                    else
+                    {
+                        // If the client's major and minor versions match the
+                        // server's, fire the event handler for it. If not.
+                        if (_OnMETAEqualVersion != null)
+                            _OnMETAEqualVersion.Invoke(sender, args);
+                    }*/
+                }
+            }
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -448,7 +628,7 @@ namespace AppsAgainstHumanity.Server.Game
         {
             _senderBDCS(message);
         }
-
+        
         public delegate void ClientMessageEventHandler(Player sender, string message);
         public delegate void PlayerEventHandler(Player p);
         public delegate void PlayerCardsEventHandler(Player p, int[] cardIDs);
@@ -474,6 +654,17 @@ namespace AppsAgainstHumanity.Server.Game
         /// Fired when a CZPK is received.
         /// </summary>
         public event PlayerCardEventHandler OnCzarPick;
+
+        /// <summary>
+        /// Fired when a client sends a META command and has a version
+        /// identifier equal to that of the server.
+        /// </summary>
+        private event CommandHandler _OnMETAEqualVersion;
+        /// <summary>
+        /// Fired when a client sends a META command and has a version
+        /// identifier inequal to that of the server.
+        /// </summary>
+        private event CommandHandler _OnMETAInequalVersion;
 
         /// <summary>
         /// The parameters the game is currently configured to use.

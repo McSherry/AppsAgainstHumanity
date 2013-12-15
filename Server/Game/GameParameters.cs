@@ -14,7 +14,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The basic Cards Against Humanity ruleset without any modification.
         /// </summary>
-        Basic,
+        Basic = 0,
 
         // ONLY BASIC WILL BE SUPPORTED INITIALLY
         // FURTHER RULESETS MAY BE SUPPORTED IN FUTURE
@@ -23,33 +23,33 @@ namespace AppsAgainstHumanity.Server.Game
         /// At any time, players may trade in an Awesome Point to return as many White Cards
         /// as they'd like to the deck and draw back up to ten.
         /// </summary>
-        RebootingTheUniverse,
+        RebootingTheUniverse = 1,
         /// <summary>
         /// For all "Pick 2" cards, players draw an extra white card before playing their hands.
         /// </summary>
-        PackingHeat,
+        PackingHeat = 2,
         /// <summary>
         /// In every round, an additional white card, beloning to an imaginary player, is thrown
         /// into the mix. If this imaginary player wins, all other players enter into a state of
         /// everlasting shame.
         /// </summary>
-        RandoCandrissian,
+        RandoCandrissian = 3,
         /// <summary>
         /// Play without a Card Czar. Each player picks his or her favourite card each round, and
         /// the card with the most votes at the end of the round wins.
         /// </summary>
-        GodIsDead,
+        GodIsDead = 4,
         /// <summary>
         /// After everyone has played a card, players take turns eliminating one card from the set.
         /// The card left at the end of these eliminations is the winner.
         /// </summary>
-        SurvivalOfTheFittest,
+        SurvivalOfTheFittest = 5,
         /// <summary>
         /// Instead of picking a favourite card, the Card Czar selects three cards and ranks them
         /// from first to third. The first cards receives 3 Awesome Points, the second 2, and the
         /// third 1.
         /// </summary>
-        SeriousBusiness
+        SeriousBusiness = 6
     }
 
     /// <summary>

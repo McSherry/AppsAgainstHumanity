@@ -290,7 +290,7 @@
             // timeoutLimitCBox
             // 
             this.timeoutLimitCBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.timeoutLimitCBox.Location = new System.Drawing.Point(440, 61);
+            this.timeoutLimitCBox.Location = new System.Drawing.Point(381, 58);
             this.timeoutLimitCBox.Maximum = new decimal(new int[] {
             60,
             0,
@@ -314,7 +314,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(360, 63);
+            this.label1.Location = new System.Drawing.Point(301, 62);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(74, 13);
             this.label1.TabIndex = 10;
@@ -323,7 +323,7 @@
             // awesomePointsLimitBox
             // 
             this.awesomePointsLimitBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.awesomePointsLimitBox.Location = new System.Drawing.Point(288, 59);
+            this.awesomePointsLimitBox.Location = new System.Drawing.Point(246, 58);
             this.awesomePointsLimitBox.Maximum = new decimal(new int[] {
             10,
             0,
@@ -347,7 +347,7 @@
             // pointLimitLbl
             // 
             this.pointLimitLbl.AutoSize = true;
-            this.pointLimitLbl.Location = new System.Drawing.Point(173, 63);
+            this.pointLimitLbl.Location = new System.Drawing.Point(131, 62);
             this.pointLimitLbl.Name = "pointLimitLbl";
             this.pointLimitLbl.Size = new System.Drawing.Size(109, 13);
             this.pointLimitLbl.TabIndex = 8;
@@ -356,7 +356,7 @@
             // playerLimitBox
             // 
             this.playerLimitBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.playerLimitBox.Location = new System.Drawing.Point(115, 59);
+            this.playerLimitBox.Location = new System.Drawing.Point(85, 59);
             this.playerLimitBox.Maximum = new decimal(new int[] {
             5,
             0,
@@ -380,7 +380,7 @@
             // playerLimitLbl
             // 
             this.playerLimitLbl.AutoSize = true;
-            this.playerLimitLbl.Location = new System.Drawing.Point(49, 63);
+            this.playerLimitLbl.Location = new System.Drawing.Point(19, 62);
             this.playerLimitLbl.Name = "playerLimitLbl";
             this.playerLimitLbl.Size = new System.Drawing.Size(60, 13);
             this.playerLimitLbl.TabIndex = 6;

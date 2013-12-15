@@ -388,11 +388,12 @@ namespace AppsAgainstHumanity.Server.Game
                 _parent.SendCommand(CommandType.CZTO, "You did not pick within adequate time.", CardCzar.ClientIdentifier);
             };
 
-            czarTimeout.Start();
+            // TODO: Uncomment me and my Stop() call for production!
+            //czarTimeout.Start();
             _parent.OnCzarPick += czpkHandler;
             while (!cardCzarHasPicked) ;
             _parent.OnCzarPick -= czpkHandler;
-            czarTimeout.Stop();
+            //czarTimeout.Stop();
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.
