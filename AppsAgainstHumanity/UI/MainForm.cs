@@ -42,6 +42,7 @@ namespace AppsAgainstHumanityClient
 			{
 				Game.RemovePlayer(arguments[0]);
 				UpdatePlayerList();
+				AddChatLine("<NOTICE> " + arguments[0] + " has left the game.");
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.GSTR, (sender, arguments) =>
 			{
@@ -135,7 +136,8 @@ namespace AppsAgainstHumanityClient
 					throw new InvalidOperationException("Command type " + cmd.Type.ToString() + " was unexpected at this time.");
 				}
 			}
-			networkInterface.ClientWrapper.SendCommand(CommandType.META);
+			// TODO: Send this once the server implements it
+			//networkInterface.ClientWrapper.SendCommand(CommandType.META);
 
 			InitializeComponent();
 		}
@@ -185,7 +187,17 @@ namespace AppsAgainstHumanityClient
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			// TODO: Send disconnect request to server to attempt a clean disconnect
-			//NetworkInterface.ClientWrapper.SendCommand(CommandTyp
+			NetworkInterface.ClientWrapper.SendCommand(CommandType.DISC);
+			bool received = false;
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.DISC, (sender, arguments) =>
+			{
+				received = true;
+			});
+			int waitTime = 0;
+			while (!received && waitTime < 1000) { // Wait for the server to confirm a DISC, but don't wait longer than one second.
+				System.Threading.Thread.Sleep(20);
+				waitTime += 20;
+			}
 			base.OnClosing(e);
 		}
 

@@ -136,6 +136,10 @@ namespace CsNetLib2
 		{
 			return SendCommand(cmd, new string[0], clientId);
 		}
+		public bool SendCommand(CommandType cmd)
+		{
+			return SendCommand(cmd, new string[0], 0);
+		}
 
 		/// <summary>
 		/// Sends a command to the specified client. If the wrapped ITransmittable is a client,  the clientId variable is discarded.
