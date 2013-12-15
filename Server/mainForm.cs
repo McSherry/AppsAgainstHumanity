@@ -190,8 +190,7 @@ namespace AppsAgainstHumanity.Server
         {
             if (game != null)
             {
-                if (game.HasStarted) game.Stop(stopServer: false);
-                game.Stop(stopServer: true);
+                game.Stop();
 
                 this.serverStatusIndicLbl.ForeColor = Color.Red;
                 this.serverStatusIndicLbl.Text = "Offline.";
@@ -214,6 +213,12 @@ namespace AppsAgainstHumanity.Server
                 gameStopBtn.Enabled = false;
                 #endregion
             }
+        }
+
+        private void expansionPackButtons_Click(object sender, EventArgs e)
+        {
+            expansionPackForm epf = new expansionPackForm();
+            epf.ShowDialog(this);
         }
 	}
 }

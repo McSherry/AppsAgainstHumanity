@@ -59,73 +59,71 @@ namespace AppsAgainstHumanity.Server.Game
             _xmd = new XmlDocument();
             _xmd.LoadXml(deckXml);
 
-            this.WhiteCards = new List<WhiteCard>(int.Parse(_xmd.SelectNodes("/deck/count").Item(0).Attributes["white"].Value));
-            this.BlackCards = new List<BlackCard>(int.Parse(_xmd.SelectNodes("/deck/count").Item(0).Attributes["black"].Value));
+            XmlNode countNode = _xmd.SelectSingleNode("/deck/count");
+            this.WhiteCards = new List<WhiteCard>(int.Parse(countNode.Attributes["white"].Value));
+            this.BlackCards = new List<BlackCard>(int.Parse(countNode.Attributes["black"].Value));
 
             try
             {
                 if (_determinePackType() == PackType.Addon)
-                    throw new FormatException
-                    ("The provided XML document represents an addon pack and not a main card pack.");
+                {
+                    this.Type = PackType.Addon;
+                }
                 else
                 {
-                    this.Name = _xmd.SelectNodes("/deck/name").Item(0).InnerText;
-                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/white/card"))
-                    {
-                        // Select white cards from file and load into list.
-                        // White cards all reside as a <card> element which is
-                        // the child of a <white> element.
-                        this.WhiteCards.Add(new WhiteCard(xmn.InnerText));
-                    }
-                    foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/black/card"))
-                    {
-                        int pick = 0;
-                        try
-                        {
-                            pick = int.Parse(xmn.Attributes["pick"].Value);
-                        }
-                        catch (FormatException fex)
-                        {
-                            System.Windows.Forms.MessageBox.Show(
-                                String.Format(
-                                    "Pick value for card \"{0}\" is invalid: \n\n{1}",
-                                    xmn.InnerText, fex.Message
-                                    )
-                                );
-                        }
+                    this.Type = PackType.Pack;
+                }
 
-                        // Extra draw is considered true if attribute is present when its value is not false.
-                        // If not present, or if its attribute value is false, it is considered false.
-                        bool extraDraw = false;
-                        if (xmn.Attributes["xd"] != null)
-                            if (xmn.Attributes["xd"].Value.ToLower() == "false") extraDraw = false;
-                            else extraDraw = true;
-                        else if (xmn.Attributes["xd"] == null)
-                            extraDraw = false;
-                        // Select all black cards from file and load into list.
-                        // Black cards are under a <black> element as a <card>
-                        // element with the "pick" attribute and optional
-                        // "xd" attribute.
-                        this.BlackCards.Add(
-                            new BlackCard(
-                                xmn.InnerText,
-                                pick,
-                                // By default, a black card allows a player to draw a single (1) card
-                                // However, some require a player draws two cards. If a black card has
-                                // the "xd" (eXtra Draw) attribute, two cards should be drawn.
-                                extraDraw ? 2 : 1
+                this.Name = _xmd.SelectSingleNode("/deck/name").InnerText;
+                foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/white/card"))
+                {
+                    // Select white cards from file and load into list.
+                    // White cards all reside as a <card> element which is
+                    // the child of a <white> element.
+                    this.WhiteCards.Add(new WhiteCard(xmn.InnerText));
+                }
+                foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/black/card"))
+                {
+                    int pick = 0;
+                    try
+                    {
+                        pick = int.Parse(xmn.Attributes["pick"].Value);
+                    }
+                    catch (FormatException fex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(
+                            String.Format(
+                                "Pick value for card \"{0}\" is invalid: \n\n{1}",
+                                xmn.InnerText, fex.Message
                                 )
                             );
                     }
+
+                    // Extra draw is considered true if attribute is present when its value is not false.
+                    // If not present, or if its attribute value is false, it is considered false.
+                    bool extraDraw = false;
+                    if (xmn.Attributes["xd"] != null)
+                        if (xmn.Attributes["xd"].Value.ToLower() == "false") extraDraw = false;
+                        else extraDraw = true;
+                    else if (xmn.Attributes["xd"] == null)
+                        extraDraw = false;
+                    // Select all black cards from file and load into list.
+                    // Black cards are under a <black> element as a <card>
+                    // element with the "pick" attribute and optional
+                    // "xd" attribute.
+                    this.BlackCards.Add(
+                        new BlackCard(
+                            xmn.InnerText,
+                            pick,
+                        // By default, a black card allows a player to draw a single (1) card
+                        // However, some require a player draws two cards. If a black card has
+                        // the "xd" (eXtra Draw) attribute, two cards should be drawn.
+                            extraDraw ? 2 : 1
+                            )
+                        );
                 }
             }
-            catch (XmlException xex)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    "An XmlException Occured:\n\n" +
-                    xex.Message
-                    );
-            }
+            catch (XmlException) { }
         }
 
         /// <summary>
@@ -138,6 +136,11 @@ namespace AppsAgainstHumanity.Server.Game
             ("This functionality is not currently implemented.");
         }
 
+        public void ExtendDeck(Deck addonDeck)
+        {
+            
+        }
+
         /// <summary>
         /// The white cards present in this deck.
         /// </summary>
@@ -146,6 +149,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// The black cards present in this deck.
         /// </summary>
         public List<BlackCard> BlackCards { get; private set; }
+        /// <summary>
+        /// The type of card pack represented by this Deck class.
+        /// </summary>
+        public PackType Type { get; private set; }
 
         /// <summary>
         /// The name of the main card pack of the deck.

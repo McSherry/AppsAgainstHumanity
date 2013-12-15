@@ -892,23 +892,16 @@ namespace AppsAgainstHumanity.Server.Game
 
             _gameThread.Start();
         }
-        public void Stop(bool stopServer = false)
+        public void Stop()
         {
-            if (!stopServer)
-            {
-                _gameThread.Abort();
+            if (_gameThread != null) _gameThread.Abort();
 
-                foreach (Player p in Players.ToList())
-                {
-                    SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
-                }
-            }
-            else
+            foreach (Player p in Players.ToList())
             {
-                if (_hasStarted) Stop();
-                // TODO: FIX EXCEPTION WITH THIS
-                //_server.Stop();
+                SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
             }
+
+            _server.Stop();
         }
     }
 }
