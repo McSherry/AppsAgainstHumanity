@@ -39,5 +39,17 @@ namespace AppsAgainstHumanity.Server
         {
             get { return (MajorVersion * 10000) + (MinorVersion * 100) + PatchVersion; }
         }
+
+        /// <summary>
+        /// Indicates the error which occurred when attempting to
+        /// parse a META from the client.
+        /// </summary>
+        internal enum MetaStatus
+        {
+            Success,
+            OutdatedServer,
+            OutdatedClient,
+            MalformedXml
+        }
     }
 }
