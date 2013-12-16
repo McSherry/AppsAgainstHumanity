@@ -44,45 +44,42 @@ namespace AppsAgainstHumanity.Server.Game
                     _xmd.SelectNodes("/deck").Item(0).Attributes["type"].Value
                 );
         }
-        private XmlDocument _xmd;
-
         /// <summary>
-        /// Creates a new deck.
+        /// Parses an XML string into a Deck class.
         /// </summary>
-        public Deck() { }
-        /// <summary>
-        /// Creates a new deck from XML.
-        /// </summary>
-        /// <param name="deckXml">The XML of a main deck to create this class from.</param>
-        public Deck(string deckXml)
+        /// <param name="xml">If given a non-empty/non-null value, the XML to parse. If left null, the method uses the private XML document for the class's XML.</param>
+        /// <returns></returns>
+        private Deck _parseXmlToDeck(string xml = null)
         {
-            _xmd = new XmlDocument();
-            _xmd.LoadXml(deckXml);
+            XmlDocument xmd = new XmlDocument();
+            xmd.LoadXml(string.IsNullOrEmpty(xml) ? _xmd.OuterXml : xml);
+            Deck dk = new Deck();
+            dk.AddonPacks = new List<string>();
 
-            XmlNode countNode = _xmd.SelectSingleNode("/deck/count");
-            this.WhiteCards = new List<WhiteCard>(int.Parse(countNode.Attributes["white"].Value));
-            this.BlackCards = new List<BlackCard>(int.Parse(countNode.Attributes["black"].Value));
+            XmlNode countNode = xmd.SelectSingleNode("/deck/count");
+            dk.WhiteCards = new List<WhiteCard>(int.Parse(countNode.Attributes["white"].Value));
+            dk.BlackCards = new List<BlackCard>(int.Parse(countNode.Attributes["black"].Value));
 
             try
             {
                 if (_determinePackType() == PackType.Addon)
                 {
-                    this.Type = PackType.Addon;
+                    dk.Type = PackType.Addon;
                 }
                 else
                 {
-                    this.Type = PackType.Pack;
+                    dk.Type = PackType.Pack;
                 }
 
-                this.Name = _xmd.SelectSingleNode("/deck/name").InnerText;
-                foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/white/card"))
+                dk.Name = xmd.SelectSingleNode("/deck/name").InnerText;
+                foreach (XmlNode xmn in xmd.SelectNodes("/deck/cards/white/card"))
                 {
                     // Select white cards from file and load into list.
                     // White cards all reside as a <card> element which is
                     // the child of a <white> element.
-                    this.WhiteCards.Add(new WhiteCard(xmn.InnerText));
+                    dk.WhiteCards.Add(new WhiteCard(xmn.InnerText));
                 }
-                foreach (XmlNode xmn in _xmd.SelectNodes("/deck/cards/black/card"))
+                foreach (XmlNode xmn in xmd.SelectNodes("/deck/cards/black/card"))
                 {
                     int pick = 0;
                     try
@@ -111,7 +108,7 @@ namespace AppsAgainstHumanity.Server.Game
                     // Black cards are under a <black> element as a <card>
                     // element with the "pick" attribute and optional
                     // "xd" attribute.
-                    this.BlackCards.Add(
+                    dk.BlackCards.Add(
                         new BlackCard(
                             xmn.InnerText,
                             pick,
@@ -124,18 +121,36 @@ namespace AppsAgainstHumanity.Server.Game
                 }
             }
             catch (XmlException) { }
+
+            return dk;
+        }
+        private XmlDocument _xmd;
+
+        /// <summary>
+        /// Creates a new deck.
+        /// </summary>
+        public Deck() { }
+        /// <summary>
+        /// Creates a new deck from XML.
+        /// </summary>
+        /// <param name="deckXml">The XML of a main deck to create this class from.</param>
+        public Deck(string deckXml)
+        {
+            _xmd = new XmlDocument();
+            _xmd.LoadXml(deckXml);
+
+            Deck d = _parseXmlToDeck();
+
+            this.AddonPacks = d.AddonPacks;
+            this.BlackCards = d.BlackCards;
+            this.Name = d.Name;
+            this.Type = d.Type;
+            this.WhiteCards = d.WhiteCards;
         }
 
         public Deck Clone()
         {
-            return new Deck()
-            {
-                WhiteCards = this.WhiteCards.ToList(),
-                BlackCards = this.BlackCards.ToList(),
-                Name = this.Name,
-                AddonPacks = this.AddonPacks.ToList(),
-                Type = this.Type
-            };
+            return _parseXmlToDeck();
         }
 
         /// <summary>
@@ -144,13 +159,28 @@ namespace AppsAgainstHumanity.Server.Game
         /// <param name="addonXml">The XML of the addon pack file.</param>
         public void ExtendDeck(string addonXml)
         {
-            throw new NotImplementedException
-            ("This functionality is not currently implemented.");
+            ExtendDeck(new Deck(addonXml));
         }
 
         public void ExtendDeck(Deck addonDeck)
         {
-            
+            if (addonDeck.Type != PackType.Addon)
+            {
+                throw new ArgumentException
+                ("Cannot extend with a main pack.");
+            }
+            else
+            {
+                foreach (WhiteCard wc in addonDeck.WhiteCards)
+                {
+                    this.WhiteCards.Add(wc);
+                }
+                foreach (BlackCard bc in addonDeck.BlackCards)
+                {
+                    this.BlackCards.Add(bc);
+                }
+                this.AddonPacks.Add(addonDeck.Name);
+            }
         }
 
         /// <summary>
