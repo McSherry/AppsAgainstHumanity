@@ -18,7 +18,7 @@ namespace AppsAgainstHumanityClient
 		private NetworkInterface NetworkInterface;
 		private Game Game = new Game();
 		private PrivateFontCollection PrivateFont = new PrivateFontCollection();
-		private const string Version = "100";
+		
 
 		public MainForm(NetworkInterface networkInterface, string yourName)
 		{
@@ -92,6 +92,7 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
 			{
+				AddChatLine("<NOTICE> " + arguments[0] + " is the Card Czar.");
 				if (arguments[0] == Game.YourName) {
 					SetGameStatusLabel("You are the Card Czar! Wait for the other players to submit their cards, then pick the one you like best.");
 					SetSelectability(crl_OwnedCards, false); // Prevent the Card Czar from being able to pick from his deck
@@ -107,12 +108,6 @@ namespace AppsAgainstHumanityClient
 			{
 				AddCard(crl_PickedCards, arguments[0], "");
 			});
-			/*NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.META, (sender, arguments) =>
-			{
-				if (arguments.Length == 0) {
-					networkInterface.ClientWrapper.SendCommand(CommandType.META, version);
-				}
-			});*/
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RWIN, (sender, arguments) =>
 			{
 				Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
@@ -123,6 +118,7 @@ namespace AppsAgainstHumanityClient
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.GWIN, (sender, arguments) =>
 			{
 				SetGameActionButton(false);
+				AddChatLine("<NOTICE> " + arguments[0] + " wins the game!");
 				SetGameStatusLabel("The game has ended.");
 			});
 
@@ -280,7 +276,8 @@ namespace AppsAgainstHumanityClient
 		{
 			if(crl_OwnedCards.SelectedCards.Count != 0){
 				if (crl_OwnedCards.SelectedCards.Count == crl_OwnedCards.MaxSelectNum) {
-					foreach (var card in crl_OwnedCards.SelectedCards) {
+					while (crl_OwnedCards.SelectedCards.Count != 0) {
+						var card = crl_OwnedCards.SelectedCards[0];
 						NetworkInterface.ClientWrapper.SendCommand(CommandType.PICK, card.Id);
 						AddCard(crl_PickedCards, card.Id, card.CardText);
 						crl_OwnedCards.RemoveCard(card);

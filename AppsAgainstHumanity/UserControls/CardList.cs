@@ -49,9 +49,17 @@ namespace AppsAgainstHumanityClient
 		{
 			PutAt(card, Cards.Count);
 			card.Click += card_Click;
+			card.DoubleClick += card_DoubleClick;
 			Cards.Add(card);
 			base.SuspendLayout();
 			base.Controls.Add(card);
+			base.ResumeLayout(true);
+		}
+
+		void card_DoubleClick(object sender, EventArgs e)
+		{
+			base.SuspendLayout();
+			((Card)sender).Visible = false;
 			base.ResumeLayout(true);
 		}
 
@@ -100,6 +108,7 @@ namespace AppsAgainstHumanityClient
 		}
 		protected virtual void card_Click(object sender, EventArgs e)
 		{
+			ReflowCards();
 			if (CanSelectCards) {
 				var card = (Card)sender;
 				if (SelectedCards.Contains(card)) {

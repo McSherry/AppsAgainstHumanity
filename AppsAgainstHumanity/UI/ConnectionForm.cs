@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Xml;
+using System.Xml.Linq;
 using CsNetLib2;
 
 namespace AppsAgainstHumanityClient
@@ -14,6 +16,7 @@ namespace AppsAgainstHumanityClient
 	public partial class ConnectionForm : Form
 	{
 		private NetworkInterface NetworkInterface;
+		private const int VersionIdentifier = 100;
 
 		public ConnectionForm()
 		{
@@ -21,6 +24,22 @@ namespace AppsAgainstHumanityClient
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.ACKN, ProcessACKN);
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.REFU, ProcessREFU);
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.NDNY, ProcessNDNY);
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.META, (sender, arguments) =>
+			{
+				XDocument metaResp = new XDocument(
+					new XDeclaration("1.0", "utf-8", "yes"),
+					new XElement(
+						"meta",
+						new XElement(
+							"version",
+							VersionIdentifier
+						)
+					)
+				);
+				if (arguments == null) {
+					NetworkInterface.ClientWrapper.SendCommand(CommandType.META, Convert.ToBase64String(Encoding.UTF8.GetBytes(metaResp.ToString())));
+				}
+			});
 			InitializeComponent();
 		}
 
