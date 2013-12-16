@@ -22,6 +22,7 @@ namespace AppsAgainstHumanity.Server
 		//private AAHProtocolWrapper ServerWrapper;
         Game.Game game;
 
+        internal List<Deck> _expansionDecks = new List<Deck>();
         private Dictionary<int, Deck> _cardDecks;
         private void _fillDeckSelectBox()
         {
@@ -29,6 +30,7 @@ namespace AppsAgainstHumanity.Server
             _cardDecks = new Dictionary<int, Deck>();
             string deckPath = "decks";
             int deckCtr = 0;
+
             foreach (string s in Directory.GetFiles(deckPath, "*.xml"))
             {
                 try
@@ -45,9 +47,16 @@ namespace AppsAgainstHumanity.Server
                 catch (UnauthorizedAccessException) { }
             }
 
+            // Remove from the card packs dictionary all items which are not addons.
+            foreach (KeyValuePair<int, Deck> kvp in _cardDecks.ToList().Where(cp => cp.Value.Type != PackType.Pack))
+            {
+                _cardDecks.Remove(kvp.Key);
+                deckCtr--;
+            }
+
             for (int i = 0; i < deckCtr; i++)
             {
-                this.cardDeckCBox.Items.Add(_cardDecks[i].Name);
+                this.cardDeckCBox.Items.Add(_cardDecks.ElementAt(i).Value.Name);
             }
             this.cardDeckCBox.SelectedIndex = 0;
         }
@@ -136,9 +145,12 @@ namespace AppsAgainstHumanity.Server
         }
         private void serverStartBtn_Click(object sender, EventArgs e)
         {
+            Deck aggregateDeck = _cardDecks.ElementAt(cardDeckCBox.SelectedIndex).Value.Clone();
+            foreach (Deck d in _expansionDecks) aggregateDeck.ExtendDeck(d);
+
             GameParameters gp = new GameParameters()
             {
-                Cards = _cardDecks[cardDeckCBox.SelectedIndex],
+                Cards = aggregateDeck,
                 Players = int.Parse(playerLimitBox.Value.ToString()),
                 PointsLimit = int.Parse(awesomePointsLimitBox.Value.ToString()),
                 TimeoutLimit = int.Parse(timeoutLimitCBox.Value.ToString()),
@@ -167,6 +179,7 @@ namespace AppsAgainstHumanity.Server
             serverStartBtn.Enabled = false;
             gameStartBtn.Enabled = true;
             gameStopBtn.Enabled = true;
+            expansionPackButtons.Enabled = false;
             #endregion
 
             this.serverStatusIndicRect.BackColor = Color.Gold;

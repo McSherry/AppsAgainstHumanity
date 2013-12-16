@@ -42,6 +42,7 @@
             this.saveSelectionBtn.TabIndex = 0;
             this.saveSelectionBtn.Text = "Save Selections";
             this.saveSelectionBtn.UseVisualStyleBackColor = true;
+            this.saveSelectionBtn.Click += new System.EventHandler(this.saveSelectionBtn_Click);
             // 
             // reloadDecksBtn
             // 
@@ -51,6 +52,7 @@
             this.reloadDecksBtn.TabIndex = 1;
             this.reloadDecksBtn.Text = "Reload Packs";
             this.reloadDecksBtn.UseVisualStyleBackColor = true;
+            this.reloadDecksBtn.Click += new System.EventHandler(this.reloadDecksBtn_Click);
             // 
             // cancelBtn
             // 
@@ -65,12 +67,11 @@
             // expansionPackListBox
             // 
             this.expansionPackListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.expansionPackListBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.expansionPackListBox.FormattingEnabled = true;
-            this.expansionPackListBox.Location = new System.Drawing.Point(0, 0);
+            this.expansionPackListBox.Location = new System.Drawing.Point(12, 12);
             this.expansionPackListBox.Name = "expansionPackListBox";
             this.expansionPackListBox.ScrollAlwaysVisible = true;
-            this.expansionPackListBox.Size = new System.Drawing.Size(323, 279);
+            this.expansionPackListBox.Size = new System.Drawing.Size(303, 255);
             this.expansionPackListBox.TabIndex = 4;
             // 
             // expansionPackForm

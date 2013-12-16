@@ -126,6 +126,18 @@ namespace AppsAgainstHumanity.Server.Game
             catch (XmlException) { }
         }
 
+        public Deck Clone()
+        {
+            return new Deck()
+            {
+                WhiteCards = this.WhiteCards.ToList(),
+                BlackCards = this.BlackCards.ToList(),
+                Name = this.Name,
+                AddonPacks = this.AddonPacks.ToList(),
+                Type = this.Type
+            };
+        }
+
         /// <summary>
         /// Extends the number of cards in a deck using addon packs.
         /// </summary>
