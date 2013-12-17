@@ -35,6 +35,7 @@
             this.gameMonitorGBox = new System.Windows.Forms.GroupBox();
             this.connectedPlayersListBox = new System.Windows.Forms.ListBox();
             this.gameConfigGBox = new System.Windows.Forms.GroupBox();
+            this.expansionPackButtons = new System.Windows.Forms.Button();
             this.serverStatusIndicLbl = new System.Windows.Forms.Label();
             this.serverStatusIndicRect = new System.Windows.Forms.Panel();
             this.gameRulesetCBox = new System.Windows.Forms.ComboBox();
@@ -55,7 +56,6 @@
             this.gameStopBtn = new System.Windows.Forms.Button();
             this.gameStartBtn = new System.Windows.Forms.Button();
             this.serverVersionLbl = new System.Windows.Forms.Label();
-            this.expansionPackButtons = new System.Windows.Forms.Button();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -167,6 +167,16 @@
             this.gameConfigGBox.TabIndex = 7;
             this.gameConfigGBox.TabStop = false;
             this.gameConfigGBox.Text = "Game Configuration";
+            // 
+            // expansionPackButtons
+            // 
+            this.expansionPackButtons.Location = new System.Drawing.Point(447, 50);
+            this.expansionPackButtons.Name = "expansionPackButtons";
+            this.expansionPackButtons.Size = new System.Drawing.Size(100, 23);
+            this.expansionPackButtons.TabIndex = 23;
+            this.expansionPackButtons.Text = "Expansions";
+            this.expansionPackButtons.UseVisualStyleBackColor = true;
+            this.expansionPackButtons.Click += new System.EventHandler(this.expansionPackButtons_Click);
             // 
             // serverStatusIndicLbl
             // 
@@ -360,12 +370,12 @@
             this.playerLimitBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.playerLimitBox.Location = new System.Drawing.Point(89, 53);
             this.playerLimitBox.Maximum = new decimal(new int[] {
-            5,
+            8,
             0,
             0,
             0});
             this.playerLimitBox.Minimum = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
@@ -374,7 +384,7 @@
             this.playerLimitBox.TabIndex = 7;
             this.playerLimitBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.playerLimitBox.Value = new decimal(new int[] {
-            1,
+            4,
             0,
             0,
             0});
@@ -420,16 +430,6 @@
             this.serverVersionLbl.TabIndex = 8;
             this.serverVersionLbl.Text = "v0.0.0";
             this.serverVersionLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // expansionPackButtons
-            // 
-            this.expansionPackButtons.Location = new System.Drawing.Point(447, 50);
-            this.expansionPackButtons.Name = "expansionPackButtons";
-            this.expansionPackButtons.Size = new System.Drawing.Size(100, 23);
-            this.expansionPackButtons.TabIndex = 23;
-            this.expansionPackButtons.Text = "Expansions";
-            this.expansionPackButtons.UseVisualStyleBackColor = true;
-            this.expansionPackButtons.Click += new System.EventHandler(this.expansionPackButtons_Click);
             // 
             // mainForm
             // 

@@ -72,10 +72,17 @@ namespace AppsAgainstHumanity.Server
             this.czarSelectCBox.SelectedIndex = 0;
             this.gameRulesetCBox.SelectedIndex = 0;
             this.connectedPlayersListBox.Text = String.Empty;
+            this.serverVersionLbl.Text = String
+                .Format(
+                    "{0}.{1}.{2} ({3})",
+                    Metadata.MajorVersion,
+                    Metadata.MinorVersion,
+                    Metadata.PatchVersion,
+                    Metadata.VersionIdentifier
+                );
             _fillDeckSelectBox();
             #endregion
 
-            //this.serverVersionLbl.Text = Metadata.Version;
 		}
 
         private void _receivedMessageHandler(Player sender, string message)
@@ -188,16 +195,35 @@ namespace AppsAgainstHumanity.Server
         }
         private void gameStartBtn_Click(object sender, EventArgs e)
         {
-            #region enable/disable
-            this.gameStartBtn.Enabled = false;
-            #endregion
+            // Check that we have the required amount of players to begin a
+            // game.
+            if (game.Players.Count >= Constants.MinimumPlayers)
+            {
+                #region enable/disable
+                this.gameStartBtn.Enabled = false;
+                #endregion
 
-            this.serverStatusIndicRect.BackColor = Color.YellowGreen;
-            this.serverStatusIndicLbl.ForeColor = Color.DarkGreen;
-            this.serverStatusIndicLbl.Text = "Game has begun.";
+                this.serverStatusIndicRect.BackColor = Color.YellowGreen;
+                this.serverStatusIndicLbl.ForeColor = Color.DarkGreen;
+                this.serverStatusIndicLbl.Text = "Game has begun.";
 
-            // TODO: Uncomment this.
-            game.Start();
+                // TODO: Uncomment this.
+                game.Start();
+            }
+            else
+            {
+                // If we don't show the server administrator an error message.
+                MessageBox.Show(
+                    this,
+                    String.Format(
+                        "There must be at least {0} players connected before a game can begin.",
+                        Constants.MinimumPlayers
+                    ),
+                    "Insufficient players.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation
+                );
+            }
         }
         private void gameStopBtn_Click(object sender, EventArgs e)
         {

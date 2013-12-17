@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+  <!-- Card Pack = 0 | Addon Pack = 1 -->
+  <!--
+		  Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+		  The texts herein are a reproduction of the official Cards Against Humanity - The Third Expansion pack.
+	  -->
+  <name>Cards Against Humanity - The First Expansion</name>
+  <count white="75" black="25"/>
+  <cards>
+    <white>
+      <card>A black man in his early 20s, last seen wearing a hoodie.</card>
+      <card>A boo-boo.</card>
+      <card>A botched circumcision.</card>
+      <card>A cat video so cute that your eyes roll back and your spine slides out of your anus.</card>
+      <card>A cop who is also a dog.</card>
+      <card>A greased-up Matthew McConaughey.</card>
+      <card>A lamprey swimming up the toilet and latching onto your taint.</card>
+      <card>A pile of squirming bodies.</card>
+      <card>A PowerPoint presentation.</card>
+      <card>A spontaneous conga line.</card>
+      <card>A surprising amount of hair.</card>
+      <card>A vagina that leads to another dimension.</card>
+      <card>Actually getting shot, for real.</card>
+      <card>All my friends dying.</card>
+      <card>An all-midget production of Shakespeare's Richard III.</card>
+      <card>An ass disaster.</card>
+      <card>An unstoppable wave of fire ants.</card>
+      <card>Bill Clinton, naked on a bearskin rug with a saxophone.</card>
+      <card>Blood farts.</card>
+      <card>Blowing some dudes in an alley.</card>
+      <card>Buying the right pants to be cool.</card>
+      <card>Chugging a lava lamp.</card>
+      <card>Cock.</card>
+      <card>Crying into the pages of Sylvia Plath.</card>
+      <card>Demonic possession.</card>
+      <card>Disco fever.</card>
+      <card>Drinking ten 5-hour ENERGYs® to get fifty continuous hours of energy.</card>
+      <card>Dying alone and in pain.</card>
+      <card>Eating Tom Selleck's moustache to gain his powers.</card>
+      <card>Filling every orifice with butterscotch pudding.</card>
+      <card>Fisting.</card>
+      <card>Flying robots that kill people.</card>
+      <card>Gay aliens.</card>
+      <card>Getting your dick stuck in a Chinese finger trap with another dick.</card>
+      <card>Girls that always be textin'.</card>
+      <card>Going around punching people.</card>
+      <card>Having sex on top of a pizza.</card>
+      <card>Having shotguns for legs.</card>
+      <card>Indescribable loneliness.</card>
+      <card>Jumping out at people.</card>
+      <card>Letting everyone down.</card>
+      <card>Mufasa's death scene.</card>
+      <card>My manservant, Claude.</card>
+      <card>Not contributing to society in any meaningful way.</card>
+      <card>Not having sex.</card>
+      <card>Nothing.</card>
+      <card>Putting an entire peanut butter and jelly sandwich into the VCR.</card>
+      <card>Reverse cowgirl.</card>
+      <card>Roland the Farter, flatulist to the king.</card>
+      <card>Running naked through a mall, pissing and shitting everywhere.</card>
+      <card>Samuel L. Jackson.</card> <!-- The L stands for "motherfucker" -->
+      <card>Screaming like a maniac.</card>
+      <card>Self-flagellation.</card>
+      <card>Shutting the fuck up.</card>
+      <card>Slapping a racist old lady.</card>
+      <card>Sneezing, farting, and coming at the same time.</card>
+      <card>Some douche with an acoustic guitar.</card>
+      <card>Some kind of bird-man.</card>
+      <card>Spending lots of money.</card>
+      <card>That ass.</card>
+      <card>The entire Internet.</card>
+      <card>The Harlem Globetrotters.</card>
+      <card>The Land of Chocolate.</card>
+      <card>The moist, demanding chasm of his mouth.</card>
+      <card>The primal, ball-slapping sex your parents are having right now.</card>
+      <card>The Quesadilla Explosion Salad™ from Chili’s.®</card>
+      <card>The systematic destruction of an entire people and their way of life.</card>
+      <card>The thin veneer of situational causality that underlines porn.</card>
+      <card>The way white people is.</card>
+      <card>Three months in the hole.</card>
+      <card>Unlimited soup, salad, and breadsticks.</card>
+      <card>Velcro™.</card>
+      <card>Vietnam flashbacks.</card>
+      <card>Vomiting mid-blowjob.</card>
+      <card>Warm, velvety muppet sex.</card>
+    </white>
+    <black>
+      <!-- 
+				Black Attributes:
+					pick  - Number of cards, integer value.
+					xd    - Whether to draw an extra card (draw 2 cards). Implicitly false.
+			-->
+      <card pick="1">__________. Awesome in theory, kind of a mess in practice.</card>
+      <card pick="2">_____: Hours of fun. Easy to use. Perfect for _____!</card>
+      <card pick="1">A successful job interview begins with a firm handshake and ends with __________.</card>
+      <card pick="2">After months of practice with _____, I think I'm finally ready for _____.</card>
+      <card pick="1">And what did you bring to show and tell?</card>
+      <card pick="1">As part of his contract, Prince won't perform without __________ in his dressing room.</card>
+      <card pick="1">As part of his daily regimen, Anderson Cooper sets aside 15 minutes for __________.</card>
+      <card pick="1">Call the law offices of Goldstein and Goldstein, because no one should have to tolerate _____ in the workplace.</card>
+      <card pick="1">During high school I never really fit in until I found __________ club.</card>
+      <card pick="1">Finally! A service that delivers __________ right to your door!</card>
+      <card pick="2">Having problems with _____? Try __________!</card>
+      <card pick="1">Hey baby, come back to my place and I'll show you __________.</card>
+      <card pick="1">I'm not like the rest of you. I'm too rich and busy for __________.</card>
+      <card pick="1">In the sveneth circle of Hell, sinners must endure __________ for all eternity.</card>
+      <card pick="2">Listen, son. If you want to get involved with _____, I won't stop you. Just steer clear of _____.</card>
+      <card pick="1">Lovin' you is easy 'cause you're __________.</card>
+      <card pick="1">Money can't buy me love, but it can buy me __________.</card>
+      <card pick="1">A gym teacher got fired for adding __________ to the obstacle course.</card>
+      <card pick="2">My life is ruled by a vicious cycle of __________ and __________.</card>
+      <card pick="1">The blind date was going horribly until we discovered our shared interest in __________.</card>
+      <card pick="1">To prepare for his upcoming role, Daniel Day-Lewis immersed himself in the world of __________.</card>
+      <card pick="1">Turns out that __________-Man was neither the hero we needed nor wanted.</card>
+      <card pick="1">What left this stain on my couch?</card>
+      <card pick="2">When you get right down to it, __________ is just __________.</card>
+      <card pick="2">With enough time and pressure, __________ will turn into __________.</card>
+    </black>
+  </cards>
+</deck>

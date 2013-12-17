@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Handlers.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Crypto\SRand.cs" />
     <Compile Include="Crypto\Sha256.cs" />
     <Compile Include="expansionPackForm.cs">
@@ -101,11 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="decks\UK.xml">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CsNetLib2\CsNetLib2.csproj">
