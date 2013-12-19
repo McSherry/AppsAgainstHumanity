@@ -82,18 +82,30 @@ namespace CsNetLib2
 		}
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
-			var tcpClient = Listener.EndAcceptTcpClient(ar);
-			var buffer = new byte[tcpClient.ReceiveBufferSize];
-			var client = new NetLibServerInternalClient(tcpClient, buffer);
+            if (ar.AsyncState == null || !(ar.IsCompleted && !ar.CompletedSynchronously))
+            {
+                // This condition is usually met when we kill a server. If we don't
+                // account for this condition, an ObjectDisposedException is thrown
+                // on line "var tcpClient = ..."
+                Console.WriteLine("Server killed.");
+                return;
+            }
+            else
+            {
+                var tcpClient = Listener.EndAcceptTcpClient(ar);
+                var buffer = new byte[tcpClient.ReceiveBufferSize];
+                var client = new NetLibServerInternalClient(tcpClient, buffer);
 
-			lock (_clients) {
-				_clients.Add(client.ClientId, client);
-				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
-			}
-			var stream = client.NetworkStream;
+                lock (_clients)
+                {
+                    _clients.Add(client.ClientId, client);
+                    Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
+                }
+                var stream = client.NetworkStream;
 
-			stream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
-			Listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
+                stream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
+                Listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
+            }
 		}
 		private void ReadCallback(IAsyncResult result)
 		{
