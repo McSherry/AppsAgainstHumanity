@@ -98,8 +98,12 @@ namespace CsNetLib2
 				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
 			}
 			var stream = client.NetworkStream;
-
-			stream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
+			try {
+				stream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
+			} catch (ObjectDisposedException) {
+				HandleDisconnect(client.ClientId);
+				return;
+			}
 			Listener.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
 		}
 		private void ReadCallback(IAsyncResult result)

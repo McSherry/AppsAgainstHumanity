@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Text;
 using CsNetLib2;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace AppsAgainstHumanityClient
 {
@@ -90,6 +92,14 @@ namespace AppsAgainstHumanityClient
 					SetGameActionButton(true);
 				}
 			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CRTO, (sender, arguments) =>
+			{
+				SetGameActionButton(false);
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZTO, (sender, arguments) =>
+			{
+				SetGameActionButton(false);
+			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.CZAR, (sender, arguments) =>
 			{
 				AddChatLine("<NOTICE> " + arguments[0] + " is the Card Czar.");
@@ -110,6 +120,10 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RWIN, (sender, arguments) =>
 			{
+				if (arguments.Length == 0) {
+					AddChatLine("<NOTICE> The Card Czar has timed out, no Awesome Points have been awarded. Your card(s) will be returned when the next round begins.");
+					SetGameStatusLabel("Please wait for the next round to begin.");
+				}
 				Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
 				UpdatePlayerList();
 				AddChatLine("<NOTICE> " + arguments[0] + " wins the round!");
@@ -120,6 +134,20 @@ namespace AppsAgainstHumanityClient
 				SetGameActionButton(false);
 				AddChatLine("<NOTICE> " + arguments[0] + " wins the game!");
 				SetGameStatusLabel("The game has ended.");
+			});
+			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.META, (sender, arguments) =>
+			{
+				var xmlText = Encoding.UTF8.GetString(Convert.FromBase64String(arguments[0]));
+				XmlDocument xmd = new XmlDocument();
+				xmd.LoadXml(xmlText);
+				var playermax = xmd.GetElementsByTagName("playermax");
+				var aplimit = xmd.GetElementsByTagName("aplimit");
+				var timeout = xmd.GetElementsByTagName("timeout");
+				if ((playermax.Count | aplimit.Count | timeout.Count) > 1) {
+					MessageBox.Show("Error", "Invalid metadata returned by server. This error shouldn't affect your ability to play the game, but please report the error to the developers.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				} else {
+					SetMetadata(playermax.Item(0).InnerText, aplimit.Item(0).InnerText, timeout.Item(0).InnerText);
+				}
 			});
 
 			// Check for any commands that got queued up while the connection form was being displayed
@@ -133,10 +161,22 @@ namespace AppsAgainstHumanityClient
 				}
 			}
 			// TODO: Send this once the server implements it
-			//networkInterface.ClientWrapper.SendCommand(CommandType.META);
+			networkInterface.ClientWrapper.SendCommand(CommandType.META);
 
 			InitializeComponent();
 		}
+
+		private void SetMetadata(string playermax, string aplimit, string timeout)
+		{
+			if (lbl_PlayerLimit.InvokeRequired || lbl_PlayingTo.InvokeRequired || lbl_PickTimeout.InvokeRequired) {
+				Invoke(new Action<string, string, string>(SetMetadata), playermax, aplimit, timeout);
+			} else {
+				lbl_PlayerLimit.Text = playermax;
+				lbl_PlayingTo.Text = aplimit;
+				lbl_PickTimeout.Text = timeout;
+			}
+		}
+
 		private void SetGameActionButton(bool enabled)
 		{
 			if (btn_GameAction.InvokeRequired) {
@@ -287,7 +327,7 @@ namespace AppsAgainstHumanityClient
 				} else {
 					MessageBox.Show(string.Format("Please pick {0} cards.", crl_PickedCards.MaxSelectNum), "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
-			} else if (Game.CardCzar.Name == Game.YourName) {
+			} else if (Game.CardCzar.Name == Game.YourName && crl_PickedCards.SelectedCards.Count != 0) {
 				NetworkInterface.ClientWrapper.SendCommand(CommandType.CZPK, crl_PickedCards.SelectedCards.First().Id);
 				SetGameActionButton(false);
 			} else {

@@ -16,7 +16,7 @@ namespace AppsAgainstHumanityClient
 	public partial class ConnectionForm : Form
 	{
 		private NetworkInterface NetworkInterface;
-		private const int VersionIdentifier = 100;
+		private const int VersionIdentifier = 200;
 
 		public ConnectionForm()
 		{
