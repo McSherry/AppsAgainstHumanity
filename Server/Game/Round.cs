@@ -62,7 +62,7 @@ namespace AppsAgainstHumanity.Server.Game
                 if (p == cardCzar) continue;
                 this.HasPlayedList.Add(p, false);
                 this.PlayedCards.Add(p, new Dictionary<int, WhiteCard>());
-                //_parent.DrawnCards.Add(p, new Dictionary<int, WhiteCard>());
+                _parent.DrawnCards.Add(p, new Dictionary<int, WhiteCard>());
                 /* TODO:
                  * 1. Send the black card for this round to each player
                  * 2. Use NetLib wrapper's "BLCK" command.
@@ -169,9 +169,6 @@ namespace AppsAgainstHumanity.Server.Game
                 allPlayersSubmitted = true;
             };
 
-            // TODO: REMOVE THIS PLAYER
-            Player tempPlayer = new Player("REMOVE_ME", 0);
-
             foreach (Player p in Players.ToList())
             {
                 _parent.SendCommand(CommandType.RSTR, (string[])null, p.ClientIdentifier);
@@ -208,7 +205,7 @@ namespace AppsAgainstHumanity.Server.Game
 
             
             // TODO: UNCOMMENT ME FOR PRODUCTION!
-            //timeoutTimer.Start();
+            timeoutTimer.Start();
 
             // Handles a player's pick.
             // Must determine whether the card ID is valid, and
@@ -292,63 +289,73 @@ namespace AppsAgainstHumanity.Server.Game
             // Stop the timeout timer, as another will be created next round and
             // we no longer require this one.
             // TODO: UNCOMMENT ME FOR PRODUCTION
-            //timeoutTimer.Stop();
+            timeoutTimer.Stop();
             // Removes PICK handler, so any received PICKs are now dropped.
             _parent.OnPlayerPick -= pickHandler;
 
-            foreach (Player p in Players.ToList())
+            if (HasPlayedList.Count > 0)
             {
-                // These are some fucking ugly types, but we will persevere
-                List<KeyValuePair<Player, Dictionary<int, WhiteCard>>> playedCardsList = PlayedCards.ToList();
-                // Get rid of that list and key value pair, as we don't need the player for this, as
-                // nobody is to know the identity of who chose each card.
-                List<Dictionary<int, WhiteCard>> cardPairs = (from cards in playedCardsList
-                                                                select cards.Value).ToList();
-
-                for (
-                    // In order to randomise the order in which pairs of cards are sent,
-                    // we'll use our handy instance of Random to generate a random number
-                    // between 0 and the length of the list containing pairs whilst
-                    // removing pairs from said list, thus making the list smaller and
-                    // eventually ending the loop.
-                    int rnd = _cardSelectorRNG.Next(0, cardPairs.Count);
-                    cardPairs.Count > 0;
-                    cardPairs.Remove(cardPairs[rnd]), rnd = _cardSelectorRNG.Next(0, cardPairs.Count)
-                    )
+                foreach (Player p in Players.ToList())
                 {
+                    // These are some fucking ugly types, but we will persevere
+                    List<KeyValuePair<Player, Dictionary<int, WhiteCard>>> playedCardsList = PlayedCards.ToList();
+                    // Get rid of that list and key value pair, as we don't need the player for this, as
+                    // nobody is to know the identity of who chose each card.
+                    List<Dictionary<int, WhiteCard>> cardPairs = (from cards in playedCardsList
+                                                                  select cards.Value).ToList();
 
-                    // This is where it gets a bit ugly.
-                    // We're going to put the ID-Text pairs into an enumerable of string arrays,
-                    // as we can easily extract these pairs using LINQ.
-                    IEnumerable<string[]> IDs = from card in cardPairs.ToList()[rnd]
-                                                select new string[2] { card.Key.ToString(), card.Value.Text };
-                    // Now we have to make this enumerable of arrays on array, and to do that
-                    // we need to figure out the total length.
-                    int lengCtr = 0;
-                    // This first loop finds out our length for us.
-                    foreach (string[] sa in IDs) lengCtr += sa.Length;
-                    // We then use this length to define a string array which will, eventually,
-                    // contain all our bundled cards.
-                    string[] finalIds = new string[lengCtr];
-                    // Might as well reuse this variable.
-                    lengCtr = 0;
-                    // Similarly to the previous foreach loop, we iterate through, using lengCtr
-                    // to keep track of the length of the array. Only this time, we copy the contents
-                    // of string arrays in our enumerable in-between additions to the tracked length.
-                    foreach (string[] sa in IDs)
+                    for (
+                        // In order to randomise the order in which pairs of cards are sent,
+                        // we'll use our handy instance of Random to generate a random number
+                        // between 0 and the length of the list containing pairs whilst
+                        // removing pairs from said list, thus making the list smaller and
+                        // eventually ending the loop.
+                        int rnd = _cardSelectorRNG.Next(0, cardPairs.Count);
+                        cardPairs.Count > 0;
+                        cardPairs.Remove(cardPairs[rnd]), rnd = _cardSelectorRNG.Next(0, cardPairs.Count)
+                        )
                     {
-                        sa.CopyTo(finalIds, lengCtr);
-                        lengCtr += sa.Length;
-                    }
 
-                    // Since this code spits out a nice string array, all that's left is to send
-                    // the REVL command to each player.
-                    _parent.SendCommand(
-                        CommandType.REVL,
-                        finalIds,
-                        p.ClientIdentifier
-                    );
+                        // This is where it gets a bit ugly.
+                        // We're going to put the ID-Text pairs into an enumerable of string arrays,
+                        // as we can easily extract these pairs using LINQ.
+                        IEnumerable<string[]> IDs = from card in cardPairs.ToList()[rnd]
+                                                    select new string[2] { card.Key.ToString(), card.Value.Text };
+                        // Now we have to make this enumerable of arrays on array, and to do that
+                        // we need to figure out the total length.
+                        int lengCtr = 0;
+                        // This first loop finds out our length for us.
+                        foreach (string[] sa in IDs) lengCtr += sa.Length;
+                        // We then use this length to define a string array which will, eventually,
+                        // contain all our bundled cards.
+                        string[] finalIds = new string[lengCtr];
+                        // Might as well reuse this variable.
+                        lengCtr = 0;
+                        // Similarly to the previous foreach loop, we iterate through, using lengCtr
+                        // to keep track of the length of the array. Only this time, we copy the contents
+                        // of string arrays in our enumerable in-between additions to the tracked length.
+                        foreach (string[] sa in IDs)
+                        {
+                            sa.CopyTo(finalIds, lengCtr);
+                            lengCtr += sa.Length;
+                        }
+
+                        // Since this code spits out a nice string array, all that's left is to send
+                        // the REVL command to each player.
+                        _parent.SendCommand(
+                            CommandType.REVL,
+                            finalIds,
+                            p.ClientIdentifier
+                        );
+                    }
                 }
+            }
+            else
+            {
+                // If the number of players that have played cards is zero,
+                // it'll be a null round, so we'll return a null player,
+                // which indicates that the round is null.
+                return (Player)null;
             }
 
             bool cardCzarHasPicked = false;
@@ -365,7 +372,7 @@ namespace AppsAgainstHumanity.Server.Game
 
                 // Select the player who played the winning card,
                 // using the card's ID to locate said player.
-                roundWinner = this.PlayedCards.First(pl => pl.Value.ContainsKey(cardId)).Key;
+                    roundWinner = this.PlayedCards.First(pl => pl.Value.ContainsKey(cardId)).Key;
 
                 foreach (Player p in Players.ToList())
                 {
@@ -389,11 +396,11 @@ namespace AppsAgainstHumanity.Server.Game
             };
 
             // TODO: Uncomment me and my Stop() call for production!
-            //czarTimeout.Start();
+            czarTimeout.Start();
             _parent.OnCzarPick += czpkHandler;
             while (!cardCzarHasPicked) ;
             _parent.OnCzarPick -= czpkHandler;
-            //czarTimeout.Stop();
+            czarTimeout.Stop();
 
             /* TODO:
              * 1. Bind handlers to events for receiving "PICK" commands from players.

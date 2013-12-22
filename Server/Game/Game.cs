@@ -405,7 +405,7 @@ namespace AppsAgainstHumanity.Server.Game
         private void _handlerMETA(long sender, string[] args)
         {
             // determine whether META has been sent with or without parameters.
-            if (String.IsNullOrEmpty(args[0]) || String.IsNullOrWhiteSpace(args[0]))
+            if (args == null)
             {
                 // Construct an XML document containing all the metadata we're
                 // going to send to the client. XDocument is a fairly friendly,
@@ -796,6 +796,11 @@ namespace AppsAgainstHumanity.Server.Game
                             SendCommand(
                                 CommandType.BDCS,
                                 "Card Czar failed to pick within given time. This round will be skipped.",
+                                p.ClientIdentifier
+                            );
+                            SendCommand(
+                                CommandType.RWIN,
+                                (string[])null,
                                 p.ClientIdentifier
                             );
                         }
