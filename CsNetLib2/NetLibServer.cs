@@ -82,7 +82,14 @@ namespace CsNetLib2
 		}
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
-			var tcpClient = Listener.EndAcceptTcpClient(ar);
+			TcpClient tcpClient;
+			try {
+				tcpClient = Listener.EndAcceptTcpClient(ar);
+			} catch (ObjectDisposedException) {
+				// The AcceptTcpClient method didn't finish, as the server was shut down.
+				// Therefore, we can simply cancel execution of the callback method.
+				return;
+			}
 			var buffer = new byte[tcpClient.ReceiveBufferSize];
 			var client = new NetLibServerInternalClient(tcpClient, buffer);
 
@@ -160,6 +167,7 @@ namespace CsNetLib2
 		}
 		public void Stop()
 		{
+			foreach(var pair in _clients)
 			Listener.Stop();
 		}
 		public class NetLibServerInternalClient
