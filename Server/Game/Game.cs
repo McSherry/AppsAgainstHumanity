@@ -349,8 +349,19 @@ namespace AppsAgainstHumanity.Server.Game
         // between clients
         private void _handlerSMSG(long sender, string[] args)
         {
-            Player p = Players.First(pl => pl.ClientIdentifier == sender);
-            _senderRMSG(p, args[0]);
+            if (Parameters.AllowPlayerChat)
+            {
+                Player p = Players.First(pl => pl.ClientIdentifier == sender);
+                _senderRMSG(p, args[0]);
+            }
+            else
+            {
+                // Inform the player that attempted to chat that this feature is disabled.
+                // A bit of an abuse of BDCS, since we're not /actually/ broadcasting, but
+                // it works, and a client won't know that we're not broadcasting to everyone
+                // else, now, will it?
+                SendCommand(CommandType.BDCS, "Chat is disabled on this server.", sender);
+            }
         }
         // handles PICKs from clients + fires event
         private void _handlerPICK(long sender, string[] args)
@@ -703,6 +714,14 @@ namespace AppsAgainstHumanity.Server.Game
         public void Broadcast(string message)
         {
             _senderBDCS(message);
+        }
+        /// <summary>
+        /// Disconnect a player from the server.
+        /// </summary>
+        /// <param name="playerNick">The nickname of the player to disconnect.</param>
+        public void Disconnect(string playerNick, string message = null)
+        {
+            _senderDISC(Players.Single(pl => pl.Nickname == playerNick).ClientIdentifier, message);
         }
 
         private delegate void METAHandler(long sender, Metadata.MetaStatus status);

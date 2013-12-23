@@ -269,7 +269,6 @@
             this.allowChatCheckBox.AutoSize = true;
             this.allowChatCheckBox.Checked = true;
             this.allowChatCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.allowChatCheckBox.Enabled = false;
             this.allowChatCheckBox.Location = new System.Drawing.Point(267, 130);
             this.allowChatCheckBox.Name = "allowChatCheckBox";
             this.allowChatCheckBox.Size = new System.Drawing.Size(108, 17);
@@ -280,7 +279,6 @@
             // timeoutKickCheckBox
             // 
             this.timeoutKickCheckBox.AutoSize = true;
-            this.timeoutKickCheckBox.Enabled = false;
             this.timeoutKickCheckBox.Location = new System.Drawing.Point(116, 130);
             this.timeoutKickCheckBox.Name = "timeoutKickCheckBox";
             this.timeoutKickCheckBox.Size = new System.Drawing.Size(145, 17);

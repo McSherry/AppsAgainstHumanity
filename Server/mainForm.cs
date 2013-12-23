@@ -172,7 +172,9 @@ namespace AppsAgainstHumanity.Server
                 TimeoutLimit = int.Parse(timeoutLimitCBox.Value.ToString()),
                 Ruleset = (GameRuleset)gameRulesetCBox.SelectedIndex,
                 CzarSelection = (CzarSelection)czarSelectCBox.SelectedIndex,
-                AllowGambling = allowGamblingCheckBox.Checked
+                AllowGambling = allowGamblingCheckBox.Checked,
+                KickOnTimeout = timeoutKickCheckBox.Checked,
+                AllowPlayerChat = allowChatCheckBox.Checked
             };
 
             this.game = new Game.Game(gp);

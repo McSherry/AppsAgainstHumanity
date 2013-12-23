@@ -163,6 +163,10 @@ namespace AppsAgainstHumanity.Server.Game
                 foreach (KeyValuePair<Player, bool> pl in hasntPlayed)
                 {
                     _parent.SendCommand(CommandType.CRTO, (string[])null, pl.Key.ClientIdentifier);
+                    if (_parent.Parameters.KickOnTimeout)
+                    {
+                        _parent.Disconnect(pl.Key.Nickname, "Disconnected for inactivity.");
+                    }
                 }
 
                 allPlayersSubmitted = true;
@@ -392,6 +396,7 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 cardCzarHasPicked = true;
                 _parent.SendCommand(CommandType.CZTO, "You did not pick within adequate time.", CardCzar.ClientIdentifier);
+                if (_parent.Parameters.KickOnTimeout) _parent.Disconnect(CardCzar.Nickname);
             };
 
             // TODO: Uncomment me and my Stop() call for production!

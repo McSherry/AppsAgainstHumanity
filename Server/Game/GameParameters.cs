@@ -124,5 +124,15 @@ namespace AppsAgainstHumanity.Server.Game
             }
         }
 
+        /// <summary>
+        /// Whether the server should kick any players who fail to send
+        /// in a choice in the allotted time. Includes Card Czar.
+        /// </summary>
+        public bool KickOnTimeout { get; set; }
+        /// <summary>
+        /// Whether players are allowed to chat on this server.
+        /// </summary>
+        public bool AllowPlayerChat { get; set; }
+
     }
 }
