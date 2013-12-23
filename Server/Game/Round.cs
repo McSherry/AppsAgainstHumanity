@@ -62,7 +62,6 @@ namespace AppsAgainstHumanity.Server.Game
                 if (p == cardCzar) continue;
                 this.HasPlayedList.Add(p, false);
                 this.PlayedCards.Add(p, new Dictionary<int, WhiteCard>());
-                _parent.DrawnCards.Add(p, new Dictionary<int, WhiteCard>());
                 /* TODO:
                  * 1. Send the black card for this round to each player
                  * 2. Use NetLib wrapper's "BLCK" command.

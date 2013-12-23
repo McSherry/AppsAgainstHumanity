@@ -123,7 +123,16 @@ namespace AppsAgainstHumanity.Server
         private void _playerLeaveHandler(Player player)
         {
             if (connectedPlayersListBox.InvokeRequired) Invoke(new Action<Player>(_playerLeaveHandler), player);
-            else this.connectedPlayersListBox.Items.Remove(player.Nickname);
+            else
+            {
+                this.connectedPlayersListBox.Items.Remove(player.Nickname);
+                this.serverChatRTBox.AppendText(String
+                    .Format(
+                        "\nPlayer {0} has disconnected.",
+                        player.Nickname
+                    )
+                );
+            }
         }
 
         private void broadcastBtn_Click(object sender, EventArgs e)

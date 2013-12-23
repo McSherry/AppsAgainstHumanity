@@ -46,8 +46,9 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 try
                 {
-                    Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
-                    Players.Remove(remPlayer);
+                    // TODO: See if we need this shit.
+                    //Player remPlayer = Players.First(pl => pl.ClientIdentifier == clientID);
+                    //Players.Remove(remPlayer);
                     // Close the connection after refusing.
                     //_server.Clients[clientID].TcpClient.Close();
                     // Remove client after disconnecting
@@ -57,8 +58,10 @@ namespace AppsAgainstHumanity.Server.Game
                     //DrawnCards.Remove(remPlayer);
                     //_currRound.End();
 
-                    foreach (Player p in Players.ToList())
-                        _senderCLNF(p.ClientIdentifier);
+                    _handlerClientLeave(clientID);
+
+                    //foreach (Player p in Players.ToList())
+                    //    _senderCLNF(p.ClientIdentifier);
                 }
                 // Players.First() found no match, probably because there are no players
                 // we'll ignore it and continue.
@@ -333,6 +336,13 @@ namespace AppsAgainstHumanity.Server.Game
             }
 
             if (this.OnPlayerLeave != null) this.OnPlayerLeave.Invoke(p);
+
+            // If there are now fewer players than are required to play,
+            // Stop the game.
+            if (Players.Count <= Constants.MinimumPlayers)
+            {
+                this.Stop();
+            }
         }
         // handles SMSG requests received by the server
         // these are chat requests, the server acts as a relay
@@ -532,6 +542,11 @@ namespace AppsAgainstHumanity.Server.Game
                 }
             }
         }
+        // handles disconnection requests from the client
+        private void _handlerDISC(long sender, string[] args)
+        {
+            _senderDISC(sender, "Disconnected at request.");
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -597,6 +612,11 @@ namespace AppsAgainstHumanity.Server.Game
             }
             else return;
         }
+        // Informs a client that they have been disconnected.
+        private void _senderDISC(long clientID, string message = null)
+        {
+
+        }
 
         /// <summary>
         /// Selects a black card from the pool, and removes it from the pool.
@@ -659,7 +679,7 @@ namespace AppsAgainstHumanity.Server.Game
             // TODO: Re-enable this at production!
             // Pings disabled because they spam the console
             // and this is annoying during debugging.
-            //_pingTimer.Start();
+            _pingTimer.Start();
 
 
             this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
@@ -845,11 +865,7 @@ namespace AppsAgainstHumanity.Server.Game
                                 p.ClientIdentifier
                             );
                             // Request that clients gracefully disconnect.
-                            SendCommand(
-                                CommandType.DISC,
-                                (string[])null,
-                                p.ClientIdentifier
-                            );
+                            _senderDISC(p.ClientIdentifier);
                         }
 
                         // Stop pinging, as the game is over now
@@ -903,9 +919,10 @@ namespace AppsAgainstHumanity.Server.Game
 
             foreach (Player p in Players.ToList())
             {
-                SendCommand(CommandType.DISC, "Game ended by server administrator.", p.ClientIdentifier);
+                _senderDISC(p.ClientIdentifier, "Game ended by server or administrator.");
             }
 
+            _pingTimer.Stop();
             _server.Stop();
         }
     }
