@@ -58,10 +58,12 @@ namespace CsNetLib2
 		{
 			Console.WriteLine("Client #{0} disconnected", clientId);
 			lock (_clients) {
-				_clients[clientId].TcpClient.Close();
-				Clients.Remove(clientId);
+				if (_clients.ContainsKey(clientId)) {
+					_clients[clientId].TcpClient.Close();
+					Clients.Remove(clientId);
+					if (OnClientDisconnected != null) OnClientDisconnected(clientId);
+				}
 			}
-			if (OnClientDisconnected != null) OnClientDisconnected(clientId);
 		}
 		public void CloseClientConnection(long clientId)
 		{
@@ -110,11 +112,19 @@ namespace CsNetLib2
 		{
 			var client = result.AsyncState as NetLibServerInternalClient;
 			if (client == null) return;
-			var networkStream = client.NetworkStream;
+			
 			int read = 0;
+			NetworkStream networkStream;
 			try {
+				networkStream = client.NetworkStream;
 				read = networkStream.EndRead(result);
 			} catch (System.IO.IOException) {
+				HandleDisconnect(client.ClientId);
+				return;
+			} catch (ObjectDisposedException) {
+				HandleDisconnect(client.ClientId);
+				return;
+			} catch (InvalidOperationException) {
 				HandleDisconnect(client.ClientId);
 				return;
 			}
