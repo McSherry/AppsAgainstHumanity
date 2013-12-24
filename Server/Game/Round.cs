@@ -296,7 +296,9 @@ namespace AppsAgainstHumanity.Server.Game
             // Removes PICK handler, so any received PICKs are now dropped.
             _parent.OnPlayerPick -= pickHandler;
 
-            if (HasPlayedList.Count > 0)
+            // We'll only reveal cards if we have at least two players who
+            // have played cards. If we don't, the round is null.
+            if (HasPlayedList.Where(pl => pl.Value == true).Count() > 2)
             {
                 foreach (Player p in Players.ToList())
                 {
