@@ -278,10 +278,17 @@ namespace AppsAgainstHumanity.Server.Game
                 }
 
                 int falseCtr = 0;
+                // We iterate through the list of players and determine whether
+                // all players have played by incrementing a counter for each
+                // player who has not.
                 foreach (KeyValuePair<Player, bool> hP in HasPlayedList.ToList())
                 {
                     if (!hP.Value) ++falseCtr;
                 }
+                // If we found no players who have not yet played, we can end the
+                // loop waiting for PICKs and continue with the round. If we haven't,
+                // well, the loop will continue until either the players time out or
+                // everyone plays.
                 if (falseCtr == 0) allPlayersSubmitted = true;
             };
 
