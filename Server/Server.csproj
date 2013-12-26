@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E6D18C29-9C2C-47CC-B888-431565BAED0F}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AppsAgainstHumanity.Server</RootNamespace>
     <AssemblyName>AAHServer</AssemblyName>
@@ -138,6 +138,7 @@
     </Content>
     <Content Include="Decks\US.xml" />
     <Content Include="logo32.ico" />
+    <None Include="Resources\logo172_undertext.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

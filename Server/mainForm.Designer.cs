@@ -57,11 +57,14 @@
             this.gameStopBtn = new System.Windows.Forms.Button();
             this.gameStartBtn = new System.Windows.Forms.Button();
             this.serverVersionLbl = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.awesomePointsLimitBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playerLimitBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // cardDeckLbl
@@ -430,12 +433,39 @@
             this.serverVersionLbl.Text = "v0.0.0";
             this.serverVersionLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::AppsAgainstHumanity.Server.Properties.Resources.logo172_undertext;
+            this.pictureBox1.InitialImage = global::AppsAgainstHumanity.Server.Properties.Resources.logo172_undertext;
+            this.pictureBox1.Location = new System.Drawing.Point(43, 23);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(172, 172);
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
+            // aahAboutDescRTBox
+            // 
+            this.aahAboutDescRTBox.BackColor = System.Drawing.SystemColors.Control;
+            this.aahAboutDescRTBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.aahAboutDescRTBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.aahAboutDescRTBox.Enabled = false;
+            this.aahAboutDescRTBox.Location = new System.Drawing.Point(12, 203);
+            this.aahAboutDescRTBox.Name = "aahAboutDescRTBox";
+            this.aahAboutDescRTBox.ReadOnly = true;
+            this.aahAboutDescRTBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.aahAboutDescRTBox.Size = new System.Drawing.Size(237, 82);
+            this.aahAboutDescRTBox.TabIndex = 11;
+            this.aahAboutDescRTBox.Text = "Copyright 2013 (c) Johan Geluk, Liam McSherry\n\nApps Against Humanity is released " +
+    "under the Apache 2.0 licence, and the source code is available via GitHub.";
+            // 
             // mainForm
             // 
             this.AcceptButton = this.broadcastBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 460);
+            this.Controls.Add(this.aahAboutDescRTBox);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.serverVersionLbl);
             this.Controls.Add(this.gameConfigGBox);
             this.Controls.Add(this.gameMonitorGBox);
@@ -452,6 +482,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.awesomePointsLimitBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.playerLimitBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -488,6 +519,8 @@
         private System.Windows.Forms.Panel serverStatusIndicRect;
         private System.Windows.Forms.Label serverVersionLbl;
         private System.Windows.Forms.Button expansionPackButtons;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RichTextBox aahAboutDescRTBox;
 	}
 }
 
