@@ -181,8 +181,12 @@ namespace CsNetLib2
 		}
 		public void Stop()
 		{
-			foreach(var pair in _clients)
-			Listener.Stop();
+            foreach (var pair in _clients)
+            {
+                Listener.Stop();
+                _clients.Remove(pair.Key);
+            }
+            Listener.Server.Dispose();
 		}
 		public class NetLibServerInternalClient
 		{

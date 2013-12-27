@@ -465,7 +465,7 @@
             this.aahWebLinkLbl.AutoSize = true;
             this.aahWebLinkLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.aahWebLinkLbl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.Location = new System.Drawing.Point(12, 288);
+            this.aahWebLinkLbl.Location = new System.Drawing.Point(89, 288);
             this.aahWebLinkLbl.Name = "aahWebLinkLbl";
             this.aahWebLinkLbl.Size = new System.Drawing.Size(58, 13);
             this.aahWebLinkLbl.TabIndex = 12;

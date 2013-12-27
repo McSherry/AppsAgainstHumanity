@@ -677,7 +677,7 @@ namespace AppsAgainstHumanity.Server.Game
             this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
-            _pingTimer = new System.Timers.Timer(5000);
+            _pingTimer = new System.Timers.Timer(1000);
             _pingTimer.Elapsed += (s, e) =>
             {
                 // Sends a PING to each player.
@@ -942,6 +942,7 @@ namespace AppsAgainstHumanity.Server.Game
             }
 
             _pingTimer.Stop();
+            _serverWrapper.UnregisterAllHandlers();
             _server.Stop();
         }
     }
