@@ -72,6 +72,8 @@ namespace AppsAgainstHumanity.Server
             this.czarSelectCBox.SelectedIndex = 0;
             this.gameRulesetCBox.SelectedIndex = 0;
             this.connectedPlayersListBox.Text = String.Empty;
+            this.aahAboutDescRTBox.SelectAll();
+            this.aahAboutDescRTBox.SelectionAlignment = HorizontalAlignment.Center;
             this.serverVersionLbl.Text = String
                 .Format(
                     "{0}.{1}.{2} ({3})",
@@ -269,6 +271,11 @@ namespace AppsAgainstHumanity.Server
         {
             expansionPackForm epf = new expansionPackForm();
             epf.ShowDialog(this);
+        }
+
+        private void aahWebLinkLbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(Constants.WebAddress.ToString());
         }
 	}
 }

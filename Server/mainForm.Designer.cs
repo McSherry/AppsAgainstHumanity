@@ -59,6 +59,7 @@
             this.serverVersionLbl = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
+            this.aahWebLinkLbl = new System.Windows.Forms.LinkLabel();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -458,12 +459,28 @@
             this.aahAboutDescRTBox.Text = "Copyright 2013 (c) Johan Geluk, Liam McSherry\n\nApps Against Humanity is released " +
     "under the Apache 2.0 licence, and the source code is available via GitHub.";
             // 
+            // aahWebLinkLbl
+            // 
+            this.aahWebLinkLbl.ActiveLinkColor = System.Drawing.Color.DodgerBlue;
+            this.aahWebLinkLbl.AutoSize = true;
+            this.aahWebLinkLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.aahWebLinkLbl.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.aahWebLinkLbl.Location = new System.Drawing.Point(12, 288);
+            this.aahWebLinkLbl.Name = "aahWebLinkLbl";
+            this.aahWebLinkLbl.Size = new System.Drawing.Size(58, 13);
+            this.aahWebLinkLbl.TabIndex = 12;
+            this.aahWebLinkLbl.TabStop = true;
+            this.aahWebLinkLbl.Text = "getaah.net";
+            this.aahWebLinkLbl.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
+            this.aahWebLinkLbl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aahWebLinkLbl_LinkClicked);
+            // 
             // mainForm
             // 
             this.AcceptButton = this.broadcastBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 460);
+            this.Controls.Add(this.aahWebLinkLbl);
             this.Controls.Add(this.aahAboutDescRTBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.serverVersionLbl);
@@ -521,6 +538,7 @@
         private System.Windows.Forms.Button expansionPackButtons;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RichTextBox aahAboutDescRTBox;
+        private System.Windows.Forms.LinkLabel aahWebLinkLbl;
 	}
 }
 

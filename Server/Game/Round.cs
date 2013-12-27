@@ -208,7 +208,7 @@ namespace AppsAgainstHumanity.Server.Game
 
             
             // TODO: UNCOMMENT ME FOR PRODUCTION!
-            //timeoutTimer.Start();
+            timeoutTimer.Start();
 
             // Handles a player's pick.
             // Must determine whether the card ID is valid, and
@@ -305,7 +305,7 @@ namespace AppsAgainstHumanity.Server.Game
 
             // We'll only reveal cards if we have at least two players who
             // have played cards. If we don't, the round is null.
-            if (HasPlayedList.Where(pl => pl.Value == true).Count() > 2)
+            if (HasPlayedList.Where(pl => pl.Value == true).Count() > (Constants.MinimumPlayers - 1))
             {
                 foreach (Player p in Players.ToList())
                 {
@@ -409,7 +409,7 @@ namespace AppsAgainstHumanity.Server.Game
             };
 
             // TODO: Uncomment me and my Stop() call for production!
-            //czarTimeout.Start();
+            czarTimeout.Start();
             _parent.OnCzarPick += czpkHandler;
             while (!cardCzarHasPicked) ;
             _parent.OnCzarPick -= czpkHandler;

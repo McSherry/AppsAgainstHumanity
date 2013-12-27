@@ -120,14 +120,21 @@ namespace AppsAgainstHumanityClient
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.RWIN, (sender, arguments) =>
 			{
-				if (arguments.Length == 0) {
-					AddChatLine("<NOTICE> The Card Czar has timed out, no Awesome Points have been awarded. Your card(s) will be returned when the next round begins.");
-					SetGameStatusLabel("Please wait for the next round to begin.");
-				}
-				Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
-				UpdatePlayerList();
-				AddChatLine("<NOTICE> " + arguments[0] + " wins the round!");
-				SetGameStatusLabel(arguments[0] + " has won the round. Please wait for the next round to begin.");
+                // Arguments being null indicates that the server terminated the round, either because
+                // too few players picked to continue the round, or because the Card Czar failed to
+                // pick within adequate time.
+                if (arguments == null)
+                {
+                    AddChatLine("<NOTICE> The Card Czar has timed out, no Awesome Points have been awarded. Your card(s) will be returned when the next round begins.");
+                    SetGameStatusLabel("Please wait for the next round to begin.");
+                }
+                else
+                {
+				    Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
+				    UpdatePlayerList();
+				    AddChatLine("<NOTICE> " + arguments[0] + " wins the round!");
+                    SetGameStatusLabel(arguments[0] + " has won the round. Please wait for the next round to begin.");
+                }
 			});
 			NetworkInterface.ClientWrapper.RegisterCommandHandler(CommandType.GWIN, (sender, arguments) =>
 			{

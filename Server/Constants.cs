@@ -22,5 +22,12 @@ namespace AppsAgainstHumanity.Server
         /// </summary>
         public const int MinimumPlayers = 3;
 #endif
+        /// <summary>
+        /// The address of the Apps Against Humanity website.
+        /// </summary>
+        public static Uri WebAddress
+        {
+            get { return new Uri("http://getaah.net"); }
+        }
     }
 }
