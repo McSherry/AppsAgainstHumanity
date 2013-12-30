@@ -24,6 +24,21 @@ namespace AppsAgainstHumanityClient
 
 		public MainForm(NetworkInterface networkInterface, string yourName)
 		{
+            this.FormClosed += (s, e) =>
+            {
+                /* "Why is this here?" You may ask. Good question. Why do we need to
+                 * kill the application even though the user's just closed the form?
+                 * Well, in debug mode, the console persists and the form doesn't, and
+                 * then someone bit of code tries to call a method of the now-disposed
+                 * form and it throws an exception.
+                 * 
+                 * Killing the app fixes this, since the console is no longer actually
+                 * running and cannot call anything. Does it work? Yes. Is it the best
+                 * way to do it? Probably not.
+                 */
+                Application.Exit();
+            };
+
 			Game.YourName = yourName;
 
 			NetworkInterface = networkInterface;
