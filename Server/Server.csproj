@@ -128,15 +128,35 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Decks\UK.xml" />
-    <Content Include="Decks\US-X1.xml">
-      <SubType>Designer</SubType>
+    <Content Include="Decks\CA.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Decks\US-X2.xml" />
-    <Content Include="Decks\US-X3.xml">
-      <SubType>Designer</SubType>
+    <Content Include="Decks\CAH-Holiday-2012.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Decks\US.xml" />
+    <Content Include="Decks\CAH-PAX-East-2013.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\CAH-PAX-Prime-2013.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\UK.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\X1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\X2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\X3.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Decks\US.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo32.ico" />
     <None Include="Resources\logo172_undertext.png" />
   </ItemGroup>
