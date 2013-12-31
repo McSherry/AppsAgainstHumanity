@@ -339,7 +339,7 @@ namespace AppsAgainstHumanity.Server.Game
 
             // If there are now fewer players than are required to play,
             // Stop the game.
-            if (Players.Count <= Constants.MinimumPlayers)
+            if (Players.Count < Constants.MinimumPlayers && this.HasStarted)
             {
                 this.Stop();
             }
@@ -556,7 +556,12 @@ namespace AppsAgainstHumanity.Server.Game
         // handles disconnection requests from the client
         private void _handlerDISC(long sender, string[] args)
         {
+            Player rmPl = Players.Single(pl => pl.ClientIdentifier == sender);
             _senderDISC(sender, "Disconnected at request.");
+            foreach (Player p in Players.ToList())
+            {
+                _senderCLEX(p.ClientIdentifier, rmPl);
+            }
         }
 
         // sends CLNFs to a client 
