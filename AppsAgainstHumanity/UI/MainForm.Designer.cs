@@ -141,7 +141,7 @@
             // 
             this.sts_GameStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stl_GameStatusLabel});
-            this.sts_GameStatus.Location = new System.Drawing.Point(0, 660);
+            this.sts_GameStatus.Location = new System.Drawing.Point(0, 682);
             this.sts_GameStatus.Name = "sts_GameStatus";
             this.sts_GameStatus.Size = new System.Drawing.Size(938, 22);
             this.sts_GameStatus.TabIndex = 1;
@@ -156,7 +156,7 @@
             // 
             this.tbx_Chat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbx_Chat.Location = new System.Drawing.Point(0, 642);
+            this.tbx_Chat.Location = new System.Drawing.Point(0, 660);
             this.tbx_Chat.Name = "tbx_Chat";
             this.tbx_Chat.Size = new System.Drawing.Size(864, 20);
             this.tbx_Chat.TabIndex = 6;
@@ -178,7 +178,7 @@
             this.tbx_ChatLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbx_ChatLog.Location = new System.Drawing.Point(0, 548);
+            this.tbx_ChatLog.Location = new System.Drawing.Point(0, 565);
             this.tbx_ChatLog.Multiline = true;
             this.tbx_ChatLog.Name = "tbx_ChatLog";
             this.tbx_ChatLog.ReadOnly = true;
@@ -189,7 +189,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(863, 643);
+            this.button1.Location = new System.Drawing.Point(863, 660);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 20);
             this.button1.TabIndex = 10;
@@ -266,7 +266,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(938, 682);
+            this.ClientSize = new System.Drawing.Size(960, 700);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tbx_ChatLog);

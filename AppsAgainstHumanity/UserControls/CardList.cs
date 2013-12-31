@@ -11,7 +11,7 @@ namespace AppsAgainstHumanityClient
 {
 	class CardList : Panel
 	{
-		protected List<Card> Cards = new List<Card>();
+		protected internal List<Card> Cards = new List<Card>();
 		public List<Card> SelectedCards { get; private set; }
 		private int CardsPerRow;
 		private bool canSelectCards;
@@ -101,19 +101,23 @@ namespace AppsAgainstHumanityClient
 		protected virtual void card_Click(object sender, EventArgs e)
 		{
 			ReflowCards();
-			if (CanSelectCards) {
-				var card = (Card)sender;
-				if (SelectedCards.Contains(card)) {
-					SelectedCards.Remove(card);
-				} else{
-					if (SelectedCards.Count == MaxSelectNum) {
-						SelectedCards.RemoveAt(0);
-					}
-					SelectedCards.Add(card);
-					card.SelectionIndex = SelectedCards.Count;
-				}
-				RecalculateSelectionIndices();
-			}
+            if (CanSelectCards) SelectCard(sender as Card);
 		}
+
+        public void SelectCard(Card c, bool force = false)
+        {
+            if (SelectedCards.Contains(c)) SelectedCards.Remove(c);
+            else
+            {
+                if (SelectedCards.Count == MaxSelectNum && !force) SelectedCards.RemoveAt(0);
+                else
+                {
+                    SelectedCards.Add(c);
+                    c.SelectionIndex = SelectedCards.Count;
+                    c.RegenerateCardText(true);
+                }
+            }
+            RecalculateSelectionIndices();
+        }
 	}
 }

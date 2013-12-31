@@ -23,7 +23,7 @@ namespace AppsAgainstHumanity.Server
         /// </summary>
         public static int MinorVersion
         {
-            get { return 1; }
+            get { return 2; }
         }
         /// <summary>
         /// The patch version in a version string MAJOR.MINOR.PATCH.

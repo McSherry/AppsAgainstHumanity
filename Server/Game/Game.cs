@@ -777,6 +777,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// they leave by any other means.
         /// </summary>
         public event PlayerEventHandler OnPlayerDisconnected;
+        /// <summary>
+        /// Fired whenever Game.Stop() is called.
+        /// </summary>
+        public event EventHandler OnGameStopped;
 
         /// <summary>
         /// Event which is fired when a META is received from the client.
@@ -970,6 +974,8 @@ namespace AppsAgainstHumanity.Server.Game
             _pingTimer.Stop();
             _serverWrapper.UnregisterAllHandlers();
             _server.Stop();
+
+            if (this.OnGameStopped != null) this.OnGameStopped.Invoke(null, null);
         }
     }
 }

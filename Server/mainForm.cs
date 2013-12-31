@@ -16,6 +16,13 @@ namespace AppsAgainstHumanity.Server
 {
 	public partial class mainForm : Form
 	{
+        private enum _GameMonitorState
+        {
+            Online,
+            Waiting,
+            Offline
+        }
+
         public const byte ETX = 3;
 
 		//private NetLibServer Server;
@@ -37,10 +44,18 @@ namespace AppsAgainstHumanity.Server
                 {
                     using (StreamReader sr = new StreamReader(s))
                     {
-                        _cardDecks.Add(
-                            deckCtr,
-                            new Deck(sr.ReadToEnd())
-                        );
+                        try
+                        {
+                            _cardDecks.Add(
+                                deckCtr,
+                                new Deck(sr.ReadToEnd())
+                            );
+                        }
+                        catch (System.Xml.XmlException)
+                        {
+                            Console.WriteLine("ERROR PARSING: {0}", s);
+                            continue;
+                        }
                     }
                     deckCtr++;
                 }
@@ -59,6 +74,70 @@ namespace AppsAgainstHumanity.Server
                 this.cardDeckCBox.Items.Add(_cardDecks.ElementAt(i).Value.Name);
             }
             this.cardDeckCBox.SelectedIndex = 0;
+        }
+        private void _enableUIComponents()
+        {
+            #region set form elements to enabled/disabled
+            cardDeckCBox.Enabled = true;
+            deckReloadBtn.Enabled = true;
+            playerLimitBox.Enabled = true;
+            awesomePointsLimitBox.Enabled = true;
+            timeoutLimitCBox.Enabled = true;
+            // TODO: Uncomment these when implemented.
+            czarSelectCBox.Enabled = true;
+            //gameRulesetCBox.Enabled = true;
+            //allowGamblingCheckBox.Enabled = true;
+            allowChatCheckBox.Enabled = true;
+            timeoutKickCheckBox.Enabled = true;
+            expansionPackButtons.Enabled = true;
+            serverStartBtn.Enabled = true;
+            gameStartBtn.Enabled = false;
+            gameStopBtn.Enabled = false;
+            #endregion
+        }
+        private void _disableUIComponents()
+        {
+            cardDeckCBox.Enabled = false;
+            deckReloadBtn.Enabled = false;
+            playerLimitBox.Enabled = false;
+            awesomePointsLimitBox.Enabled = false;
+            timeoutLimitCBox.Enabled = false;
+            czarSelectCBox.Enabled = false;
+            gameRulesetCBox.Enabled = false;
+            allowGamblingCheckBox.Enabled = false;
+            allowChatCheckBox.Enabled = false;
+            timeoutKickCheckBox.Enabled = false;
+            serverStartBtn.Enabled = false;
+            gameStartBtn.Enabled = true;
+            gameStopBtn.Enabled = true;
+            expansionPackButtons.Enabled = false;
+        }
+        private void _setGameMonitorState(_GameMonitorState gms)
+        {
+            Color FC = Color.Empty, BC = FC;
+            string text = String.Empty;
+
+            switch (gms)
+            {
+                case _GameMonitorState.Offline:
+                    FC = BC = Color.Red;
+                    text = "Offline.";
+                    break;
+                case _GameMonitorState.Online:
+                    BC = Color.YellowGreen;
+                    FC = Color.DarkGreen;
+                    text = "Game has begun.";
+                    break;
+                case _GameMonitorState.Waiting:
+                    FC = Color.OrangeRed;
+                    BC = Color.Gold;
+                    text = "Waiting for players...";
+                    break;
+            }
+
+            this.serverStatusIndicLbl.ForeColor = FC;
+            this.serverStatusIndicLbl.Text = text;
+            this.serverStatusIndicRect.BackColor = BC;
         }
 
         public mainForm()
@@ -185,27 +264,15 @@ namespace AppsAgainstHumanity.Server
             game.OnPlayerJoin += _playerJoinHandler;
             game.OnPlayerLeave += _playerLeaveHandler;
             game.OnPlayerDisconnected += _playerLeaveHandler;
+            game.OnGameStopped += (s, ee) =>
+            {
+                _setGameMonitorState(_GameMonitorState.Offline);
+                _enableUIComponents();
+            };
 
-            #region set form elements to enabled/disabled
-            cardDeckCBox.Enabled = false;
-            deckReloadBtn.Enabled = false;
-            playerLimitBox.Enabled = false;
-            awesomePointsLimitBox.Enabled = false;
-            timeoutLimitCBox.Enabled = false;
-            czarSelectCBox.Enabled = false;
-            gameRulesetCBox.Enabled = false;
-            allowGamblingCheckBox.Enabled = false;
-            allowChatCheckBox.Enabled = false;
-            timeoutKickCheckBox.Enabled = false;
-            serverStartBtn.Enabled = false;
-            gameStartBtn.Enabled = true;
-            gameStopBtn.Enabled = true;
-            expansionPackButtons.Enabled = false;
-            #endregion
+            _disableUIComponents();
 
-            this.serverStatusIndicRect.BackColor = Color.Gold;
-            this.serverStatusIndicLbl.ForeColor = Color.OrangeRed;
-            this.serverStatusIndicLbl.Text = "Waiting for Players...";
+            _setGameMonitorState(_GameMonitorState.Waiting);
         }
         private void gameStartBtn_Click(object sender, EventArgs e)
         {
@@ -217,9 +284,7 @@ namespace AppsAgainstHumanity.Server
                 this.gameStartBtn.Enabled = false;
                 #endregion
 
-                this.serverStatusIndicRect.BackColor = Color.YellowGreen;
-                this.serverStatusIndicLbl.ForeColor = Color.DarkGreen;
-                this.serverStatusIndicLbl.Text = "Game has begun.";
+                _setGameMonitorState(_GameMonitorState.Online);
 
                 // TODO: Uncomment this.
                 game.Start();
@@ -244,27 +309,6 @@ namespace AppsAgainstHumanity.Server
             if (game != null)
             {
                 game.Stop();
-
-                this.serverStatusIndicLbl.ForeColor = Color.Red;
-                this.serverStatusIndicLbl.Text = "Offline.";
-                this.serverStatusIndicRect.BackColor = Color.Red;
-
-                #region set form elements to enabled/disabled
-                cardDeckCBox.Enabled = true;
-                deckReloadBtn.Enabled = true;
-                playerLimitBox.Enabled = true;
-                awesomePointsLimitBox.Enabled = true;
-                timeoutLimitCBox.Enabled = true;
-                // TODO: Uncomment these when implemented.
-                //czarSelectCBox.Enabled = true;
-                //gameRulesetCBox.Enabled = true;
-                //allowGamblingCheckBox.Enabled = true;
-                //allowChatCheckBox.Enabled = true;
-                //timeoutKickCheckBox.Enabled = true;
-                serverStartBtn.Enabled = true;
-                gameStartBtn.Enabled = false;
-                gameStopBtn.Enabled = false;
-                #endregion
             }
         }
 

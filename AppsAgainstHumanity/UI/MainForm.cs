@@ -147,6 +147,10 @@ namespace AppsAgainstHumanityClient
                 {
 				    Game.Players.Where(p => p.Name == arguments[0]).First().AwesomePoints++;
 				    UpdatePlayerList();
+
+                    this.crl_PickedCards.SelectCard(this.crl_PickedCards.Cards.Single(c => c.Id == arguments[1]), true);
+                    this.crl_PickedCards.SuspendLayout();
+
 				    AddChatLine("<NOTICE> " + arguments[0] + " wins the round!");
                     SetGameStatusLabel(arguments[0] + " has won the round. Please wait for the next round to begin.");
                 }

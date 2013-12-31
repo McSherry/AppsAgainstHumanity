@@ -48,9 +48,15 @@ namespace AppsAgainstHumanityClient
 				RegenerateCardText();
 			}
 		}
-		private void RegenerateCardText()
+		protected internal void RegenerateCardText(bool noNumber = false)
 		{
-			lbl_CardText.Text = cardText + (SelectionIndex == 0 ? "" : string.Format(" ({0})", SelectionIndex));
+            if (lbl_CardText.InvokeRequired) lbl_CardText.Invoke(new Action<bool>(RegenerateCardText), noNumber);
+            else
+            {
+                string cardAppend = SelectionIndex == 0 ? String.Empty : String.Format(" ({0})", SelectionIndex);
+                cardAppend = noNumber ? String.Empty : cardAppend;
+                lbl_CardText.Text = cardText + cardAppend;
+            }
 		}
 		public string Id
 		{

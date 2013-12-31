@@ -67,6 +67,7 @@
             // expansionPackListBox
             // 
             this.expansionPackListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.expansionPackListBox.CheckOnClick = true;
             this.expansionPackListBox.FormattingEnabled = true;
             this.expansionPackListBox.Location = new System.Drawing.Point(12, 12);
             this.expansionPackListBox.Name = "expansionPackListBox";
@@ -79,8 +80,9 @@
             this.AcceptButton = this.saveSelectionBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.CancelButton = this.cancelBtn;
-            this.ClientSize = new System.Drawing.Size(463, 279);
+            this.ClientSize = new System.Drawing.Size(459, 275);
             this.ControlBox = false;
             this.Controls.Add(this.expansionPackListBox);
             this.Controls.Add(this.cancelBtn);
