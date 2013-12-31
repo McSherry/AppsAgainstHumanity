@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!-- Card Pack = 0 | Addon Pack = 1 -->
+    <!--
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - Holiday 2012 expansion.
+    -->
+    <name>Cards Against Humanity - Holiday Expansion 2012</name>
+    <count white="23" black="8"/>
+    <cards>
+        <white>
+            <card>Elf cum.</card>
+            <card>Gift-wrapping a live hamster.</card>
+            <card>A Hungry-Man Frozen Christmas Dinner for One.</card>
+            <card>Several intertwining love stories featuring Hugh Grant.</card>
+            <card>Mall Santa.</card>
+            <card>Whatever Kwanzaa is supposed to be about.</card>
+            <card>Clearing a bloody path through Walmart with a scimitar.</card>
+            <card>Santa's heavy sack.</card>
+            <card>Krampus, the Austrian Christmas monster.</card>
+            <card>Another shitty year.</card>
+            <card>My hot cousin.</card>
+            <card>A Christmas stocking full of coleslaw.</card>
+            <card>A visually arresting turtleneck.</card>
+            <card>Fucking up "Silent Night" in front of 300 parents.</card>
+            <card>Space Jam on VHS.</card>
+            <card>A toxic family environment.</card>
+            <card>Taking down Santa with a surface-to-air-missile.</card>
+            <card>Immaculate conception.</card>
+            <card>Socks.</card>
+            <card>The tiny, calloused hands of the Chinese children that made this card.</card>
+            <card>The Star Wars Holiday Special.</card>
+            <card>Pretending to be happy.</card>
+            <card>Eating an entire snowman.</card>
+        </white>
+        <black>
+            <card pick="1">After blacking out during New Year's Eve, I was awoken by _____.</card>
+            <card pick="1">What keeps me warm during the cold, cold winter?</card>
+            <card pick="1">This holiday season, Tim Allen must overcome his fear of _____ to save Christmas.</card>
+            <card pick="1">What keeps me warm during the cold, cold winter?</card>
+            <card pick="1">Every Christmas, my uncle gets drunk and tells the story about _____.</card>
+            <card pick="1">On the third day of Christmas, my true love gave to me: three French hens, two turtle doves and _____.</card>
+            <card pick="1">Jesus is _____.</card>
+            <card pick="1">Wake up, America. Christmas is under attack by secular liberals and their _____.</card>
+        </black>
+    </cards>
+</deck>

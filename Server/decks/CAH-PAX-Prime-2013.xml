@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!-- Card Pack = 0 | Addon Pack = 1 -->
+    <!--
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - PAX Prime 2013 expansion.
+    -->
+    <name>Cards Against Humanity - PAX Prime 2013</name>
+    <count white="36" black="7"/>
+    <cards>
+        <white>
+            <card>Full HD.</card>
+            <card>Mario Kart rage.</card>
+            <card>Tapping Serra Angel.</card>
+            <card>The gravity gun.</card>
+            <card>Nude-modding Super Mario World.</card>
+            <card>Charles Barkley Shut Up and Jam!</card>
+            <card>Reading the comments.</card>
+            <card>An angry stone head that stomps on the floor every three seconds.</card>
+            <card>Legendary Create - Robert Khoo.</card>
+            <card>70,000 gamers sweating and farting inside an airtight steel dome.</card>
+            <card>Yoshi's huge egg-laying cloaca.</card>
+            <card>Winning the approval of Cooking Mama that you never got from actual mama.</card>
+            <card>Allowing nacho cheese to curdle in your beard while you creep in League of Legends.</card>
+            <card>The Cock Ring of Alacrity.</card>
+            <card>Eating a pizza that's lying in the street to gain health.</card>
+            <card>Achieving the manual dexterity and tactical brilliance of a 12-year-old Korean boy.</card>
+            <card>Offering sexual favors for an ore and a sheep.</card>
+            <card>Getting into a situation with an owlbear.</card>
+            <card>Rolling a D20 to save a failing marriage.</card>
+            <card>A homemade, cum-stained Star Trek uniform.</card>
+            <card>Grand Theft Auto: Fort Lauderdale.</card>
+            <card>The collective wail of every Magic: The Gathering player suddenly realising that they've spent hundreds of dollars on pieces of cardboard.</card>
+            <card>Unlocking a new sex position.</card>
+            <card>A madman who lives in a policebox and kidnaps women.</card>
+            <card>Being an attractive elf trapped in an unattractive human's body.</card>
+            <card>The boner hatch in the Iron Man suit.</card>
+            <card>SNES cartridge cleaning fluid.</card>
+            <card>Temporary invincibility.</card>
+            <card>Never watching, discussing, or thinking about My Little Pony.</card>
+            <card>Google Glass + e-cigarette: Ultimate Combo!</card>
+            <card>The Sarlacc</card>
+            <card>Turn-of-the-century sky racists.</card>
+            <card>Buying virtual clothes for a Sim family instead of real clothes for a real family.</card>
+            <card>Filling every pouch of a UtiliKilt(TM) with pizza.</card>
+            <card>The decade of legal inquests following a single hour of Grand Theft Auto.</card>
+            <card>Bowser's aching heart.</card>
+            <card>A fully-dressed female videogame character.</card>
+        </white>
+        <black>
+            <card pick="1">No Enforcer wants to manage the panel on __________.</card>
+            <card pick="1">The most controversial game at PAX this year is an 8-bit indie platformer about _____.</card>
+            <card pick="1">__________: Achievement unlocked.</card>
+            <card pick="1">In the new DLC for Mass Effect, Shepard must save the galaxy from __________.</card>
+            <card pick="1">What made Spock cry?</card>
+            <card pick="1">There was a riot at the Gearbox panel when they gave the attendees __________.</card>
+            <card pick="1">What's the latest bullshit that's troubling this quaint fantasy town?</card>
+        </black>
+    </cards>
+</deck>

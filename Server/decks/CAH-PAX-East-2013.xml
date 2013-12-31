@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1"> <!-- Card Pack = 0 | Addon Pack = 1 -->
+    <!--
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - PAX East 2013 expansion.
+    -->
+    <name>Cards Against Humanity - PAX East 2013</name>
+    <count white="24" black="6"/>
+    <cards>
+        <white>
+            <card>Paying the iron price.</card>
+            <card>Loading from a previous save.</card>
+            <card>The Klobb.</card>
+            <card>Jiggle physics.</card>
+            <card>Sharpening a foam broadsword on a foam whetstone.</card>
+            <card>Wil Wheaton crashing an actual spaceship.</card>
+            <card>Running out of stamina.</card>
+            <card>The rocket launcher.</card>
+            <card>Forgetting to eat, and consequently dying.</card>
+            <card>An immediately regrettable $9 hot dog from the Boston Convention Center.</card>
+            <card>The depression that ensues after catching 'em all.</card>
+            <card>Achieving 500 actions per minute.</card>
+            <card>Casting magic missile at a bully.</card>
+            <card>Violating the First Law of Robotics.</card>
+            <card>Smashing all the pottery in a Pottery Barn in search of rupees.</card>
+            <card>Getting bitch slapped by Dhalsim.</card>
+            <card>Getting inside the Horadric Cube with a hot babe and pressing the transmute button.</card>
+            <card>Judging elves by the color of their skin and not by the content of their character.</card>
+            <card>Firefly: Season 2.</card>
+            <card>Punching a tree to gather wood.</card>
+            <card>Charging up all the way.</card>
+            <card>Rotating shapes in mid-air so that they fit into other shapes when they fall.</card>
+            <card>Spending the year's insulin budget on Warhammer 40k figures.</card>
+            <card>Vespene gas.</card>
+        </white>
+        <black>
+            <card pick="1">I have an idea even better than Kickstarter, and it's called _____ starter.</card>
+            <card pick="1">In the final round of this year's Omegathon, Omeganauts must face off in a game of _____.</card>
+            <card pick="1">I don't know exactly how I got the PAX plague, but I suspect it had something to do with _____.</card>
+            <card pick="1">You have been waylaid by __________ and must defend yourself.</card>
+            <card pick="1">Action stations! Action stations! Set condition one throughout the fleet and brace for _____.</card>
+            <card pick="1"><![CDATA[ v v < > B to unleash _____]]></card>
+        </black>
+    </cards>
+</deck>

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!-- Card Pack = 0 | Addon Pack = 1 -->
+    <!--
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - Canadian expansion.
+    -->
+    <name>Cards Against Humanity - Canadian Expansion</name>
+    <count white="27" black="9"/>
+    <cards>
+        <white>
+            <card>Snotsicles.</card>
+            <card>Naked News.</card>
+            <card>Don Cherry's wardrobe.</card>
+            <card>Syrupy sex with a maple tree.</card>
+            <card>Terry Fox's prosthetic leg.</card>
+            <card>Canada: America's hat.</card>
+            <card>Homo milk.</card>
+            <card>Mr. Dressup.</card>
+            <card>The Front de Libération du Québec.</card>
+            <card>Heritage minutes.</card>
+            <card>The Royal Canadian Mounted Police.</card>
+            <card>Stephen Harper.</card>
+            <card>Burning down the White House.</card>
+            <card>Being Canadian.</card>
+            <card>The Famous Five.</card>
+            <card>A Molson muscle.</card>
+            <card>An icy handjob from an Edmonton hooker.</card>
+            <card>Poutine.</card>
+            <card>Schmirler the Curler.</card>
+            <card>The Official Languages Act. La Loi sur les langues officielles.</card>
+            <card>Newfies.</card>
+            <card>The CBC.</card>
+            <card>Graham Greene playing the same First Nations character on every TV show.</card>
+            <card>Killing a Moose with your bare hands.</card>
+            <card>Tim Hortons.</card>
+            <card>Quintland.</card>
+            <card>Karla Homolka.</card>
+        </white>
+        <black>
+            <card pick="1">In an attempt to reach a wider audience, the Royal Ontario Museum has opened an interactive exhibit on _____.</card>
+            <card pick="1">What's the Canadian government using to inspire rural students to succeed?</card>
+            <card pick="3">In the next Bob and Doug McKenzie adventure, they have to find _____ to uncover a sinister plot involved _____ and _____.</card>
+            <card pick="1">Air Canada now prohibit __________ on airplanes.</card>
+            <card pick="2">CTV presents _____, the story of _____.</card>
+            <card pick="1">In Vancouver it is now legal to __________.</card>
+            <card pick="1">O Canada, we stand on guard for __________.</card>
+            <card pick="2">If _____ came in two-fours Canada would be more _____.</card>
+            <card pick="2">After unifying the GST and PST the Government now afford to provide _____ for _____.</card>
+        </black>
+    </cards>
+</deck>
