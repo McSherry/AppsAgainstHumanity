@@ -181,7 +181,7 @@ namespace CsNetLib2
 		}
 		public void Stop()
 		{
-            foreach (var pair in _clients)
+            foreach (var pair in _clients.ToList())
             {
                 Listener.Stop();
                 _clients.Remove(pair.Key);

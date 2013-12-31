@@ -626,7 +626,23 @@ namespace AppsAgainstHumanity.Server.Game
         // Informs a client that they have been disconnected.
         private void _senderDISC(long clientID, string message = null)
         {
+            SendCommand(
+                CommandType.DISC,
+                message,
+                clientID
+            );
 
+            Player rmPl = this.Players.Single(pl => pl.ClientIdentifier == clientID);
+            this.Players.Remove(rmPl);
+
+            if (this._currRound != null)
+            {
+                this._currRound.Players.Remove(rmPl);
+                this._currRound.PlayedCards.Remove(rmPl);
+                this._currRound.HasPlayedList.Remove(rmPl);
+            }
+
+            if (this.OnPlayerDisconnected != null) this.OnPlayerDisconnected.Invoke(rmPl);
         }
 
         /// <summary>
@@ -751,6 +767,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// Fired when a CZPK is received.
         /// </summary>
         public event PlayerCardEventHandler OnCzarPick;
+        /// <summary>
+        /// Fired when a player is disconnected by the server, but not when
+        /// they leave by any other means.
+        /// </summary>
+        public event PlayerEventHandler OnPlayerDisconnected;
 
         /// <summary>
         /// Event which is fired when a META is received from the client.

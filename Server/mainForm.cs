@@ -184,6 +184,7 @@ namespace AppsAgainstHumanity.Server
             game.OnClientMessageReceived += _receivedMessageHandler;
             game.OnPlayerJoin += _playerJoinHandler;
             game.OnPlayerLeave += _playerLeaveHandler;
+            game.OnPlayerDisconnected += _playerLeaveHandler;
 
             #region set form elements to enabled/disabled
             cardDeckCBox.Enabled = false;
