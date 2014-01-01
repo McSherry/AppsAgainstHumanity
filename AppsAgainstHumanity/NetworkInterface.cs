@@ -40,7 +40,7 @@ namespace AppsAgainstHumanityClient
 		/// <param name="nick">The nickname that should be used.</param>
 		internal async Task Connect(string host, string nick)
 		{
-			Task t = Client.Connect(host, 11235, TransferProtocols.Delimited, Encoding.ASCII);
+			Task t = Client.Connect(host, 11235, TransferProtocols.Delimited, Encoding.UTF8);
 			Client.Delimiter = ETX;
 			await t;
 			ClientWrapper.SendCommand(CommandType.JOIN, nick);

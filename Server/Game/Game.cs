@@ -714,7 +714,7 @@ namespace AppsAgainstHumanity.Server.Game
             _pingTimer.Start();
 
 
-            this._server = new NetLibServer(PORT, TransferProtocols.Delimited, Encoding.ASCII);
+            this._server = new NetLibServer(Settings.Port, TransferProtocols.Delimited, Encoding.UTF8);
             _server.Delimiter = ETX;
             this._serverWrapper = new AAHProtocolWrapper(_server);
 
