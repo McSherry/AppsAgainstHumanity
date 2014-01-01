@@ -69,5 +69,27 @@ namespace AppsAgainstHumanity.Server.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;deck type=&quot;0&quot;&gt; &lt;!-- Card Pack = 0 | Addon Pack = 1 --&gt;
+        ///  &lt;!--
+        ///      Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        ///      The texts herein are a reproduction of the official Cards Against Humanity game.
+        ///  --&gt;
+        ///  &lt;name&gt;Cards Against Humanity - US Edition&lt;/name&gt;
+        ///  &lt;count white=&quot;460&quot; black=&quot;90&quot;/&gt;
+        ///  &lt;cards&gt;
+        ///    &lt;white&gt;
+        ///      &lt;card&gt;Being on fire.&lt;/card&gt;
+        ///      &lt;card&gt;Racism.&lt;/card&gt;
+        ///      &lt;card&gt;Old-people smell.&lt;/card&gt;
+        ///      [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string US {
+            get {
+                return ResourceManager.GetString("US", resourceCulture);
+            }
+        }
     }
 }

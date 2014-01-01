@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!-- 
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - Rejects Pack expansion.
+    -->
+    <name>Cards Against Humanity - Rejects Pack</name>
+    <count white="16" black="8"/>
+    <cards>
+        <white>
+            <card>My dick in your mouth.</card>
+            <card>Corn.</card>
+            <card>Caribbean Jesus.</card>
+            <card>Super yoga.</card>
+            <card>Ladles.</card>
+            <card>Ejaculating a pound of tinsel.</card>
+            <card>A heart that is two sizes too small and therefore cannot pump an adequate amount of blood.</card>
+            <card>The John D. and Catherine T. MacArthur Foundation.</card>
+            <card>Dividing by zero.</card>
+            <card>Playing an ocarina to summon Ultra-Congress from the sea.</card>
+            <card>Asshole pomegranates that are hard to eat.</card>
+            <card>Becoming so rich that you shed your body and turn to vapor.</card>
+            <card>Faking a jellyfish sting so someone will pee on you.</card>
+            <card>A sexy naked interactive theater thing.</card>
+            <card>A giant squid in a wedding gown.</card>
+            <card>Crawling into a vagina.</card>
+        </white>
+        <black>
+            <card pick="1">You can't wait forever. It's tie to talk to your doctor about _____.</card>
+            <card pick="1">The Westboro Baptist Church is now picketing soldiers' funerals with signs that read "GOD HATES _____."</card>
+            <card pick="2">What are two cards in your hand that you want to get rid of?</card>
+            <card pick="1">The elders of the Ibo tribe of Nigeria recommend _____ as a cure for impotence.</card>
+            <card pick="1">My name is Inigo Montoya. You killed my father. Prepare for __________.</card>
+            <card pick="1">From WBEZ Chicago, it's This American Life. Today on our program, _____. Stay with us.</card>
+            <card pick="1">What do you see?</card>
+            <card pick="1">Sir, we found you passed out naked on the side of the road. What's the last thing you remember?</card>
+        </black>
+    </cards>
+</deck>

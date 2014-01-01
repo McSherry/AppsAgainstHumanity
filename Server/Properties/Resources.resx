@@ -121,4 +121,7 @@
   <data name="logo172_undertext" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo172_undertext.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="US" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Decks\US.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
