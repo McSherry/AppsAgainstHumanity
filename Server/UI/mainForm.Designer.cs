@@ -1,4 +1,4 @@
-﻿namespace AppsAgainstHumanity.Server
+﻿namespace AppsAgainstHumanity.Server.UI
 {
 	partial class mainForm
 	{
@@ -60,6 +60,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
             this.aahWebLinkLbl = new System.Windows.Forms.LinkLabel();
+            this.serverSettingsBtn = new System.Windows.Forms.Button();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -465,7 +466,7 @@
             this.aahWebLinkLbl.AutoSize = true;
             this.aahWebLinkLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.aahWebLinkLbl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.Location = new System.Drawing.Point(102, 288);
+            this.aahWebLinkLbl.Location = new System.Drawing.Point(103, 288);
             this.aahWebLinkLbl.Name = "aahWebLinkLbl";
             this.aahWebLinkLbl.Size = new System.Drawing.Size(58, 13);
             this.aahWebLinkLbl.TabIndex = 12;
@@ -474,12 +475,23 @@
             this.aahWebLinkLbl.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
             this.aahWebLinkLbl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aahWebLinkLbl_LinkClicked);
             // 
+            // serverSettingsBtn
+            // 
+            this.serverSettingsBtn.Location = new System.Drawing.Point(174, 428);
+            this.serverSettingsBtn.Name = "serverSettingsBtn";
+            this.serverSettingsBtn.Size = new System.Drawing.Size(75, 23);
+            this.serverSettingsBtn.TabIndex = 13;
+            this.serverSettingsBtn.Text = "Settings";
+            this.serverSettingsBtn.UseVisualStyleBackColor = true;
+            this.serverSettingsBtn.Click += new System.EventHandler(this.serverSettingsBtn_Click);
+            // 
             // mainForm
             // 
             this.AcceptButton = this.broadcastBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 460);
+            this.Controls.Add(this.serverSettingsBtn);
             this.Controls.Add(this.aahWebLinkLbl);
             this.Controls.Add(this.aahAboutDescRTBox);
             this.Controls.Add(this.pictureBox1);
@@ -539,6 +551,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RichTextBox aahAboutDescRTBox;
         private System.Windows.Forms.LinkLabel aahWebLinkLbl;
+        private System.Windows.Forms.Button serverSettingsBtn;
 	}
 }
 

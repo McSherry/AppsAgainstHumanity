@@ -12,7 +12,7 @@ using CsNetLib2;
 using AppsAgainstHumanity.Server.Game;
 using System.IO;
 
-namespace AppsAgainstHumanity.Server
+namespace AppsAgainstHumanity.Server.UI
 {
 	public partial class mainForm : Form
 	{
@@ -349,6 +349,15 @@ namespace AppsAgainstHumanity.Server
         private void aahWebLinkLbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(Constants.WebAddress.ToString());
+        }
+
+        private void serverSettingsBtn_Click(object sender, EventArgs e)
+        {
+            var sf = new settingsForm();
+
+            sf.ShowDialog(this);
+
+            sf.Dispose();
         }
 	}
 }

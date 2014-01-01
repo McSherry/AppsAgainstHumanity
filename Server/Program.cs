@@ -8,7 +8,7 @@ namespace AppsAgainstHumanity.Server
 {
 	static class Program
 	{
-        public static mainForm MainForm;
+        public static UI.mainForm MainForm;
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
@@ -17,7 +17,7 @@ namespace AppsAgainstHumanity.Server
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-            MainForm = new mainForm();
+            MainForm = new UI.mainForm();
 			Application.Run(MainForm);
 		}
 	}

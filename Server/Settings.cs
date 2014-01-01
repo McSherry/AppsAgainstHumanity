@@ -18,7 +18,6 @@ namespace AppsAgainstHumanity.Server
     {
         // We'll need this to keep watch on the file.
         private static FileSystemWatcher _settingFileChecker;
-        private static FileStream _settingsFileStream;
 
         // If the settings file changes, we'll need to reload the settings. 
         private static void _fileChangeHandler(object sender, FileSystemEventArgs e)
@@ -45,14 +44,13 @@ namespace AppsAgainstHumanity.Server
 
         static Settings()
         {
+
             _fileChangeHandler(null, null);
 
-            _settingsFileStream = File.Open(Constants.SettingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-
-            //_settingFileChecker = new FileSystemWatcher(Environment.CurrentDirectory, Constants.SettingsFile);
-            //_settingFileChecker.Changed += _fileChangeHandler;
-            //_settingFileChecker.Deleted += _fileChangeHandler;
-            //_settingFileChecker.EnableRaisingEvents = true;
+            _settingFileChecker = new FileSystemWatcher(Environment.CurrentDirectory, "*.xml");
+            _settingFileChecker.Changed += _fileChangeHandler;
+            _settingFileChecker.Deleted += _fileChangeHandler;
+            _settingFileChecker.EnableRaisingEvents = true;
         }
 
         /// <summary>
@@ -124,7 +122,22 @@ namespace AppsAgainstHumanity.Server
                         new XElement("deckpath", DeckPath ?? Constants.DefaultDeckPath)
                     )
                 );
+
+                setXd.Save(Constants.SettingsFile);
             }
+        }
+
+        public static void Create(string deckPath, int port)
+        {
+            string dpBkp = DeckPath;
+            int pBkp = Port;
+
+            DeckPath = deckPath;
+            Port = port;
+
+            Create(Constants.SettingsFile);
+
+            Load();
         }
     }
 }

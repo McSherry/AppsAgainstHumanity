@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using AppsAgainstHumanity.Server.Game;
 using System.IO;
 
-namespace AppsAgainstHumanity.Server
+namespace AppsAgainstHumanity.Server.UI
 {
     public partial class expansionPackForm : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace AppsAgainstHumanity.Server
+﻿namespace AppsAgainstHumanity.Server.UI
 {
     partial class expansionPackForm
     {
