@@ -214,7 +214,7 @@
             "God Is Dead",
             "Survival of the Fittest",
             "Serious Business"});
-            this.gameRulesetCBox.Location = new System.Drawing.Point(327, 92);
+            this.gameRulesetCBox.Location = new System.Drawing.Point(327, 79);
             this.gameRulesetCBox.Name = "gameRulesetCBox";
             this.gameRulesetCBox.Size = new System.Drawing.Size(220, 21);
             this.gameRulesetCBox.TabIndex = 20;
@@ -222,7 +222,7 @@
             // gameRulesetLbl
             // 
             this.gameRulesetLbl.AutoSize = true;
-            this.gameRulesetLbl.Location = new System.Drawing.Point(247, 96);
+            this.gameRulesetLbl.Location = new System.Drawing.Point(247, 84);
             this.gameRulesetLbl.Name = "gameRulesetLbl";
             this.gameRulesetLbl.Size = new System.Drawing.Size(74, 13);
             this.gameRulesetLbl.TabIndex = 19;
@@ -255,7 +255,7 @@
             this.czarSelectCBox.Items.AddRange(new object[] {
             "Sequential",
             "Random"});
-            this.czarSelectCBox.Location = new System.Drawing.Point(115, 92);
+            this.czarSelectCBox.Location = new System.Drawing.Point(115, 79);
             this.czarSelectCBox.Name = "czarSelectCBox";
             this.czarSelectCBox.Size = new System.Drawing.Size(121, 21);
             this.czarSelectCBox.TabIndex = 16;
@@ -263,7 +263,7 @@
             // czarSelectLbl
             // 
             this.czarSelectLbl.AutoSize = true;
-            this.czarSelectLbl.Location = new System.Drawing.Point(9, 96);
+            this.czarSelectLbl.Location = new System.Drawing.Point(9, 85);
             this.czarSelectLbl.Name = "czarSelectLbl";
             this.czarSelectLbl.Size = new System.Drawing.Size(100, 13);
             this.czarSelectLbl.TabIndex = 15;
@@ -465,7 +465,7 @@
             this.aahWebLinkLbl.AutoSize = true;
             this.aahWebLinkLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.aahWebLinkLbl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.Location = new System.Drawing.Point(89, 288);
+            this.aahWebLinkLbl.Location = new System.Drawing.Point(102, 288);
             this.aahWebLinkLbl.Name = "aahWebLinkLbl";
             this.aahWebLinkLbl.Size = new System.Drawing.Size(58, 13);
             this.aahWebLinkLbl.TabIndex = 12;

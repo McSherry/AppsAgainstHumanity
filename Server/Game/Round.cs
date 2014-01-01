@@ -160,7 +160,7 @@ namespace AppsAgainstHumanity.Server.Game
                     where p.Value == false
                     select p;
 
-                foreach (KeyValuePair<Player, bool> pl in hasntPlayed)
+                foreach (KeyValuePair<Player, bool> pl in hasntPlayed.ToList())
                 {
                     _parent.SendCommand(CommandType.CRTO, (string[])null, pl.Key.ClientIdentifier);
                     if (_parent.Parameters.KickOnTimeout)

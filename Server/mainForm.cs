@@ -31,16 +31,20 @@ namespace AppsAgainstHumanity.Server
 
         internal List<Deck> _expansionDecks = new List<Deck>();
         private Dictionary<int, Deck> _cardDecks;
+        private void _loadEmbeddedDeck(int ctr = 0)
+        {
+            Console.WriteLine("ERROR LOADING DECKS: LOADING EMBEDDED COPY");
+            _cardDecks.Add(ctr, new Deck(Server.Properties.Resources.US));
+        }
         private void _fillDeckSelectBox()
         {
             cardDeckCBox.Items.Clear();
             _cardDecks = new Dictionary<int, Deck>();
-            string deckPath = "decks";
             int deckCtr = 0;
 
-            foreach (string s in Directory.GetFiles(deckPath, "*.xml"))
+            try
             {
-                try
+                foreach (string s in Directory.GetFiles(Settings.DeckPath, "*.xml"))
                 {
                     using (StreamReader sr = new StreamReader(s))
                     {
@@ -59,7 +63,31 @@ namespace AppsAgainstHumanity.Server
                     }
                     deckCtr++;
                 }
-                catch (UnauthorizedAccessException) { }
+            }
+            catch (DirectoryNotFoundException)
+            {
+                // If the user's configured the server to look for decks in a directory that doesn't exist,
+                // we'll load our copy of the US main deck that's embedded inside the application.
+                _loadEmbeddedDeck(deckCtr);
+                deckCtr++;
+            }
+            catch (ArgumentException)
+            {
+                // Here the user's given us an invalid path. Once again, we're loading the embedded copy.
+                _loadEmbeddedDeck(deckCtr);
+                deckCtr++;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // User probably tried to get us to load stuff from a protected directory.
+                _loadEmbeddedDeck(deckCtr);
+                deckCtr++;
+            }
+            finally
+            {
+                // Similarly, if the user has got us to look in a directory where there aren't any
+                // decks, we'll load the embedded US version.
+                if (deckCtr == 0) _loadEmbeddedDeck();
             }
 
             // Remove from the card packs dictionary all items which are not addons.

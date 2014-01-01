@@ -20,12 +20,11 @@ namespace AppsAgainstHumanity.Server
             expansionPackListBox.BeginUpdate();
             expansionPackListBox.Items.Clear();
             _cardPacks = new Dictionary<int, Deck>();
-            string deckPath = "decks";
             int deckCtr = 0;
 
-            foreach (string s in Directory.GetFiles(deckPath, "*.xml"))
+            try
             {
-                try
+                foreach (string s in Directory.GetFiles(Settings.DeckPath, "*.xml"))
                 {
                     using (StreamReader sr = new StreamReader(s))
                     {
@@ -36,8 +35,10 @@ namespace AppsAgainstHumanity.Server
                     }
                     deckCtr++;
                 }
-                catch (UnauthorizedAccessException) { }
             }
+            catch (UnauthorizedAccessException) { } // Protected directory, can't load
+            catch (ArgumentException) { } // Invalid directory, can't load
+            catch (DirectoryNotFoundException) { } // Directory doesn't exist, can't load
 
             // Remove from the card packs dictionary all items which are not addons.
             foreach (KeyValuePair<int, Deck> kvp in _cardPacks.ToList().Where(cp => cp.Value.Type != PackType.Addon))

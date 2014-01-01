@@ -29,5 +29,17 @@ namespace AppsAgainstHumanity.Server
         {
             get { return new Uri("http://getaah.net"); }
         }
+
+        /// <summary>
+        /// The name of the file containing server configuration data.
+        /// </summary>
+        public const string SettingsFile = "Server.xml";
+
+        /// <summary>
+        /// The default port used for communication.
+        /// </summary>
+        public static int DefaultPort { get { return 11235; } }
+
+        public const string DefaultDeckPath = "./Decks";
     }
 }
