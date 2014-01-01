@@ -13,7 +13,7 @@ namespace AppsAgainstHumanityClient
 		/// <summary>
 		/// Apps Against Humanity runs on port 11235
 		/// </summary>
-		private const int Port = 11235;
+		public const int DefaultPort = 11235;
 		/// <summary>
 		/// The low-level TCP client
 		/// </summary>
@@ -38,9 +38,11 @@ namespace AppsAgainstHumanityClient
 		/// </summary>
 		/// <param name="host">The host to connect to.</param>
 		/// <param name="nick">The nickname that should be used.</param>
-		internal async Task Connect(string host, string nick)
+		internal async Task Connect(string host, int port, string nick)
 		{
-			Task t = Client.Connect(host, 11235, TransferProtocols.Delimited, Encoding.UTF8);
+            if (port > Int16.MaxValue - 1 || port < 1024) port = DefaultPort;
+
+			Task t = Client.Connect(host, port, TransferProtocols.Delimited, Encoding.UTF8);
 			Client.Delimiter = ETX;
 			await t;
 			ClientWrapper.SendCommand(CommandType.JOIN, nick);

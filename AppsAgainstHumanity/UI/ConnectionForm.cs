@@ -16,7 +16,10 @@ namespace AppsAgainstHumanityClient
 	public partial class ConnectionForm : Form
 	{
 		private NetworkInterface NetworkInterface;
-		private const int VersionIdentifier = 200;
+        private const int MajorVersion = 0;
+        private const int MinorVersion = 2;
+        private const int PatchVersion = 0;
+        private const int VersionIdentifier = (MajorVersion * 10000) + (MinorVersion * 100) + PatchVersion;
 
 		public ConnectionForm()
 		{
@@ -90,14 +93,26 @@ namespace AppsAgainstHumanityClient
 				return;
 			}
 			btn_Connect.Enabled = false;
-			try {
-				Console.WriteLine("Attempting to connect to the server");
-				await NetworkInterface.Connect(tbx_Host.Text, tbx_Nick.Text);
-				Console.WriteLine("Connection established");
-			} catch (System.Net.Sockets.SocketException ex) {
-				MessageBox.Show(ex.Message, "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				btn_Connect.Enabled = true;
-			}
+            try
+            {
+                Console.WriteLine("Attempting to connect to the server");
+                await NetworkInterface
+                    .Connect(
+                        tbx_Host.Text,
+                        int.Parse(String.IsNullOrEmpty(tbx_Port.Text) || String.IsNullOrWhiteSpace(tbx_Port.Text) ? NetworkInterface.DefaultPort.ToString() : tbx_Port.Text),
+                        tbx_Nick.Text
+                    );
+                Console.WriteLine("Connection established");
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                MessageBox.Show(ex.Message, "Unable to connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btn_Connect.Enabled = true;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("The port specified was not numeric.", "Invalid Port", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 		}
 		private void ShowMainUI()
 		{
@@ -116,5 +131,15 @@ namespace AppsAgainstHumanityClient
 			NetworkInterface.Disconnect();
 			base.Close();
 		}
+
+        private void websiteLLbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://getaah.net");
+        }
+
+        private void ConnectionForm_Load(object sender, EventArgs e)
+        {
+            label6.Text = string.Format("{0}.{1}.{2} ({3})", MajorVersion, MinorVersion, PatchVersion, VersionIdentifier);
+        }
 	}
 }
