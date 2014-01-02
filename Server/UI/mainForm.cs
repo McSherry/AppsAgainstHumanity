@@ -105,23 +105,27 @@ namespace AppsAgainstHumanity.Server.UI
         }
         private void _enableUIComponents()
         {
-            #region set form elements to enabled/disabled
-            cardDeckCBox.Enabled = true;
-            deckReloadBtn.Enabled = true;
-            playerLimitBox.Enabled = true;
-            awesomePointsLimitBox.Enabled = true;
-            timeoutLimitCBox.Enabled = true;
-            // TODO: Uncomment these when implemented.
-            czarSelectCBox.Enabled = true;
-            //gameRulesetCBox.Enabled = true;
-            //allowGamblingCheckBox.Enabled = true;
-            allowChatCheckBox.Enabled = true;
-            timeoutKickCheckBox.Enabled = true;
-            expansionPackButtons.Enabled = true;
-            serverStartBtn.Enabled = true;
-            gameStartBtn.Enabled = false;
-            gameStopBtn.Enabled = false;
-            #endregion
+            if (this.InvokeRequired) this.Invoke(new Action(_enableUIComponents));
+            else
+            {
+                #region set form elements to enabled/disabled
+                cardDeckCBox.Enabled = true;
+                deckReloadBtn.Enabled = true;
+                playerLimitBox.Enabled = true;
+                awesomePointsLimitBox.Enabled = true;
+                timeoutLimitCBox.Enabled = true;
+                // TODO: Uncomment these when implemented.
+                czarSelectCBox.Enabled = true;
+                //gameRulesetCBox.Enabled = true;
+                //allowGamblingCheckBox.Enabled = true;
+                allowChatCheckBox.Enabled = true;
+                timeoutKickCheckBox.Enabled = true;
+                expansionPackButtons.Enabled = true;
+                serverStartBtn.Enabled = true;
+                gameStartBtn.Enabled = false;
+                gameStopBtn.Enabled = false;
+                #endregion
+            }
         }
         private void _disableUIComponents()
         {
@@ -148,7 +152,8 @@ namespace AppsAgainstHumanity.Server.UI
             switch (gms)
             {
                 case _GameMonitorState.Offline:
-                    FC = BC = Color.Red;
+                    FC = Color.Red;
+                    BC = Color.Red;
                     text = "Offline.";
                     break;
                 case _GameMonitorState.Online:
@@ -163,9 +168,17 @@ namespace AppsAgainstHumanity.Server.UI
                     break;
             }
 
-            this.serverStatusIndicLbl.ForeColor = FC;
-            this.serverStatusIndicLbl.Text = text;
-            this.serverStatusIndicRect.BackColor = BC;
+            if (this.serverStatusIndicLbl.InvokeRequired)
+                this.serverStatusIndicLbl.Invoke(new Action<_GameMonitorState>(_setGameMonitorState), gms);
+            else
+            {
+                this.serverStatusIndicLbl.ForeColor = FC;
+                this.serverStatusIndicLbl.Text = text;
+            }
+
+            if (this.serverStatusIndicRect.InvokeRequired)
+                this.serverStatusIndicRect.Invoke(new Action<_GameMonitorState>(_setGameMonitorState), gms);
+            else this.serverStatusIndicRect.BackColor = BC;
         }
 
         public mainForm()
@@ -292,11 +305,7 @@ namespace AppsAgainstHumanity.Server.UI
             game.OnPlayerJoin += _playerJoinHandler;
             game.OnPlayerLeave += _playerLeaveHandler;
             game.OnPlayerDisconnected += _playerLeaveHandler;
-            game.OnGameStopped += (s, ee) =>
-            {
-                _setGameMonitorState(_GameMonitorState.Offline);
-                _enableUIComponents();
-            };
+            game.OnGameStopped += gameStop_handler;
 
             _disableUIComponents();
 
@@ -338,6 +347,13 @@ namespace AppsAgainstHumanity.Server.UI
             {
                 game.Stop();
             }
+        }
+        private void gameStop_handler(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            _setGameMonitorState(_GameMonitorState.Offline);
+            _enableUIComponents();
+            ResumeLayout();
         }
 
         private void expansionPackButtons_Click(object sender, EventArgs e)

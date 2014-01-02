@@ -21,7 +21,7 @@ namespace AppsAgainstHumanityClient
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Resources/OpenSans-Regular.ttf");
 
-                OpenSans = new System.Drawing.Font(pfc.Families[0], 9F, FontStyle.Regular);
+                OpenSans = new System.Drawing.Font(pfc.Families[0], 10F, FontStyle.Regular);
             }
         }
 

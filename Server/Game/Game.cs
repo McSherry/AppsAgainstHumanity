@@ -64,7 +64,8 @@ namespace AppsAgainstHumanity.Server.Game
                     //    _senderCLNF(p.ClientIdentifier);
                 }
                 // Players.First() found no match, probably because there are no players
-                // we'll ignore it and continue.
+                // we'll ignore it and continue. This is also thrown when we do
+                // cross-thread UI stuff, sometimes.
                 catch (InvalidOperationException) { }
             }
         }
