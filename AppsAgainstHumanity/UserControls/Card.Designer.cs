@@ -7,21 +7,21 @@ namespace AppsAgainstHumanityClient
 	partial class Card
 	{
         private static PrivateFontCollection _pfc = new PrivateFontCollection();
-        private static Font OpenSansSemibold = null;
+        private static Font OpenSans = null;
 
         static Card()
         {
             // If the user's decided not to fuck with the files we've included,
-            // we'll load Open Sans Bold as the font to use.
-            if (File.Exists("Resources/OpenSans-Semibold.ttf"))
+            // we'll load Open Sans as the font to use.
+            if (File.Exists("Resources/OpenSans-Regular.ttf"))
             {
                 // This is a stupid as shit method of adding fonts. Why is it either
                 // from a file, or via an IntPtr to memory? Why can't I load it from
                 // a resource file? Regardless...
                 PrivateFontCollection pfc = new PrivateFontCollection();
-                pfc.AddFontFile("Resources/OpenSans-Semibold.ttf");
+                pfc.AddFontFile("Resources/OpenSans-Regular.ttf");
 
-                OpenSansSemibold = new System.Drawing.Font(pfc.Families[0], 9F, FontStyle.Bold);
+                OpenSans = new System.Drawing.Font(pfc.Families[0], 9F, FontStyle.Regular);
             }
         }
 
@@ -60,7 +60,7 @@ namespace AppsAgainstHumanityClient
             // If we can't find the file, probably because the user's fucked with it,
             // we'll load MS Sans Serif instead, since the system is guaranteed to
             // have that.
-            this.lbl_CardText.Font = OpenSansSemibold ?? new System.Drawing.Font(
+            this.lbl_CardText.Font = OpenSans ?? new System.Drawing.Font(
                     "Microsoft Sans Serif", 9F,
                     System.Drawing.FontStyle.Regular,
                     System.Drawing.GraphicsUnit.Point,

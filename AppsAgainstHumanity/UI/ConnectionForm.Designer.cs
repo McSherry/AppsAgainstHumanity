@@ -208,7 +208,7 @@
             this.MaximizeBox = false;
             this.Name = "ConnectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Connect to a server";
+            this.Text = "Apps Against Humanity - Connect to a Server";
             this.Load += new System.EventHandler(this.ConnectionForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
