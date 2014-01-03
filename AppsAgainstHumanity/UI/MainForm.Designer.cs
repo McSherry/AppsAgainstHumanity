@@ -29,11 +29,8 @@
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.crd_BlackCard = new AppsAgainstHumanityClient.BlackCard();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.crl_PickedCards = new AppsAgainstHumanityClient.PickedCardList();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.lb_Players = new System.Windows.Forms.ListBox();
             this.sts_GameStatus = new System.Windows.Forms.StatusStrip();
@@ -49,6 +46,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.crl_OwnedCards = new AppsAgainstHumanityClient.CardList();
+            this.crl_PickedCards = new AppsAgainstHumanityClient.PickedCardList();
+            this.crd_BlackCard = new AppsAgainstHumanityClient.BlackCard();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -67,17 +67,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Black card";
             // 
-            // crd_BlackCard
-            // 
-            this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.crd_BlackCard.CardText = "Card contents go here";
-            this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
-            this.crd_BlackCard.Name = "crd_BlackCard";
-            this.crd_BlackCard.PickNum = 0;
-            this.crd_BlackCard.SelectionIndex = 0;
-            this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
-            this.crd_BlackCard.TabIndex = 0;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.crl_PickedCards);
@@ -88,17 +77,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Picked cards";
             // 
-            // crl_PickedCards
-            // 
-            this.crl_PickedCards.AutoScroll = true;
-            this.crl_PickedCards.CanSelectCards = false;
-            this.crl_PickedCards.GroupNumber = 0;
-            this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
-            this.crl_PickedCards.MaxSelectNum = 0;
-            this.crl_PickedCards.Name = "crl_PickedCards";
-            this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
-            this.crl_PickedCards.TabIndex = 0;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.crl_OwnedCards);
@@ -108,16 +86,6 @@
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Your cards";
-            // 
-            // crl_OwnedCards
-            // 
-            this.crl_OwnedCards.AutoScroll = true;
-            this.crl_OwnedCards.CanSelectCards = false;
-            this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
-            this.crl_OwnedCards.MaxSelectNum = 0;
-            this.crl_OwnedCards.Name = "crl_OwnedCards";
-            this.crl_OwnedCards.Size = new System.Drawing.Size(767, 246);
-            this.crl_OwnedCards.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -141,7 +109,7 @@
             // 
             this.sts_GameStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stl_GameStatusLabel});
-            this.sts_GameStatus.Location = new System.Drawing.Point(0, 682);
+            this.sts_GameStatus.Location = new System.Drawing.Point(0, 678);
             this.sts_GameStatus.Name = "sts_GameStatus";
             this.sts_GameStatus.Size = new System.Drawing.Size(938, 22);
             this.sts_GameStatus.TabIndex = 1;
@@ -262,11 +230,44 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Player limit:";
             // 
+            // crl_OwnedCards
+            // 
+            this.crl_OwnedCards.AutoScroll = true;
+            this.crl_OwnedCards.CanSelectCards = false;
+            this.crl_OwnedCards.Location = new System.Drawing.Point(6, 20);
+            this.crl_OwnedCards.MaxSelectNum = 0;
+            this.crl_OwnedCards.Name = "crl_OwnedCards";
+            this.crl_OwnedCards.Size = new System.Drawing.Size(767, 246);
+            this.crl_OwnedCards.TabIndex = 0;
+            // 
+            // crl_PickedCards
+            // 
+            this.crl_PickedCards.AutoScroll = true;
+            this.crl_PickedCards.CanSelectCards = false;
+            this.crl_PickedCards.GroupNumber = 0;
+            this.crl_PickedCards.Location = new System.Drawing.Point(6, 19);
+            this.crl_PickedCards.MaxSelectNum = 0;
+            this.crl_PickedCards.Name = "crl_PickedCards";
+            this.crl_PickedCards.Size = new System.Drawing.Size(767, 246);
+            this.crl_PickedCards.TabIndex = 0;
+            // 
+            // crd_BlackCard
+            // 
+            this.crd_BlackCard.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.crd_BlackCard.CardText = "";
+            this.crd_BlackCard.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.crd_BlackCard.Location = new System.Drawing.Point(6, 19);
+            this.crd_BlackCard.Name = "crd_BlackCard";
+            this.crd_BlackCard.PickNum = 0;
+            this.crd_BlackCard.SelectionIndex = 0;
+            this.crd_BlackCard.Size = new System.Drawing.Size(120, 120);
+            this.crd_BlackCard.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 700);
+            this.ClientSize = new System.Drawing.Size(938, 700);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tbx_ChatLog);
@@ -320,7 +321,7 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label lbl_PickTimeout;
 		private System.Windows.Forms.Label lbl_PlayingTo;
-		private System.Windows.Forms.Label lbl_PlayerLimit;
+        private System.Windows.Forms.Label lbl_PlayerLimit;
 	}
 }
 
