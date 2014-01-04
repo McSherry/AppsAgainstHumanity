@@ -133,6 +133,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// Whether players are allowed to chat on this server.
         /// </summary>
         public bool AllowPlayerChat { get; set; }
-
+        /// <summary>
+        /// Whether to only allow black cards where a single white card may be picked
+        /// into the pool of black cards to be given to players.
+        /// </summary>
+        public bool BlackCardPickLimit { get; set; }
     }
 }

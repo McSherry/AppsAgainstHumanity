@@ -120,6 +120,7 @@ namespace AppsAgainstHumanity.Server.UI
                 //allowGamblingCheckBox.Enabled = true;
                 allowChatCheckBox.Enabled = true;
                 timeoutKickCheckBox.Enabled = true;
+                onePickBlacksCBox.Enabled = true;
                 expansionPackButtons.Enabled = true;
                 serverStartBtn.Enabled = true;
                 gameStartBtn.Enabled = false;
@@ -139,6 +140,7 @@ namespace AppsAgainstHumanity.Server.UI
             allowGamblingCheckBox.Enabled = false;
             allowChatCheckBox.Enabled = false;
             timeoutKickCheckBox.Enabled = false;
+            onePickBlacksCBox.Enabled = false;
             serverStartBtn.Enabled = false;
             gameStartBtn.Enabled = true;
             gameStopBtn.Enabled = true;
@@ -296,7 +298,8 @@ namespace AppsAgainstHumanity.Server.UI
                 CzarSelection = (CzarSelection)czarSelectCBox.SelectedIndex,
                 AllowGambling = allowGamblingCheckBox.Checked,
                 KickOnTimeout = timeoutKickCheckBox.Checked,
-                AllowPlayerChat = allowChatCheckBox.Checked
+                AllowPlayerChat = allowChatCheckBox.Checked,
+                BlackCardPickLimit = onePickBlacksCBox.Checked
             };
 
             this.game = new Game.Game(gp);

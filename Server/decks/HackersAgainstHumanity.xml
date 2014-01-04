@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!--
+        Hackers Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the "Hackers Against Humanity" unofficial expansion
+        to the Cards Against Humanity card game.
+        
+        http://www.hackersagainsthumanity.com/
+        
+        Minor alterations have been made. Contents adapted from the expansion as it appeared on
+        January 4th, 2014.
+    -->
+    <name>Hackers Against Humanity</name>
+    <count white="276" black="52"/>
+    <cards>
+        <white>
+            <card>Zero F**Ks Given!</card>
+            <card>Windows update.</card>
+            <card>Windows 8.1</card>
+            <card>Wilford Brimley's moustache.</card>
+            <card>WikiLeaks.</card>
+            <card>Why not Zoidberg?!</card>
+            <card>White Shirt</card>
+            <card>Warp core breach.</card>
+            <card>W.O.P.R.</card>
+            <card>Vinyl Vanna.</card>
+            <card>Vegas 2.0</card>
+            <card>Using 4Chan for parenting advice.</card>
+            <card>User Error.</card>
+            <card>Undercover NBC DateLine reporter.</card>
+            <card>UDP Handshake.</card>
+            <card>Two Girls One Cup.</card>
+            <card>Truffle Shuffle.</card>
+            <card>Trigger word.</card>
+            <card>Tractor beam.</card>
+            <card>Toxic BBQ.</card>
+            <card>I'm a text.</card>
+            <card>Tongue-punch that fart-box, boy.</card>
+            <card>TL;DR</card>
+            <card>Threat modelling.</card>
+            <card>Throat punching.</card>
+            <card>There's talks at DEFCON?</card>
+            <card>The Spanish Inquisition.</card>
+            <card>The smell of glitter and lost dreams.</card>
+            <card>The plan was to crowd-source a plan.</card>
+            <card>The fractured elements of her psyche reassembled themselves into an exact likeness of a snarling ferret and she self-destructed.</card>
+            <card>The asshole sitting to my right.</card>
+            <card>The asshole sitting to my left.</card>
+            <card>"That's what." - She</card>
+            <card>That's racist!</card>
+            <card>The place where I put that thing that time.</card>
+            <card>That just happened and we let that happen.</card>
+            <card>Tentacle porn.</card>
+            <card>TARDIS.</card>
+            <card>Sweat, anger, and shame.</card>
+            <card>Stolen laptops.</card>
+            <card>Sticky keyboard.</card>
+            <card>Steve Wozniak.</card>
+            <card>Steampunk.</card>
+            <card>SRDF (Self Righteous Dick-Face).</card>
+            <card>Squirrel.</card>
+            <card>Spyware.</card>
+            <card>Spotting a FED.</card>
+            <card>SPAM with bacon.</card>
+            <card>Something something danger zone. I know, I'm not even trying anymore.</card>
+            <card>Spacedicks.</card>
+            <card>Slow clap.</card>
+            <card>Six gummy bears and some scotch.</card>
+            <card>Situational awareness.</card>
+            <card>Shut up and take my money!</card>
+            <card>Schroedinger's cat.</card>
+            <card>Shenanigans.</card>
+            <card>Security theatre.</card>
+            <card>Security evangelist.</card>
+            <card>Security by obscurity.</card>
+            <card>Script kiddies.</card>
+            <card>Said no one ever!</card>
+            <card>Sabu.</card>
+            <card>Running backwards through a corn field.</card>
+            <card>Rule 34.</card>
+            <card>Ruby-on-Rails.</card>
+            <card>Rolling Natural 20s.</card>
+            <card>ROFLCOPTER.</card>
+            <card>Riding a horse.</card>
+            <card>Ridiculously Photogenic Guy.</card>
+            <card>Ribbing for their pleasure.</card>
+            <card>Restore from backups.</card>
+            <card>RedBull without a cause.</card>
+            <card>Red shirts.</card>
+            <card>ReCAPTCHA.</card>
+            <card>Real men of genius.</card>
+            <card>Rainbow tables.</card>
+            <card>Rageface.</card>
+            <card>Rage quit.</card>
+            <card>Put Kevin back.</card>
+            <card>Put a bird on it.</card>
+            <card>Purchasing challenge coins on eBay.</card>
+            <card>Prism.</card>
+            <card>Priest in a thong doing Gangnam Style.</card>
+            <card>Pressing the red button.</card>
+            <card>Prenda Law.</card>
+            <card>Prairie dogging during an interview.</card>
+            <card>Practicing Gringo Warrior at home with baby oil. Naked.</card>
+            <card>P0rn.</card>
+            <card>PORK CHOP SANDWHICHES!</card>
+            <card>Pop, Pop, Ret.</card>
+            <card>Pool2Girl.</card>
+            <card>Please do the needful.</card>
+            <card>Pirate Party.</card>
+            <card>Pepper spray.</card>
+            <card>Pedobear.</card>
+            <card>Patrick Star.</card>
+            <card>Pastebin password files.</card>
+            <card>Passwords emailed in plain text.</card>
+            <card>Password: Guest.</card>
+            <card>0wning you.</card>
+            <card>Online backups.</card>
+            <card>One salty hash.</card>
+            <card>OMGBTFBBQ.</card>
+            <card>Obvious.</card>
+            <card>The NSA.</card>
+            <card>Now I'm into something...darker...</card>
+            <card>Not a single fuck was given.</card>
+            <card>North Korea's Twitter account.</card>
+            <card>No Starch Press.</card>
+            <card>No reason.</card>
+            <card>nmap.</card>
+            <card>Ninjas, pirates, robots, and zombies!</card>
+            <card>Ninja badge.</card>
+            <card>Nigerian scammers.</card>
+            <card>Neck beard.</card>
+            <card>NAMBLA.</card>
+            <card>Na-ah-ah! You didn't say the magic word!</card>
+            <card>My sex robot, Fisto Roboto.</card>
+            <card>My massive SSD.</card>
+            <card>My little bronies.</card>
+            <card>My first prostate exam.</card>
+            <card>Mouth hugs.</card>
+            <card>MEGA.</card>
+            <card>Math is hard. Let's go shopping!</card>
+            <card>Mansplaining.</card>
+            <card>Masturbating in a hot tub for a ninja badge.</card>
+            <card>Maniacally laughing while wearing a monocle.</card>
+            <card>Making a sandwich.</card>
+            <card>Maintaining the Ballmer Peak.</card>
+            <card>Lock picks.</card>
+            <card>Level 8 portal.</card>
+            <card>Lemon Party.</card>
+            <card>Learning something at Con.</card>
+            <card>Lady boner.</card>
+            <card>L0pht.</card>
+            <card>Keyloggers.</card>
+            <card>Kevin Mitnick.</card>
+            <card>Kegels.</card>
+            <card>Just the tip.</card>
+            <card>Just a sniff.</card>
+            <card>Julian Assange.</card>
+            <card>John McAfee.</card>
+            <card>It's just a bunch of ones and zeroes.</card>
+            <card>It blended!</card>
+            <card>Ingress.</card>
+            <card>Infected email attachments.</card>
+            <card>In the cloud.</card>
+            <card>Implied situational consent.</card>
+            <card>Ill-tempered sea bass.</card>
+            <card>If you know what I mean.</card>
+            <card>Identity theft.</card>
+            <card>ICANN.</card>
+            <card>I should buy a boat.</card>
+            <card>Humperdink award.</card>
+            <card>HuBot (Chatroom bot).</card>
+            <card><![CDATA[Hookers & Blow.]]></card>
+            <card>Hashtag.</card>
+            <card>Handcuffs.</card>
+            <card>Grumpy cat.</card>
+            <card>Grey beard, grey balls.</card>
+            <card>Grammar Nazis.</card>
+            <card>Got it done!</card>
+            <card>Good Guy Greg.</card>
+            <card>Golf carts.</card>
+            <card>Glasshole.</card>
+            <card>Getting thrown into the pool by the Goons with all your tech.</card>
+            <card>Getting hammered in the ass so much you die of getting hammered in the ass.</card>
+            <card>Getting F'd in the A with a D.</card>
+            <card>Getting a sympathy boner.</card>
+            <card>Fyodor.</card>
+            <card>FX.</card>
+            <card>Forking someone's repo.</card>
+            <card>Forever alone.</card>
+            <card>A FOIA request.</card>
+            <card>A floppy disk.</card>
+            <card>Flipping a table.</card>
+            <card>Flesh lights.</card>
+            <card>Flame wars.</card>
+            <card>A fist full of assholes.</card>
+            <card>Fish fingers and custard.</card>
+            <card>First world problems.</card>
+            <card>Finished it last week!</card>
+            <card>Feminazis.</card>
+            <card>Fear, uncertainty, and doubt.</card>
+            <card>Fapping while wearing a horse-head mask.</card>
+            <card>Fapping on the family computer.</card>
+            <card>Fapped.</card>
+            <card>Facepalm.</card>
+            <card>EXIF data stalking.</card>
+            <card>End User Licence Agreements.</card>
+            <card>The Electronic Frontier Foundation.</card>
+            <card>Edward Snowden.</card>
+            <card>A drunken muppet.</card>
+            <card>Drones.</card>
+            <card>Double ROT13.</card>
+            <card>Double facepalm.</card>
+            <card>Don't blink.</card>
+            <card>Dongs.</card>
+            <card>Doing the "you are NOT the father" dance.</card>
+            <card>The Digital Millenium Copyright Act.</card>
+            <card>Dying in a fire.</card>
+            <card>Dick and/or balls.</card>
+            <card>derp.rar</card>
+            <card>DEFCON Wireless.</card>
+            <card>Deep C phishing.</card>
+            <card>Dark Tangent.</card>
+            <card>Dan Kaminsky's password generator.</card>
+            <card>Dan Kaminsky.</card>
+            <card>Daaaaaanger Zone!</card>
+            <card>Cyber war.</card>
+            <card>Cyber-douchery.</card>
+            <card>Cyberpunk.</card>
+            <card>Crying over spilt milk.</card>
+            <card>Crash override.</card>
+            <card>Copyright trolls.</card>
+            <card>Coding while listening to whale songs.</card>
+            <card>Clicking shit.</card>
+            <card>Chuck Norris.</card>
+            <card>China.</card>
+            <card>Check a look at you later.</card>
+            <card>Cat memes.</card>
+            <card>Caressing a man's hairy chest.</card>
+            <card>Captain Crunch.</card>
+            <card>Butthurt.</card>
+            <card>Butt-chugging mum's boxed wine.</card>
+            <card>But then I'd have to kill you.</card>
+            <card>Big dongles.</card>
+            <card>Big data.</card>
+            <card>Being the big spoon.</card>
+            <card>Being the little spoon.</card>
+            <card>Being sexually aroused by the right of TSA gloves.</card>
+            <card>Bath salts.</card>
+            <card>Bacon.</card>
+            <card>Bae caught me slippin'.</card>
+            <card>Awkward mouth hugs.</card>
+            <card>Awkward hugs.</card>
+            <card>Asymmetric encryption.</card>
+            <card>Arbitrary code execution.</card>
+            <card>APT1.</card>
+            <card>Anonymous.</card>
+            <card>And then it died.</card>
+            <card>And boom goes the dynamite.</card>
+            <card>An arrow to the knee.</card>
+            <card>Altair 8800.</card>
+            <card>All the things!</card>
+            <card>Alexis Park.</card>
+            <card>Ain't nobody got time fo' that!</card>
+            <card>ADA Initiative-approved flesh-light with anti-rape condom included.</card>
+            <card>ASCII pr0n.</card>
+            <card>A van down by the river.</card>
+            <card>A town with no ducks.</card>
+            <card>A series of explicit Post-It notes.</card>
+            <card>A series of tubes.</card>
+            <card>A Raspberry Pi.</card>
+            <card>A payphone.</card>
+            <card>A Ninja-tel phone.</card>
+            <card>A Hak5 pineapple.</card>
+            <card>A googly-eyed blowjob.</card>
+            <card>A giant cup of STFU.</card>
+            <card>A baby's arm holding an apple.</card>
+            <card>A pair of docs.</card>
+            <card>64-bit keys.</card>
+            <card>503 Card Unavailable.</card>
+            <card>501 Card Error.</card>
+            <card>500 Internal Card Error.</card>
+            <card>406 Not Allowed.</card>
+            <card>404 Not Found.</card>
+            <card>403 Forbidden.</card>
+            <card>401 Unauthorised.</card>
+            <card>302 Card Redirect.</card>
+            <card>3D-printed p0rn.</card>
+            <card>10,000 Canadian pennies.</card>
+            <card>1.21 gigawatts.</card>
+            <card>Wubwubwub.</card>
+            <card>An "I Survived ADA Camp" challenge coin.</card>
+            <card>13375p34k.</card>
+        </white>
+        <black>
+            <card pick="1">/r/__________.</card>
+            <card pick="1">The ADA Initiative is now attacking _____.</card>
+            <card pick="1">Not another _____ in the hotel elevator!</card>
+            <card pick="1">In a congressional hearing, US CYBERCOM Command Gen. Alexander claimed the latest breach was due to _____.</card>
+            <card pick="1">This year's Maker Faire was unexpected interrupted by _____.</card>
+            <card pick="1">What is something you should never do naked?</card>
+            <card pick="1">Do you even ______?</card>
+            <card pick="1">Come to the dark side, we have _____.</card>
+            <card pick="1">Y U NO _____?!</card>
+            <card pick="1">While alone in the server room, I ______.</card>
+            <card pick="1">Where can I download more RAM?</card>
+            <card pick="1">When I get drunk, I become an expert on _____.</card>
+            <card pick="1">Well, guess what? I've got a fever, and the only prescription is more _____.</card>
+            <card pick="2">We should take _____, and push it to _____.</card>
+            <card pick="1">We decided to _____ to raise money for the EFF.</card>
+            <card pick="1">The TSA wouldn't let me through because of my _____.</card>
+            <card pick="1">Tonight's final Hacker Jeopardy! category will be: __________.</card>
+            <card pick="1">These are not the _____ you're looking for.</card>
+            <card pick="1">The snozberries taste like _____.</card>
+            <card pick="1">The only winning move is _____.</card>
+            <card pick="1">The next cyber war will feature _____.</card>
+            <card pick="1">So long, and thanks for all the _____.</card>
+            <card pick="1">Rock, paper, scissors, lizard, _____.</card>
+            <card pick="1">Our most powerful weapon in the zombie apocalypse will be _____.</card>
+            <card pick="1">Only 10% of programming is coding. The other 90% is _____.</card>
+            <card pick="1">One does not simply _____.</card>
+            <card pick="1">On the Internet, nobody can tell you're _____.</card>
+            <card pick="1">Occupy _____.</card>
+            <card pick="2">Next year's scavenger hunt is rumoured to include find a _____ with a _____.</card>
+            <card pick="1">Next time we meet, we should _____.</card>
+            <card pick="1">My extremely large _____ is what makes me better than you.</card>
+            <card pick="2">My _____ brings all the _____.</card>
+            <card pick="1">Most hackers smell like _____.</card>
+            <card pick="1">Las Vegas is best known for _____.</card>
+            <card pick="1">Keep calm and _____.</card>
+            <card pick="1">It's dangerous to go alone. Take _____.</card>
+            <card pick="1">It smells like _____ in this room.</card>
+            <card pick="2">I'mma let you finish, but _____ is the best _____ of all time.</card>
+            <card pick="1">I'm fucking tired of hearing about _____.</card>
+            <card pick="1">I would be doing more with my life, if not for this _____.</card>
+            <card pick="1">I work 80 hours a week and still can't afford _____.</card>
+            <card pick="1">I find your lack of _____ disturbing.</card>
+            <card pick="1">I can't believe DEFCON rejected my talk on _____.</card>
+            <card pick="1">I can haz _____?</card>
+            <card pick="1">Holy _____, Batman!</card>
+            <card pick="2">High-tech startup sees massive success after combining _____ and _____.</card>
+            <card pick="1">Go home _____, you're drunk.</card>
+            <card pick="1">Go go gadget _____!</card>
+            <card pick="1">Am I the only one around here who ______?</card>
+            <card pick="1">__________: there's an app for that.</card>
+            <card pick="1">Call centres in India can now be outsourced for all your _____ needs.</card>
+            <card pick="1">One day, over my fireplace, I'm going to have a massive painting of _____. You know, to remind me where I came from.</card>
+        </black>
+    </cards>
+</deck>

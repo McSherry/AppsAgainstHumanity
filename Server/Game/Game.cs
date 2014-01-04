@@ -696,7 +696,9 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 this.WhiteCardPool.Add(_RNG.Next(), wc);
             }
-            this.BlackCardPool = Parameters.Cards.BlackCards;
+
+            if (Parameters.BlackCardPickLimit) this.BlackCardPool = Parameters.Cards.BlackCards.Where(bc => bc.Pick == 1).ToList();
+            else this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
             _pingTimer = new System.Timers.Timer(1000);
@@ -708,6 +710,10 @@ namespace AppsAgainstHumanity.Server.Game
                 // method and will have the player removed.
                 foreach (Player p in Players.ToList())
                     SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
+                // Due to this aforementioned behaviour, actual latency between the
+                // client and server is not taken into account. As long as the client
+                // can be reached, they will remain in the game. TCP accounts for
+                // packet loss.
             };
             // TODO: Re-enable this at production!
             // Pings disabled because they spam the console

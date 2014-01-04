@@ -61,6 +61,7 @@
             this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
             this.aahWebLinkLbl = new System.Windows.Forms.LinkLabel();
             this.serverSettingsBtn = new System.Windows.Forms.Button();
+            this.onePickBlacksCBox = new System.Windows.Forms.CheckBox();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -145,6 +146,7 @@
             // 
             // gameConfigGBox
             // 
+            this.gameConfigGBox.Controls.Add(this.onePickBlacksCBox);
             this.gameConfigGBox.Controls.Add(this.expansionPackButtons);
             this.gameConfigGBox.Controls.Add(this.serverStatusIndicLbl);
             this.gameConfigGBox.Controls.Add(this.serverStatusIndicRect);
@@ -485,6 +487,16 @@
             this.serverSettingsBtn.UseVisualStyleBackColor = true;
             this.serverSettingsBtn.Click += new System.EventHandler(this.serverSettingsBtn_Click);
             // 
+            // onePickBlacksCBox
+            // 
+            this.onePickBlacksCBox.AutoSize = true;
+            this.onePickBlacksCBox.Location = new System.Drawing.Point(12, 153);
+            this.onePickBlacksCBox.Name = "onePickBlacksCBox";
+            this.onePickBlacksCBox.Size = new System.Drawing.Size(191, 17);
+            this.onePickBlacksCBox.TabIndex = 24;
+            this.onePickBlacksCBox.Text = "Disallow Black Cards with 2+ Picks";
+            this.onePickBlacksCBox.UseVisualStyleBackColor = true;
+            // 
             // mainForm
             // 
             this.AcceptButton = this.broadcastBtn;
@@ -552,6 +564,7 @@
         private System.Windows.Forms.RichTextBox aahAboutDescRTBox;
         private System.Windows.Forms.LinkLabel aahWebLinkLbl;
         private System.Windows.Forms.Button serverSettingsBtn;
+        private System.Windows.Forms.CheckBox onePickBlacksCBox;
 	}
 }
 
