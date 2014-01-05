@@ -33,7 +33,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// into the mix. If this imaginary player wins, all other players enter into a state of
         /// everlasting shame.
         /// </summary>
-        RandoCandrissian = 3,
+        RandoCardrissian = 3,
         /// <summary>
         /// Play without a Card Czar. Each player picks his or her favourite card each round, and
         /// the card with the most votes at the end of the round wins.
