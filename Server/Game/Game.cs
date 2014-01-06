@@ -818,6 +818,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// Indicates whether the game has started.
         /// </summary>
         public bool HasStarted { get { return _hasStarted; } }
+        /// <summary>
+        /// The round which is currently in play. Null if the game has not yet started.
+        /// </summary>
+        public Round CurrentRound { get { return _currRound; } }
 
         public void Start()
         {

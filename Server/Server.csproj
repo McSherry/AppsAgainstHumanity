@@ -68,7 +68,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Crypto\SRand.cs" />
     <Compile Include="Crypto\Sha256.cs" />
-    <Compile Include="Game\Modes\IGameMode.cs" />
+    <Compile Include="Game\Modes\GameMode.cs" />
+    <Compile Include="Game\Modes\StandardGameMode.cs" />
     <Compile Include="UI\expansionPackForm.cs">
       <SubType>Form</SubType>
     </Compile>
