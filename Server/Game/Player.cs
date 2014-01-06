@@ -31,7 +31,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The name used to identify the player.
         /// </summary>
-        public string Nickname {
+        public virtual string Nickname {
             get { return _Nickname; }
             set
             {
@@ -49,21 +49,21 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The unique identifier used to identify the client in a NetLibServer instance.
         /// </summary>
-        public long ClientIdentifier { get; set; }
+        public virtual long ClientIdentifier { get; set; }
         /// <summary>
         /// The UTC time at which the player connected. Automatically set by the constructor.
         /// </summary>
-        public DateTime JoinTime { get; private set; }
+        public virtual DateTime JoinTime { get; private set; }
 
         /// <summary>
         /// The number of Awesome Points the player currently has.
         /// </summary>
-        public uint AwesomePoints { get; set; }
+        public virtual uint AwesomePoints { get; set; }
 
         /// <summary>
         /// The cards the player has currently drawn.
         /// </summary>
-        public List<WhiteCard> DrawnCards { get; set; }
+        public virtual List<WhiteCard> DrawnCards { get; set; }
 
     }
 }
