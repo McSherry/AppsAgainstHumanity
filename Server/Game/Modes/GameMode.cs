@@ -21,7 +21,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         {
             this.Parent = parent;
             this.Players = parent.Players;
-            this.WhiteCards = parent.WhiteCardPool;
+            this.WhiteCards = parent.CurrentRound.WhiteCardPool;
             this.BlackCard = parent.CurrentRound.BlackCard;
 
             foreach (Player p in this.Players.ToList())
