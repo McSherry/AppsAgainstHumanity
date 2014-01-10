@@ -55,6 +55,10 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// of white card picks.
         /// </summary>
         public virtual Dictionary<Player, bool> PickedList { get; set; }
+        /// <summary>
+        /// A list of players who have gambled in order to play additional cards.
+        /// </summary>
+        public virtual List<Player> Gamblers { get; set; }
 
         /// <summary>
         /// This game mode's handler for PICK commands.

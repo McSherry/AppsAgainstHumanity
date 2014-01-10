@@ -126,10 +126,88 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                                 );
                             }
                         }
-                        // This code block handles gambling by players.
+                        // This code block handles gambling by players. Won't be executed
+                        // Unless gambling is enabled and the player has played all cards
+                        // required of them.
                         else if (base.PickedList[pSender] && base.Parent.Parameters.AllowGambling)
                         {
+                            // If the player has more than zero Awesome Points, they will be able
+                            // to gamble. This was implemented in this manner as I doubt negative
+                            // Awesome Points, whilst they would work, are really the best choice.
+                            if (pSender.AwesomePoints > 0)
+                            {
+                                // Add the card the player's gambled to the list of drawn cards.
+                                this._playedCards[pSender].Add(i, base.Parent.DrawnCards[pSender][i]);
+                                // Remove the card from the player's hand since they've just played
+                                // it and therefore no longer have it drawn.
+                                base.Parent.DrawnCards[pSender].Remove(i);
+                                // As players must spend an Awesome Point to gamble, we'll subtract
+                                // one from their current total, provided it is greater than zero
+                                // (this particular condition was checked in the above conditional).
+                                pSender.AwesomePoints--;
+                                // We'll then add the player to our list of gamblers. At the end of
+                                // the round, this list will be checked to determine whether the
+                                // winning player is present within it. If they are, they will be
+                                // returned the Awesome Point they gambled.
+                                base.Gamblers.Add(pSender);
+                                // Once again, we inform all other players that a choice of card
+                                // has been made, via the BLNK command.
+                                foreach (Player p in base.Players.Where(p => p != pSender).ToList())
+                                {
+                                    base.Parent.SendCommand(
+                                        CommandType.BLNK,
+                                        (string[])null,
+                                        p.ClientIdentifier
+                                    );
+                                }
 
+                                return;
+                            }
+                            else
+                            {
+                                // First, we inform the user that they have too few Awesome Points
+                                // to gamble any, via UNRG.
+                                base.Parent.SendCommand(
+                                    CommandType.UNRG,
+                                    "You have too few Awesome Points to gamble.",
+                                    sender
+                                );
+                                // We then return the card to this player via a WHTE command. As the
+                                // card is never removed from any of the server's dictionaries, no
+                                // further action must be taken.
+                                base.Parent.SendCommand(
+                                    CommandType.WHTE,
+                                    new string[2] {
+                                        i.ToString(),
+                                        base.Parent.DrawnCards[pSender][i].Text
+                                    },
+                                    sender
+                                );
+                                return;
+                            }
+                        }
+                        // If the player has already played all cards required of them,
+                        // and if gambling is disabled by the server, this block of
+                        // code will be executed.
+                        else
+                        {
+                            // The client is informed, via UNRG, that gambling is disabled.
+                            base.Parent.SendCommand(
+                                CommandType.UNRG,
+                                "Gambling is disabled on this server.",
+                                sender
+                            );
+                            // The client is then returned their white card, and the function
+                            // is exited.
+                            base.Parent.SendCommand(
+                                CommandType.WHTE,
+                                new string[2] {
+                                        i.ToString(),
+                                        base.Parent.DrawnCards[pSender][i].Text
+                                    },
+                                sender
+                            );
+                            return;
                         }
                     }
                     else
