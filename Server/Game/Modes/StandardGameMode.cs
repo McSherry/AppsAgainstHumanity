@@ -10,31 +10,16 @@ namespace AppsAgainstHumanity.Server.Game.Modes
     public class StandardGameMode : GameMode
     {
         /// <summary>
-        /// Dictionary containing a dictionary of cards played by each player.
-        /// Card dictionary is keyed using the card's unique identifier, as
-        /// generated at the beginning of the game.
-        /// </summary>
-        private Dictionary<Player, Dictionary<int, WhiteCard>> _playedCards;
-        /// <summary>
         /// True when the server is expecting to receive
         /// a PICK command. When false, the command handler
         /// for PICKs will not function.
         /// </summary>
-        private bool _allowPicks = false;
+        private bool _allowPicks = false, _allowCzpk = false;
 
         public StandardGameMode(Game parent)
             : base(parent)
         {
-            // In order to avoid putting the instantiation of this
-            // ugly type somewhere weird, it's been thrown into the
-            // constructor. Hopefully base.Players is instantiated
-            // before this code is executed.
-            foreach (Player p in base.Players.ToList())
-            {
-                // Instantiates the dictionary that will track the cards
-                // played by each player for the duration of the round.
-                _playedCards.Add(p, new Dictionary<int, WhiteCard>());
-            }
+
         }
 
         public override string Name
@@ -42,233 +27,66 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             get { return "Standard"; }
         }
 
-        public override void CommandPickHandler(long sender, string[] arguments)
+        public override Player Start()
         {
-            // If this array is null, it indicates that the client sent the command
-            // without any arguments. Since the PICK command requires arguments,
-            // this is invalid.
-            // We don't check for the number of arguments provided, as the client is
-            // free to provide its user's picks over a series of PICK commands rather
-            // than as a single command.
+            throw new NotImplementedException();
+        }
+
+        public override void CommandCzpkHandler(long sender, string[] arguments)
+        {
             if (arguments == null)
             {
-                // As this is invalid, we return an UNRG (unrecognised) to the client,
-                // and exit out of the function. No further action is taken.
+                // If the client has attempted to submit a Czar Pick
+                // without specifying any cards, we'll return an error
+                // message to them regarding this, and then exit the function.
                 base.Parent.SendCommand(
                     CommandType.UNRG,
-                    "PICK received without arguments; invalid.",
+                    "CZPK sent without arguments; invalid.",
                     sender
                 );
                 return;
             }
 
-            // The variable _allowPicks being set to true indicates that players can
-            // currently submit cards. If this is false, we should not accept picks
-            // sent in by players.
-            if (_allowPicks)
+            // If the game mode has indicated that this is currently a period
+            // in which CZPK commands are accepted and should be parsed.
+            if (_allowCzpk)
             {
-                // The sender of the PICK command, as a Player class rather than
-                // their numeric identifier.
-                Player pSender = base.Players.Single(pl => pl.ClientIdentifier == sender);
-                List<int> pSenderPicks = new List<int>();
-
-                // Parse the IDs sent by the client into integers, which will
-                // later be used to try and retrieve cards from the list of
-                // drawn cards.
-                foreach (string id in arguments)
+                // The player represented by the client identifier which sent this
+                // command.
+                Player pSender = base.Players.Single(p => p.ClientIdentifier == sender);
+                
+                // If the sender of the CZPK is the Card Czar for this round, we can
+                // proceed as normal, since they're the one that's meant to be picking.
+                if (pSender.ClientIdentifier == base.Parent.CurrentRound.CardCzar.ClientIdentifier)
                 {
-                    int tempAdd = 0;
-                    if (int.TryParse(id, out tempAdd))
-                    {
-                        pSenderPicks.Add(tempAdd);
-                    }
+
                 }
-
-                foreach (int i in pSenderPicks.ToList())
+                else
                 {
-                    // Before we accept the client's PICK, we'll check if the ID
-                    // sent exists within the player represented by the client's
-                    // hand. If it does, we can accept it and move on. If it doesn't,
-                    // the server will report, via UNRG, that they do not have
-                    // the card they tried to PICK.
-                    if (base.Parent.DrawnCards[pSender].ContainsKey(i))
-                    {
-                        // If the player has not picked the number of cards
-                        // required for this round, add their pick to the
-                        // dictionary containing drawn cards.
-                        if (!base.PickedList[pSender])
-                        {
-                            // Add the card the player played to the
-                            // dictionary containing the cards they have
-                            // played.
-                            this._playedCards[pSender].Add(i, base.Parent.DrawnCards[pSender][i]);
-                            // As the player no longer has the card in their "hand,"
-                            // we'll remove it from the list of drawn cards to prevent
-                            // the card being played again.
-                            base.Parent.DrawnCards[pSender].Remove(i);
-                            // If the player has played the required number of cards,
-                            // we set the value in the dictionary indicating as much to
-                            // true. As this code will not be executed during gambling,
-                            // we don't need to perform any checks for it.
-                            if (this._playedCards[pSender].Count == base.BlackCard.Pick)
-                                base.PickedList[pSender] = true;
-
-                            // We now select every player who is /not/ the player who just sent a
-                            // PICK command, and we inform them that another player has submitted
-                            // a choice of card via the BLNK command. Upon receiving this command,
-                            // clients should show some indication of another player having played.
-                            foreach (Player p in base.Players.Where(pl => pl != pSender).ToList())
-                            {
-                                base.Parent.SendCommand(
-                                    CommandType.BLNK,
-                                    (string[])null,
-                                    p.ClientIdentifier
-                                );
-                            }
-                        }
-                        // This code block handles gambling by players. Won't be executed
-                        // Unless gambling is enabled and the player has played all cards
-                        // required of them.
-                        else if (base.PickedList[pSender] && base.Parent.Parameters.AllowGambling)
-                        {
-                            // If the player has more than zero Awesome Points, they will be able
-                            // to gamble. This was implemented in this manner as I doubt negative
-                            // Awesome Points, whilst they would work, are really the best choice.
-                            if (pSender.AwesomePoints > 0)
-                            {
-                                // Add the card the player's gambled to the list of drawn cards.
-                                this._playedCards[pSender].Add(i, base.Parent.DrawnCards[pSender][i]);
-                                // Remove the card from the player's hand since they've just played
-                                // it and therefore no longer have it drawn.
-                                base.Parent.DrawnCards[pSender].Remove(i);
-                                // As players must spend an Awesome Point to gamble, we'll subtract
-                                // one from their current total, provided it is greater than zero
-                                // (this particular condition was checked in the above conditional).
-                                pSender.AwesomePoints--;
-                                // We'll then add the player to our list of gamblers. At the end of
-                                // the round, this list will be checked to determine whether the
-                                // winning player is present within it. If they are, they will be
-                                // returned the Awesome Point they gambled.
-                                base.Gamblers.Add(pSender);
-                                // Once again, we inform all other players that a choice of card
-                                // has been made, via the BLNK command.
-                                foreach (Player p in base.Players.Where(p => p != pSender).ToList())
-                                {
-                                    base.Parent.SendCommand(
-                                        CommandType.BLNK,
-                                        (string[])null,
-                                        p.ClientIdentifier
-                                    );
-                                }
-
-                                return;
-                            }
-                            else
-                            {
-                                // First, we inform the user that they have too few Awesome Points
-                                // to gamble any, via UNRG.
-                                base.Parent.SendCommand(
-                                    CommandType.UNRG,
-                                    "You have too few Awesome Points to gamble.",
-                                    sender
-                                );
-                                // We then return the card to this player via a WHTE command. As the
-                                // card is never removed from any of the server's dictionaries, no
-                                // further action must be taken.
-                                base.Parent.SendCommand(
-                                    CommandType.WHTE,
-                                    new string[2] {
-                                        i.ToString(),
-                                        base.Parent.DrawnCards[pSender][i].Text
-                                    },
-                                    sender
-                                );
-                                return;
-                            }
-                        }
-                        // If the player has already played all cards required of them,
-                        // and if gambling is disabled by the server, this block of
-                        // code will be executed.
-                        else
-                        {
-                            // The client is informed, via UNRG, that gambling is disabled.
-                            base.Parent.SendCommand(
-                                CommandType.UNRG,
-                                "Gambling is disabled on this server.",
-                                sender
-                            );
-                            // The client is then returned their white card, and the function
-                            // is exited.
-                            base.Parent.SendCommand(
-                                CommandType.WHTE,
-                                new string[2] {
-                                        i.ToString(),
-                                        base.Parent.DrawnCards[pSender][i].Text
-                                    },
-                                sender
-                            );
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        // Informs the client that they card they tried to play
-                        // was not present in their hand, and so the PICK was not
-                        // accepted by the server.
-                        base.Parent.SendCommand(
-                            CommandType.UNRG,
-                            String.Format(
-                                "You do not have the card {0}.",
-                                i
-                            ),
-                            sender
-                        );
-                        return;
-                    }
+                    // If they aren't the Card Czar, however, we'll inform them of this via
+                    // an UNRG and then exit the function, taking no further action on their
+                    // command and continue waiting for the actual Card Czar to make a pick.
+                    base.Parent.SendCommand(
+                        CommandType.CZPK,
+                        "You are not the Card Czar.",
+                        sender
+                    );
+                    return;
                 }
             }
             else
             {
-                foreach (string id in arguments)
-                {
-                    int cardId = 0;
-                    // We have to determine whether the client actually sent
-                    // us valid card identifiers first. If it has, the identifier
-                    // should be able to be parsed into an int.
-                    if (int.TryParse(id, out cardId))
-                    {
-                        // Since there's no confirmation of whether a PICK was successful in the networking spec,
-                        // it is reasonable to assume that a client will cease to display the card sent, even if
-                        // said card was sent outwith the time period it should have been sent in. Since we're
-                        // making that assumption, we will have to confirm the existence of the card which was
-                        // sent within the player's hand, which is the condition here.
-                        if (base.Parent.DrawnCards.Single(pl => pl.Key.ClientIdentifier == sender).Value.ContainsKey(cardId))
-                        {
-                            // If the card did, in fact, exist, we'll send it back to the player and then continue
-                            // with the loop.
-                            base.Parent.SendCommand(
-                                CommandType.WHTE,
-                                new string[2] { 
-                                    cardId.ToString(),
-                                    // Rather ugly, but this little statement here selects the list of cards drawn by the
-                                    // player who sent the PICK, and then selects the white card with the ID sent by the
-                                    // client, and retrieves the property Card.Text.
-                                    base.Parent.DrawnCards.Single(pl => pl.Key.ClientIdentifier == sender).Value[cardId].Text
-                                },
-                                sender
-                            );
-                            continue;
-                        }
-                        else continue;
-                    }
-                    // If they haven't sent a valid identifier, there isn't anything
-                    // we can do about that, so we'll iterate on the arguments sent
-                    // and check any further arguments.
-                    // Since we aren't accepting PICKs at this time, we won't reply
-                    // with an UNRG, as that would imply the operation would have
-                    // otherwise succeeded had the identifier been valid.
-                    else continue;
-                }
+                // If CZPKs are not currently being accepted, we'll
+                // respond with an UNRG and exit out of the function.
+                // Since card picks aren't persistent across rounds in
+                // the same way drawn cards are, we won't do anything
+                // to "return" the card to the client.
+                base.Parent.SendCommand(
+                    CommandType.UNRG,
+                    "CZPK commands are not being accepted at this time.",
+                    sender
+                );
+                return;
             }
         }
     }
