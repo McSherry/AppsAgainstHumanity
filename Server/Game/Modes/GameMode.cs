@@ -23,7 +23,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         protected internal virtual bool AllowPicks { get; set; }
 
         /// <summary>
-        /// Initialise an instance of StandardGameMode with a parent Game instance.
+        /// Initialise an instance of GameMode with a parent Game instance.
         /// </summary>
         /// <param name="parent">The Game instance to treat as a parent.</param>
         public GameMode(Game parent)
@@ -205,6 +205,15 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                                         p.ClientIdentifier
                                     );
                                 }
+                                // We inform other players that a gamble has been made via a broadcast.
+                                // We won't, however, send out any commands to tell clients to update
+                                // the number of points they are showing for this player.
+                                this.Parent.Broadcast(
+                                    String.Format(
+                                        "Player {0} has gambled an Awesome Point in order to play another card!",
+                                        pSender.Nickname
+                                    )
+                                );
 
                                 return;
                             }

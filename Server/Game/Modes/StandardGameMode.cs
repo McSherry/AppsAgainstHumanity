@@ -11,10 +11,14 @@ namespace AppsAgainstHumanity.Server.Game.Modes
     {
         /// <summary>
         /// True when the server is expecting to receive
-        /// a PICK command. When false, the command handler
-        /// for PICKs will not function.
+        /// a CZPK command. When false, the command handler
+        /// for CZPKs will not function.
         /// </summary>
-        private bool _allowPicks = false, _allowCzpk = false;
+        private bool _allowCzpk = false;
+        /// <summary>
+        /// The player to be returned as the winner of the round.
+        /// </summary>
+        private Player _roundWinner = null;
 
         public StandardGameMode(Game parent)
             : base(parent)
@@ -57,9 +61,61 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 
                 // If the sender of the CZPK is the Card Czar for this round, we can
                 // proceed as normal, since they're the one that's meant to be picking.
-                if (pSender.ClientIdentifier == base.Parent.CurrentRound.CardCzar.ClientIdentifier)
+                if (sender == base.Parent.CurrentRound.CardCzar.ClientIdentifier)
                 {
-
+                    int cardId = 0;
+                    // We must verify that the client sent a card identifier which
+                    // can be parsed into an int. If they have not, an invalid
+                    // card identifier has been sent.
+                    if (int.TryParse(arguments[0], out cardId))
+                    {
+                        // We don't know, at this point, whether the card ID the
+                        // Czar has sent us actually exists, so we have to wrap
+                        // our check in a try-catch block to prevent crashes.
+                        try
+                        {
+                            // If the provided card ID exists, we select the player who
+                            // sent it in and set _roundWinner to indicate that they have
+                            // won. If the card doesn't exist, an exception is thrown,
+                            // and _roundWinner will remain null.
+                            this._roundWinner = base.PlayedCards.Single(k => k.Value.ContainsKey(cardId)).Key;
+                            // Since we've now selected a winner, we no longer need to
+                            // execute this handler, and so we can set _allowCzpk to false,
+                            // causing this function to exit much earlier if called again.
+                            this._allowCzpk = false;
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // If the card doesn't exist, this block will be executed and
+                            // the Card Czar will be informed that the card they attempted
+                            // to select does not exist or, rather, hasn't been played by
+                            // any players.
+                            base.Parent.SendCommand(
+                                CommandType.UNRG,
+                                String.Format(
+                                    "Card has not been played ({0}).",
+                                    cardId
+                                ),
+                                sender
+                            );
+                        }
+                        // Exit out of the function.
+                        return;
+                    }
+                    else
+                    {
+                        // If the card identifier is invalid, we inform
+                        // the client of this, and provide the identifier
+                        // which was invalid.
+                        base.Parent.SendCommand(
+                            CommandType.UNRG,
+                            String.Format(
+                                "Invalid card identifier sent ({0}).",
+                                arguments[0]
+                            ),
+                            sender
+                        );
+                    }
                 }
                 else
                 {
