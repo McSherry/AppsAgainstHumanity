@@ -76,6 +76,38 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             // We return the pool that we created.
             return pool;
         }
+        /// <summary>
+        /// Handler for when a player is disconnected.
+        /// </summary>
+        /// <param name="p">The disconnected player.</param>
+        protected virtual void OnPlayerDisconnectedHandler(Player p)
+        {
+            foreach (Player pl in Players.ToList())
+            {
+                // Inform each player that another player has disconnected.
+                this.Parent.SendCommand(
+                    CommandType.CLEX,
+                    String.Format(
+                        "Player {0} disconnected.",
+                        p.Nickname
+                    ),
+                    pl.ClientIdentifier
+                );
+
+                // Inform each player that the round ended without a winner.
+                this.Parent.SendCommand(
+                    CommandType.RWIN,
+                    (string[])null,
+                    pl.ClientIdentifier
+                );
+            }
+
+            // The round cannot continue in this state, so we inform
+            // players that the round will be ending.
+            this.Parent.Broadcast("Player disconnected mid-round. Terminating round.");
+
+            this.Stop();
+        }
 
         /// <summary>
         /// Initialise an instance of GameMode with a parent Game instance.
@@ -84,6 +116,10 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         public GameMode(Game parent)
         {
             this.Parent = parent;
+            this.Parent.OnPlayerDisconnected += OnPlayerDisconnectedHandler;
+            this.Parent._serverWrapper.RegisterCommandHandler(CommandType.PICK, this.CommandPickHandler);
+            this.Parent._serverWrapper.RegisterCommandHandler(CommandType.CZPK, this.CommandCzpkHandler);
+
             this.Players = parent.Players;
             this.BlackCard = parent.CurrentRound.BlackCard;
             this.WhiteCards = this.CreateCardPool();
@@ -391,5 +427,13 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// </summary>
         /// <returns>The player who was the winner of the round.</returns>
         public abstract Player Start();
+        /// <summary>
+        /// Forces the current game-mode to stop.
+        /// </summary>
+        public virtual void Stop()
+        {
+            this.Parent._serverWrapper.UnregisterCommandHandler(CommandType.PICK);
+            this.Parent._serverWrapper.UnregisterCommandHandler(CommandType.CZPK);
+        }
     }
 }

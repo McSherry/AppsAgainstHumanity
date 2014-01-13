@@ -31,7 +31,7 @@ namespace AppsAgainstHumanity.Server.Game
         private bool _gameWon = false;
         private bool _hasStarted = false;
         private NetLibServer _server;
-        private AAHProtocolWrapper _serverWrapper;
+        internal AAHProtocolWrapper _serverWrapper;
         private System.Timers.Timer _pingTimer;
         private Round _currRound;
         private Thread _gameThread;
