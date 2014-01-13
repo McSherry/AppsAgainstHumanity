@@ -33,6 +33,8 @@ namespace AppsAgainstHumanity.Server.Game.Modes
 
         public override Player Start()
         {
+
+
             throw new NotImplementedException();
         }
 

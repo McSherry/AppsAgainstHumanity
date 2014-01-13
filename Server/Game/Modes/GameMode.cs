@@ -21,6 +21,61 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// allowed to operate. False by default.
         /// </summary>
         protected internal virtual bool AllowPicks { get; set; }
+        /// <summary>
+        /// Informs each player currently in the game of the points
+        /// held by every other player.
+        /// </summary>
+        protected virtual void InformPlayersPoints()
+        {
+            var players = this.Players.ToList();
+            foreach (Player p in players)
+            {
+                foreach (Player pl in players)
+                {
+                    this.Parent.SendCommand(
+                        CommandType.PNTS,
+                        new string[2] { pl.Nickname, pl.AwesomePoints.ToString() },
+                        p.ClientIdentifier
+                    );
+                }
+            }
+        }
+        /// <summary>
+        /// Pulls cards from the parent instance of Game's
+        /// pool for use in the current round.
+        /// </summary>
+        protected virtual Dictionary<int, WhiteCard> CreateCardPool()
+        {
+            // The generator which will be used to select random cards
+            // from our pools. Seeded with bytes from a CSPRNG.
+            Random rng = new Random(new Crypto.SRand());
+            // The dictionary which will contain our final pool of cards.
+            Dictionary<int, WhiteCard> pool = new Dictionary<int, WhiteCard>();
+
+            // First, we'll add to our pool the number of cards to be sent to
+            // each player at the beginning of the round. This is determined
+            // by the Draw number of the black card which will be played.
+            for (int i = 0; i < this.BlackCard.Draw * this.Players.Count; i++)
+            {
+                // Select a card from the white card pool of the parent Game instance.
+                // Since indices are zero-based, we have to subtract one from the total
+                // count as, if we did not do this, an IndexOutOfRangeException could
+                // occur.
+                KeyValuePair<int, WhiteCard> wc = this.Parent.WhiteCardPool
+                    .ElementAt(
+                        rng.Next(this.Parent.WhiteCardPool.Count - 1)
+                    );
+                // We then remove the card from the pool. This prevents the card being
+                // dealt to two people.
+                this.Parent.WhiteCardPool.Remove(wc.Key);
+                // The card is then added to our pool. The pool will then be returned at
+                // the end of the function.
+                pool.Add(wc.Key, wc.Value);
+            }
+
+            // We return the pool that we created.
+            return pool;
+        }
 
         /// <summary>
         /// Initialise an instance of GameMode with a parent Game instance.
@@ -30,8 +85,8 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         {
             this.Parent = parent;
             this.Players = parent.Players;
-            this.WhiteCards = parent.CurrentRound.WhiteCardPool;
             this.BlackCard = parent.CurrentRound.BlackCard;
+            this.WhiteCards = this.CreateCardPool();
             this.AllowPicks = false;
 
             foreach (Player p in this.Players.ToList())

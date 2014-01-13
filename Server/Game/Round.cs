@@ -10,10 +10,6 @@ namespace AppsAgainstHumanity.Server.Game
 {
     public class Round
     {
-        // Whether new white cards should be given to players.
-        // May be disabled if a round is skipped and played
-        // cards are returned to players.
-        private bool _drawNewWhites;
         private Random _cardSelectorRNG;
         /// <summary>
         /// Generates a random number within the bounds of the white card pool's length.
@@ -49,10 +45,10 @@ namespace AppsAgainstHumanity.Server.Game
             this._parent = parent;
             this.CardCzar = cardCzar;
 
-            this._drawNewWhites = drawNewWhites;
             this._cardSelectorRNG = new Random((int)this.RoundSeed);
             this.HasPlayedList = new Dictionary<Player, bool>();
             this.PlayedCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
+            this.DrawNewWhites = drawNewWhites;
 
             foreach (Player p in Players.ToList())
             {
@@ -102,6 +98,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// The white cards played by players.
         /// </summary>
         public Dictionary<Player, Dictionary<int, WhiteCard>> PlayedCards { get; internal set; }
+        /// <summary>
+        /// Whether a new set of white cards should be drawn and dealt to players at
+        /// the beginning of the round.
+        /// </summary>
+        public bool DrawNewWhites { get; internal set; }
 
         /// <summary>
         /// Sends a card to a given player. Randomly selected from pool.

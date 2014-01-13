@@ -18,5 +18,12 @@ namespace AppsAgainstHumanity.Server.Crypto
 
             return BitConverter.ToUInt64(rndData, 0);
         }
+        public static implicit operator int(SRand s)
+        {
+            byte[] rndData = new byte[4];
+            RNG.GetBytes(rndData);
+
+            return BitConverter.ToInt32(rndData, 0);
+        }
     }
 }
