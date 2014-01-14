@@ -64,7 +64,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// Pick a random player each round to be the Card Czar.
         /// </summary>
-        Random = 1
+        Random = 1,
+        /// <summary>
+        /// The winner of the previous round becomes the Card Czar.
+        /// </summary>
+        Winner = 2
     }
 
     /// <summary>

@@ -36,6 +36,7 @@
             this.gameMonitorGBox = new System.Windows.Forms.GroupBox();
             this.connectedPlayersListBox = new System.Windows.Forms.ListBox();
             this.gameConfigGBox = new System.Windows.Forms.GroupBox();
+            this.onePickBlacksCBox = new System.Windows.Forms.CheckBox();
             this.expansionPackButtons = new System.Windows.Forms.Button();
             this.serverStatusIndicLbl = new System.Windows.Forms.Label();
             this.serverStatusIndicRect = new System.Windows.Forms.Panel();
@@ -61,7 +62,6 @@
             this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
             this.aahWebLinkLbl = new System.Windows.Forms.LinkLabel();
             this.serverSettingsBtn = new System.Windows.Forms.Button();
-            this.onePickBlacksCBox = new System.Windows.Forms.CheckBox();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutLimitCBox)).BeginInit();
@@ -176,6 +176,16 @@
             this.gameConfigGBox.TabStop = false;
             this.gameConfigGBox.Text = "Game Configuration";
             // 
+            // onePickBlacksCBox
+            // 
+            this.onePickBlacksCBox.AutoSize = true;
+            this.onePickBlacksCBox.Location = new System.Drawing.Point(12, 153);
+            this.onePickBlacksCBox.Name = "onePickBlacksCBox";
+            this.onePickBlacksCBox.Size = new System.Drawing.Size(191, 17);
+            this.onePickBlacksCBox.TabIndex = 24;
+            this.onePickBlacksCBox.Text = "Disallow Black Cards with 2+ Picks";
+            this.onePickBlacksCBox.UseVisualStyleBackColor = true;
+            // 
             // expansionPackButtons
             // 
             this.expansionPackButtons.Location = new System.Drawing.Point(447, 50);
@@ -257,7 +267,8 @@
             this.czarSelectCBox.FormattingEnabled = true;
             this.czarSelectCBox.Items.AddRange(new object[] {
             "Sequential",
-            "Random"});
+            "Random",
+            "Winner"});
             this.czarSelectCBox.Location = new System.Drawing.Point(115, 79);
             this.czarSelectCBox.Name = "czarSelectCBox";
             this.czarSelectCBox.Size = new System.Drawing.Size(121, 21);
@@ -486,16 +497,6 @@
             this.serverSettingsBtn.Text = "Settings";
             this.serverSettingsBtn.UseVisualStyleBackColor = true;
             this.serverSettingsBtn.Click += new System.EventHandler(this.serverSettingsBtn_Click);
-            // 
-            // onePickBlacksCBox
-            // 
-            this.onePickBlacksCBox.AutoSize = true;
-            this.onePickBlacksCBox.Location = new System.Drawing.Point(12, 153);
-            this.onePickBlacksCBox.Name = "onePickBlacksCBox";
-            this.onePickBlacksCBox.Size = new System.Drawing.Size(191, 17);
-            this.onePickBlacksCBox.TabIndex = 24;
-            this.onePickBlacksCBox.Text = "Disallow Black Cards with 2+ Picks";
-            this.onePickBlacksCBox.UseVisualStyleBackColor = true;
             // 
             // mainForm
             // 

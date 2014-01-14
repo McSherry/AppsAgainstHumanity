@@ -967,6 +967,15 @@ namespace AppsAgainstHumanity.Server.Game
                             // We have to do (Players.Count - 1) as lists/dicts/arrays are zero-based.
                             czarCtr = _RNG.Next(0, Players.Count - 1);
                             break;
+                        case CzarSelection.Winner:
+                            // The winner of the current round becomes the Czar for the next round. If there was
+                            // no winner, we'll go for sequential instead. 
+                            if (roundWinner != null)
+                            {
+                                czarCtr = Players.IndexOf(roundWinner);
+                            }
+                            else czarCtr = ++czarCtr % Players.Count;
+                            break;
                     }
                 }
             });
