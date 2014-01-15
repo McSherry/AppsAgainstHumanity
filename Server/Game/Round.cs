@@ -204,7 +204,7 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 // Send new white cards to all players who are not the Card Czar
                 // unless we've stopped drawing new whites for this round.
-                if (_drawNewWhites) SendRandomCards(p);
+                if (this.DrawNewWhites) SendRandomCards(p);
             }
 
             

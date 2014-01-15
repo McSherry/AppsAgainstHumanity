@@ -77,6 +77,37 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             return pool;
         }
         /// <summary>
+        /// Distributes cards from the pool to players.
+        /// </summary>
+        protected virtual void DistributeCards()
+        {
+            // If there are no cards to distribute, throw an exception
+            // suggesting the likely reasons for this.
+            if (this.WhiteCards.Count <= 0)
+                throw new InvalidOperationException
+                ("Cards already distributed or pool depleted.");
+
+            foreach (Player p in this.Players.ToList())
+            {
+                Random rng = new Random(new Crypto.SRand());
+                for (int i = 0; i < this.BlackCard.Draw; i++)
+                {
+                    // Select a random white card from the pool to send to the player.
+                    KeyValuePair<int, WhiteCard> wc = this.WhiteCards.ElementAt(rng.Next(0, this.WhiteCards.Count - 1));
+                    // Remove the white card from our pool so it cannot be dealt to another player.
+                    this.WhiteCards.Remove(wc.Key);
+                    // Add the selected card to the player's list of drawn cards.
+                    this.Parent.DrawnCards[p].Add(wc.Key, wc.Value);
+                    // Send the contents of the card, along with its identifier, to the player.
+                    this.Parent.SendCommand(
+                        CommandType.WHTE,
+                        new string[2] { wc.Key.ToString(), wc.Value.Text },
+                        p.ClientIdentifier
+                    );
+                }
+            }
+        }
+        /// <summary>
         /// Handler for when a player is disconnected.
         /// </summary>
         /// <param name="p">The disconnected player.</param>
@@ -130,6 +161,9 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 this.PickedList.Add(p, false);
                 this.PlayedCards.Add(p, new Dictionary<int, WhiteCard>());
             }
+
+            if (this.Parent.CurrentRound.DrawNewWhites)
+                this.DistributeCards();
         }
 
         /// <summary>

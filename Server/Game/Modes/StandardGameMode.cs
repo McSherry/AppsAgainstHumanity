@@ -102,16 +102,54 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 // Dispose the timer's resources; we won't be using it again.
                 pickTimer.Dispose();
 
-                /* REWRITE THIS SHIT
-                 * Stop coding when tired. This crap should stay in Round, but you probably
-                 * need to modify your pick handler for this class to set the value of a given
-                 * base.PickedList[Player] when the expected number of cards are played by
-                 * said player (if this hasn't already been done).
-                 * 
-                 * These classes really are a mess. You should have planned this out more
-                 * thoroughly before you just wrote the implementation of the Standard game mode
-                 * and accidentally made it far too integrated with the Round class.
-                 */
+                // We check whether the number of players that have successfully played this
+                // round is greater than or equal to the minimum number of players required
+                // to play, subtracting one to account for the Card Czar.
+                if (base.PickedList.Where(pl => pl.Value).Count() >= (Constants.MinimumPlayers - 1))
+                {
+                    // If the minimum number of players have played, we'll continue with the round
+                    // and reveal cards to other players and the Card Czar.
+
+                    Random rng = new Random(new Crypto.SRand());
+                    foreach (Player p in Players.ToList())
+                    {
+                        // Retrieve all plays from players who have played the
+                        // required number of cards, and flatten the dictionary
+                        // out into a list of identifier-card pairs.
+                        List<Dictionary<int, WhiteCard>> cards = (from card in base.PlayedCards.ToList()
+                                                                  where base.PickedList[card.Key]
+                                                                  select card.Value).ToList();
+                        for (
+                            // This loop will iterate through the list of paired cards. In
+                            // order to ensure each player receives cards in a random order,
+                            // we select pairs at random by their index, and then remove them
+                            // from the list so that they won't be revealed to the same player
+                            // again.
+                            int rnd = rng.Next(0, cards.Count - 1);
+                            cards.Count > 0;
+                            cards.Remove(cards[rnd]), rnd = rng.Next(0, cards.Count - 1)
+                        )
+                        {
+                            // We create a list where we will store the information for each
+                            // set of card choices.
+                            List<string> cardParams = new List<string>();
+                            // For each card in this specific set of choices, we iterate through
+                            // and add the identifier and text to the list of strings.
+                            foreach (var c in cards.ToList()[rnd])
+                            {
+                                cardParams.Add(c.Key.ToString());
+                                cardParams.Add(c.Value.Text);
+                            }
+                            // We then send the bits of card information, turned into an
+                            // array, to the player.
+                            base.Parent.SendCommand(
+                                CommandType.REVL,
+                                cardParams.ToArray(),
+                                p.ClientIdentifier
+                            );
+                        }
+                    }
+                }
             });
 
             throw new NotImplementedException();
