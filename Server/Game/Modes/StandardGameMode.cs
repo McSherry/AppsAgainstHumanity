@@ -150,9 +150,20 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                         }
                     }
                 }
+                // If we don't have enough players to successfully play a gme, we'll
+                // end the round by returning a null player to the parent Game class,
+                // which will sent an RWIN without listed winner to all clients and
+                // return to them their cards.
+                else
+                {
+                    this._roundWinner = null;
+                    return;
+                }
             });
 
-            throw new NotImplementedException();
+            // Return the player set as the roundwinner by the
+            // game-mode processing thread.
+            return _roundWinner;
         }
 
         public override void Stop()
