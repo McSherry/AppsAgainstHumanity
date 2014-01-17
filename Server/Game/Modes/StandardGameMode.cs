@@ -196,9 +196,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
 
                 czpkTimer.Start();
                 base.AllowCzpk = true;
-                base.Parent.OnCzarPick += this.CommandCzpkHandler;
                 while (this._roundWinner == null ^ czpkTimerHasElapsed) ;
-                base.Parent.OnCzarPick -= this.CommandCzpkHandler;
                 base.AllowCzpk = false;
                 czpkTimer.Stop();
                 czpkTimer.Dispose();
@@ -256,7 +254,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
 
             // If the game mode has indicated that this is currently a period
             // in which CZPK commands are accepted and should be parsed.
-            if (_allowCzpk)
+            if (base.AllowCzpk)
             {
                 // The player represented by the client identifier which sent this
                 // command.
