@@ -20,7 +20,13 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// Whether the handler for PICK commands is currently
         /// allowed to operate. False by default.
         /// </summary>
-        protected internal virtual bool AllowPicks { get; set; }
+        protected internal bool AllowPicks { get; set; }
+        /// <summary>
+        /// Whether the handler for CZPK commands should be
+        /// allowed to execute. Recommended, but not required,
+        /// that CZPK handlers implement support for this.
+        /// </summary>
+        protected internal bool AllowCzpk { get; set; }
         /// <summary>
         /// Informs each player currently in the game of the points
         /// held by every other player.
@@ -203,6 +209,11 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// generated at the beginning of the game.
         /// </summary>
         public virtual Dictionary<Player, Dictionary<int, WhiteCard>> PlayedCards { get; internal set; }
+
+        /// <summary>
+        /// Fired when a player wins the round.
+        /// </summary>
+        public abstract event Game.PlayerEventHandler OnPlayerWin;
 
         /// <summary>
         /// This game mode's handler for PICK commands.
@@ -455,7 +466,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// </summary>
         /// <param name="sender">The Client ID of the client sending the command.</param>
         /// <param name="arguments">Any arguments sent by the client with the command.</param>
-        public abstract void CommandCzpkHandler(long sender, string[] arguments);
+        public abstract void CommandCzpkHandler(Player player, int pickedCardID);
         /// <summary>
         /// Starts a round of the specified game mode.
         /// </summary>

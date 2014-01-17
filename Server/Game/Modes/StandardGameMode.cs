@@ -12,12 +12,6 @@ namespace AppsAgainstHumanity.Server.Game.Modes
     public class StandardGameMode : GameMode
     {
         /// <summary>
-        /// True when the server is expecting to receive
-        /// a CZPK command. When false, the command handler
-        /// for CZPKs will not function.
-        /// </summary>
-        private bool _allowCzpk = false;
-        /// <summary>
         /// The player to be returned as the winner of the round.
         /// </summary>
         private Player _roundWinner = null;
@@ -37,13 +31,11 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             get { return "Standard"; }
         }
 
-        public override Player Start()
+        // This method will be called on a new thread by the Game
+        // or Round parent class, so we won't do any thread buggery
+        // in here.
+        public override void Start()
         {
-            // Create the thread on which this round's code
-            // will execute. We must create a new thread so
-            // as not to block the main threads when waiting,
-            // and so we can more easily terminate the round
-            // in the event of a disconnection.
             this._gmThread = new Thread(() =>
             {
                 // The timer we'll use to provide a period in which PICK commands will
@@ -157,13 +149,66 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 else
                 {
                     this._roundWinner = null;
+                    // Invoke the event handler which will notify any listeners
+                    // of the winner of the current round.
+                    if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner);
+                    // Exit the thread.
                     return;
                 }
-            });
 
-            // Return the player set as the roundwinner by the
-            // game-mode processing thread.
-            return _roundWinner;
+                // If we get to this point, we can reasonably assume that the game
+                // is in a suitable state to continue, and so we won't perform any
+                // checks.
+
+                // The Czar is afforded twice the time given to normal players to
+                // make their choice of the winner.
+                var czpkTimer = new System.Timers.Timer(base.Parent.Parameters.TimeoutLimit * 2000);
+                bool czpkTimerHasElapsed = false;
+                czpkTimer.Elapsed += (s, e) =>
+                {
+                    // Stop the Card Czar, or any other players, from submitting CZPKs.
+                    base.AllowCzpk = false;
+
+                    // Inform all players that the Card Czar failed to pick within adequate time
+                    // via a broadcast. The client doesn't need to be told the specific reason for
+                    // a skipped round, but it might be nice if the players get told.
+                    base.Parent.Broadcast(
+                        String.Format(
+                            "Card Czar {0} failed to pick winner within the time-limit and so the round has ended.",
+                            base.Parent.CurrentRound.CardCzar.Nickname
+                        )
+                    );
+
+                    // This round will be skipped, so we set the winner to null. Important to do
+                    // this before we cause the while loop to end as assigning afterwards might cause
+                    // a race condition where the variable is returned the appropriate value is set.
+                    _roundWinner = null;
+
+                    // Set the variable indicating whether the timer has elapsed to true,
+                    // causing the blocking while loop to end and the flow of execution to continue.
+                    czpkTimerHasElapsed = true;
+
+                    // If the server is configured to kick players who time out, kick the Card Czar
+                    // and inform them that they were kicked due to being inactive.
+                    if (base.Parent.Parameters.KickOnTimeout)
+                        base.Parent.Disconnect(base.Parent.CurrentRound.CardCzar.Nickname, "Disconnected due to inactivity.");
+                };
+
+                czpkTimer.Start();
+                base.AllowCzpk = true;
+                base.Parent.OnCzarPick += this.CommandCzpkHandler;
+                while (this._roundWinner == null ^ czpkTimerHasElapsed) ;
+                base.Parent.OnCzarPick -= this.CommandCzpkHandler;
+                base.AllowCzpk = false;
+                czpkTimer.Stop();
+                czpkTimer.Dispose();
+
+                // Invoke the event handler which will notify any listeners
+                // of the winner of the current round.
+                if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner);
+                // Exit the thread.
+                return;
+            });
         }
 
         public override void Stop()
@@ -191,6 +236,8 @@ namespace AppsAgainstHumanity.Server.Game.Modes
 
             base.Stop();
         }
+
+        public override event Game.PlayerEventHandler OnPlayerWin;
 
         public override void CommandCzpkHandler(long sender, string[] arguments)
         {

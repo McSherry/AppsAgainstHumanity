@@ -353,13 +353,8 @@
             // 
             this.awesomePointsLimitBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.awesomePointsLimitBox.Location = new System.Drawing.Point(250, 53);
-            this.awesomePointsLimitBox.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             this.awesomePointsLimitBox.Minimum = new decimal(new int[] {
-            4,
+            2,
             0,
             0,
             0});
