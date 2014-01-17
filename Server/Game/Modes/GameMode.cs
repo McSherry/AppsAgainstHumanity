@@ -466,12 +466,11 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// </summary>
         /// <param name="sender">The Client ID of the client sending the command.</param>
         /// <param name="arguments">Any arguments sent by the client with the command.</param>
-        public abstract void CommandCzpkHandler(Player player, int pickedCardID);
+        public abstract void CommandCzpkHandler(long sender, string[] arguments);
         /// <summary>
         /// Starts a round of the specified game mode.
         /// </summary>
-        /// <returns>The player who was the winner of the round.</returns>
-        public abstract Player Start();
+        public abstract void Start();
         /// <summary>
         /// Forces the current game-mode to stop.
         /// </summary>

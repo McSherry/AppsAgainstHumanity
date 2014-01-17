@@ -283,7 +283,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                             // Since we've now selected a winner, we no longer need to
                             // execute this handler, and so we can set _allowCzpk to false,
                             // causing this function to exit much earlier if called again.
-                            this._allowCzpk = false;
+                            base.AllowCzpk = false;
                         }
                         catch (InvalidOperationException)
                         {
