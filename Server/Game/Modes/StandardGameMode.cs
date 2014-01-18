@@ -36,8 +36,28 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         // in here.
         public override void Start()
         {
+            foreach (Player p in base.Players.ToList())
+            {
+                // Inform all clients of who the Card Czar is. The Czar
+                // is determined by the parent Game class prior to
+                // instantiation of this game mode, so we just need to
+                // retrieve it.
+                base.Parent.SendCommand(
+                    CommandType.CZAR,
+                    base.Parent.CurrentRound.CardCzar.Nickname,
+                    p.ClientIdentifier
+                );
+                // Send to all clients the black card for the current round.
+                base.Parent.SendCommand(
+                    CommandType.BLCK,
+                    new string[2] { base.BlackCard.Text, base.BlackCard.Pick.ToString() },
+                    p.ClientIdentifier
+                );
+            }
+
             this._gmThread = new Thread(() =>
             {
+
                 // The timer we'll use to provide a period in which PICK commands will
                 // be accepted and processed.
                 var pickTimer = new System.Timers.Timer(base.Parent.Parameters.TimeoutLimit * 1000);
@@ -86,7 +106,14 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 // Block the current thread, as the receiving and processing of
                 // PICKs is performed on another thread. Blocking this thread means
                 // that the game cannot progress.
-                while (base.PickedList.ContainsValue(false) ^ pickTimerHasElapsed) ;
+                while (
+                    (
+                    from haspl in base.PickedList.ToList()
+                    where (haspl.Key != base.Parent.CurrentRound.CardCzar) && (!haspl.Value)
+                    select haspl
+                    ).Count() > 0
+                    //base.PickedList.Where(pl => pl.Key != base.Parent.CurrentRound.CardCzar) 
+                    ^ pickTimerHasElapsed) ;
                 // Stop allowing the receival and processing of PICKs.
                 base.AllowPicks = false;
                 // Stop the timer.
@@ -119,7 +146,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                             // again.
                             int rnd = rng.Next(0, cards.Count - 1);
                             cards.Count > 0;
-                            cards.Remove(cards[rnd]), rnd = rng.Next(0, cards.Count - 1)
+                            cards.Remove(cards[rnd]), rnd = rng.Next(0, cards.Count)
                         )
                         {
                             // We create a list where we will store the information for each
@@ -151,7 +178,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                     this._roundWinner = null;
                     // Invoke the event handler which will notify any listeners
                     // of the winner of the current round.
-                    if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner);
+                    if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner, 0);
                     // Exit the thread.
                     return;
                 }
@@ -197,16 +224,15 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                 czpkTimer.Start();
                 base.AllowCzpk = true;
                 while (this._roundWinner == null ^ czpkTimerHasElapsed) ;
-                base.AllowCzpk = false;
+                //base.AllowCzpk = false;
                 czpkTimer.Stop();
                 czpkTimer.Dispose();
 
-                // Invoke the event handler which will notify any listeners
-                // of the winner of the current round.
-                if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner);
-                // Exit the thread.
                 return;
             });
+
+            // Start execution on the thread managing game-mode state.
+            _gmThread.Start();
         }
 
         public override void Stop()
@@ -235,7 +261,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             base.Stop();
         }
 
-        public override event Game.PlayerEventHandler OnPlayerWin;
+        public override event Game.PlayerCardEventHandler OnPlayerWin;
 
         public override void CommandCzpkHandler(long sender, string[] arguments)
         {
@@ -284,6 +310,11 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                             // execute this handler, and so we can set _allowCzpk to false,
                             // causing this function to exit much earlier if called again.
                             base.AllowCzpk = false;
+                            // Invoke the event handler which will notify any listeners
+                            // of the winner of the current round.
+                            if (this.OnPlayerWin != null) this.OnPlayerWin.Invoke(_roundWinner, cardId);
+                            // Exit the function.
+                            return;
                         }
                         catch (InvalidOperationException)
                         {

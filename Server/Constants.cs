@@ -41,5 +41,7 @@ namespace AppsAgainstHumanity.Server
         public static int DefaultPort { get { return 11235; } }
 
         public const string DefaultDeckPath = "./Decks";
+
+        public const string DefaultGameMode = "Standard";
     }
 }

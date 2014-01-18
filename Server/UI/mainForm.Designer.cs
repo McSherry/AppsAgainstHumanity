@@ -219,14 +219,16 @@
             this.gameRulesetCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gameRulesetCBox.Enabled = false;
             this.gameRulesetCBox.FormattingEnabled = true;
-            this.gameRulesetCBox.Items.AddRange(new object[] {
+            var gameRulesetCBoxItems = new System.Collections.Generic.List<object>();
+            /*
+            new object[] {
             "Standard",
             "Rebooting the Universe",
             "Packing Heat",
             "Rando Cardrissian",
             "God Is Dead",
             "Survival of the Fittest",
-            "Serious Business"});
+            "Serious Business"});*/
             this.gameRulesetCBox.Location = new System.Drawing.Point(327, 79);
             this.gameRulesetCBox.Name = "gameRulesetCBox";
             this.gameRulesetCBox.Size = new System.Drawing.Size(220, 21);

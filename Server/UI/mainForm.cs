@@ -192,6 +192,8 @@ namespace AppsAgainstHumanity.Server.UI
             this.awesomePointsLimitBox.Value = 8;
             this.timeoutLimitCBox.Value = 30;
             this.czarSelectCBox.SelectedIndex = 0;
+            Game.Game.ModeController gmc = Game.Game.GameModes;
+            this.gameRulesetCBox.Items.AddRange(gmc._gameModeKeys.ToArray());
             this.gameRulesetCBox.SelectedIndex = 0;
             this.connectedPlayersListBox.Text = String.Empty;
             this.aahAboutDescRTBox.SelectAll();
@@ -294,7 +296,7 @@ namespace AppsAgainstHumanity.Server.UI
                 Players = int.Parse(playerLimitBox.Value.ToString()),
                 PointsLimit = int.Parse(awesomePointsLimitBox.Value.ToString()),
                 TimeoutLimit = int.Parse(timeoutLimitCBox.Value.ToString()),
-                Ruleset = (GameRuleset)gameRulesetCBox.SelectedIndex,
+                Ruleset = gameRulesetCBox.SelectedItem.ToString(),
                 CzarSelection = (CzarSelection)czarSelectCBox.SelectedIndex,
                 AllowGambling = allowGamblingCheckBox.Checked,
                 KickOnTimeout = timeoutKickCheckBox.Checked,

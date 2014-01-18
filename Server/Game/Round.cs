@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using CsNetLib2;
+using AppsAgainstHumanity.Server.Game.Modes;
 
 namespace AppsAgainstHumanity.Server.Game
 {
@@ -146,8 +147,22 @@ namespace AppsAgainstHumanity.Server.Game
         /// Starts this round.
         /// </summary>
         /// <returns>The player who has won this round.</returns>
-        public Player Start()
+        public void Start()
         {
+            foreach (Player p in this._parent.Players.ToList())
+            {
+                // Inform clients that the game has started.
+                this._parent.SendCommand(
+                    CommandType.RSTR,
+                    (string[])null,
+                    p.ClientIdentifier
+                );
+            }
+            // Start the current game mode.
+            this._parent.CurrentGameMode.Start();
+
+            #region Legacy Commented-out code
+            /*
             bool allPlayersSubmitted = false;
             // Players are limited in the time they have available to choose.
             // This timeout is in seconds in the parameters, so we have to multiply by 1000
@@ -424,14 +439,15 @@ namespace AppsAgainstHumanity.Server.Game
              * 5. Return the player whose card was chosen by the card czar.
              * 6. Remove all played cards from Game.DrawnCards.
              */
+#endregion
 
-            return roundWinner;
+            return;
         }
 
         /// <summary>
         /// Forcibly ends the round.
         /// </summary>
-        public void End()
+        public void Stop()
         {
             // TODO: implement
         }

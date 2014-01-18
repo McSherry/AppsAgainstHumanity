@@ -154,6 +154,10 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         {
             this.Parent = parent;
             this.Parent.OnPlayerDisconnected += OnPlayerDisconnectedHandler;
+            // Remove any previous handlers
+            this.Parent._serverWrapper.UnregisterCommandHandler(CommandType.PICK);
+            this.Parent._serverWrapper.UnregisterCommandHandler(CommandType.CZPK);
+            // Bind our own handlers
             this.Parent._serverWrapper.RegisterCommandHandler(CommandType.PICK, this.CommandPickHandler);
             this.Parent._serverWrapper.RegisterCommandHandler(CommandType.CZPK, this.CommandCzpkHandler);
 
@@ -161,6 +165,10 @@ namespace AppsAgainstHumanity.Server.Game.Modes
             this.BlackCard = parent.CurrentRound.BlackCard;
             this.WhiteCards = this.CreateCardPool();
             this.AllowPicks = false;
+
+            this.PickedList = new Dictionary<Player, bool>();
+            this.PlayedCards = new Dictionary<Player, Dictionary<int, WhiteCard>>();
+            this.Gamblers = new List<Player>();
 
             foreach (Player p in this.Players.ToList())
             {
@@ -213,7 +221,7 @@ namespace AppsAgainstHumanity.Server.Game.Modes
         /// <summary>
         /// Fired when a player wins the round.
         /// </summary>
-        public abstract event Game.PlayerEventHandler OnPlayerWin;
+        public abstract event Game.PlayerCardEventHandler OnPlayerWin;
 
         /// <summary>
         /// This game mode's handler for PICK commands.
@@ -317,41 +325,65 @@ namespace AppsAgainstHumanity.Server.Game.Modes
                             // Awesome Points, whilst they would work, are really the best choice.
                             if (pSender.AwesomePoints > 0)
                             {
-                                // Add the card the player's gambled to the list of drawn cards.
-                                this.PlayedCards[pSender].Add(i, this.Parent.DrawnCards[pSender][i]);
-                                // Remove the card from the player's hand since they've just played
-                                // it and therefore no longer have it drawn.
-                                this.Parent.DrawnCards[pSender].Remove(i);
-                                // As players must spend an Awesome Point to gamble, we'll subtract
-                                // one from their current total, provided it is greater than zero
-                                // (this particular condition was checked in the above conditional).
-                                pSender.AwesomePoints--;
-                                // We'll then add the player to our list of gamblers. At the end of
-                                // the round, this list will be checked to determine whether the
-                                // winning player is present within it. If they are, they will be
-                                // returned the Awesome Point they gambled.
-                                this.Gamblers.Add(pSender);
-                                // Once again, we inform all other players that a choice of card
-                                // has been made, via the BLNK command.
-                                foreach (Player p in this.Players.Where(p => p != pSender).ToList())
+                                // Players are allowed to gamble only once per round, so if the player
+                                // is already within the list, they should be prevented from gambling
+                                // once again.
+                                if (this.Gamblers.Contains(pSender))
                                 {
+                                    // Inform the player that they have already gambled this round,
+                                    // and so their gamble has not been accepted.
                                     this.Parent.SendCommand(
-                                        CommandType.BLNK,
-                                        (string[])null,
-                                        p.ClientIdentifier
+                                        CommandType.UNRG,
+                                        "You have already gambled this round.",
+                                        pSender.ClientIdentifier
+                                    );
+
+                                    // Return the played cards to the sender, as they were
+                                    // not accepted.
+                                    this.Parent.SendCommand(
+                                        CommandType.WHTE,
+                                        new string[2] { i.ToString(), pSender.DrawnCards[i].Text },
+                                        pSender.ClientIdentifier
                                     );
                                 }
-                                // We inform other players that a gamble has been made via a broadcast.
-                                // We won't, however, send out any commands to tell clients to update
-                                // the number of points they are showing for this player.
-                                this.Parent.Broadcast(
-                                    String.Format(
-                                        "Player {0} has gambled an Awesome Point in order to play another card!",
-                                        pSender.Nickname
-                                    )
-                                );
+                                else
+                                {
+                                    // Add the card the player's gambled to the list of drawn cards.
+                                    this.PlayedCards[pSender].Add(i, this.Parent.DrawnCards[pSender][i]);
+                                    // Remove the card from the player's hand since they've just played
+                                    // it and therefore no longer have it drawn.
+                                    this.Parent.DrawnCards[pSender].Remove(i);
+                                    // As players must spend an Awesome Point to gamble, we'll subtract
+                                    // one from their current total, provided it is greater than zero
+                                    // (this particular condition was checked in the above conditional).
+                                    pSender.AwesomePoints--;
+                                    // We'll then add the player to our list of gamblers. At the end of
+                                    // the round, this list will be checked to determine whether the
+                                    // winning player is present within it. If they are, they will be
+                                    // returned the Awesome Point they gambled.
+                                    this.Gamblers.Add(pSender);
+                                    // Once again, we inform all other players that a choice of card
+                                    // has been made, via the BLNK command.
+                                    foreach (Player p in this.Players.Where(p => p != pSender).ToList())
+                                    {
+                                        this.Parent.SendCommand(
+                                            CommandType.BLNK,
+                                            (string[])null,
+                                            p.ClientIdentifier
+                                        );
+                                    }
+                                    // We inform other players that a gamble has been made via a broadcast.
+                                    // We won't, however, send out any commands to tell clients to update
+                                    // the number of points they are showing for this player.
+                                    this.Parent.Broadcast(
+                                        String.Format(
+                                            "Player {0} has gambled an Awesome Point in order to play another card!",
+                                            pSender.Nickname
+                                        )
+                                    );
 
-                                return;
+                                    return;
+                                }
                             }
                             else
                             {

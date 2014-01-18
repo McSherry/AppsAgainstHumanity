@@ -9,14 +9,15 @@ namespace AppsAgainstHumanity.Server.Game
     /// <summary>
     /// The game ruleset the server should be configured to handle.
     /// </summary>
+    [Obsolete("Ruleset system switched; see Game.ModeController.", true)]
     public enum GameRuleset
     {
         /// <summary>
         /// The basic Cards Against Humanity ruleset without any modification.
         /// </summary>
-        Basic = 0,
+        Standard = 0,
 
-        // ONLY BASIC WILL BE SUPPORTED INITIALLY
+        // ONLY STANDARD WILL BE SUPPORTED INITIALLY
         // FURTHER RULESETS MAY BE SUPPORTED IN FUTURE
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The ruleset the server should adhere to.
         /// </summary>
-        public GameRuleset Ruleset { get; set; }
+        public string Ruleset { get; set; }
         /// <summary>
         /// How the server should select Card Czars for each round of the game.
         /// </summary>
