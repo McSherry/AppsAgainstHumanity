@@ -1,4 +1,4 @@
-   Copyright 2013 (c) Johan Geluk, Liam McSherry
+   Copyright 2013-2014 (c) Liam McSherry, SynapLink LLC
 
    Apache License
    Version 2.0, January 2004
