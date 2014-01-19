@@ -738,8 +738,6 @@ namespace AppsAgainstHumanity.Server.Game
                         pl.ClientIdentifier
                     );
                 }
-
-                _roundWon = true;
             }
 
             // Query our list of players to see if anyone has yet reached the points
@@ -771,7 +769,7 @@ namespace AppsAgainstHumanity.Server.Game
                     // of the winner. We're doing this in a separate loop
                     // so clients know the game has ended prior to players
                     // appearing to leave.
-                    this._senderDISC(pl.ClientIdentifier, "The game has ended.");
+                    this._senderDISC(pl.ClientIdentifier, "The game has ended.", false);
                 }
 
                 // Forcibly end the execution of the game thread
@@ -780,6 +778,8 @@ namespace AppsAgainstHumanity.Server.Game
                 // Exit texecution of this function.
                 return;
             }
+
+            _roundWon = true;
         }
 
         // sends CLNFs to a client 
@@ -847,7 +847,7 @@ namespace AppsAgainstHumanity.Server.Game
             else return;
         }
         // Informs a client that they have been disconnected.
-        private void _senderDISC(long clientID, string message = null)
+        private void _senderDISC(long clientID, string message = null, bool fireEvent = true)
         {
             SendCommand(
                 CommandType.DISC,
@@ -865,7 +865,7 @@ namespace AppsAgainstHumanity.Server.Game
                 this._currRound.HasPlayedList.Remove(rmPl);
             }
 
-            if (this.OnPlayerDisconnected != null) this.OnPlayerDisconnected.Invoke(rmPl);
+            if (this.OnPlayerDisconnected != null && fireEvent) this.OnPlayerDisconnected.Invoke(rmPl);
         }
 
         /// <summary>
