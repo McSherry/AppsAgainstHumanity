@@ -304,17 +304,35 @@ namespace AppsAgainstHumanity.Server.UI
                 BlackCardPickLimit = onePickBlacksCBox.Checked
             };
 
-            this.game = new Game.Game(gp);
+            try
+            {
+                this.game = new Game.Game(gp);
 
-            game.OnClientMessageReceived += _receivedMessageHandler;
-            game.OnPlayerJoin += _playerJoinHandler;
-            game.OnPlayerLeave += _playerLeaveHandler;
-            game.OnPlayerDisconnected += _playerLeaveHandler;
-            game.OnGameStopped += gameStop_handler;
+                game.OnClientMessageReceived += _receivedMessageHandler;
+                game.OnPlayerJoin += _playerJoinHandler;
+                game.OnPlayerLeave += _playerLeaveHandler;
+                game.OnPlayerDisconnected += _playerLeaveHandler;
+                game.OnGameStopped += gameStop_handler;
 
-            _disableUIComponents();
+                _disableUIComponents();
 
-            _setGameMonitorState(_GameMonitorState.Waiting);
+                _setGameMonitorState(_GameMonitorState.Waiting);
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                MessageBox.Show(
+                    String.Format(
+                        "Failed to bind: port {0} is already in use!",
+                        Settings.Port
+                    ),
+                    "Failed to Bind to Port",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                this._enableUIComponents();
+                this._setGameMonitorState(_GameMonitorState.Offline);
+            }
         }
         private void gameStartBtn_Click(object sender, EventArgs e)
         {
