@@ -9,6 +9,7 @@ using System.Net.Sockets;
 namespace CsNetLib2
 {
 	public delegate void ClientDisconnected(long clientId);
+	public delegate void ClientConnected(long clientId);
 
     public class NetLibServer : ITransmittable
     {
@@ -19,6 +20,7 @@ namespace CsNetLib2
 		public event DataAvailabe OnDataAvailable;
 		public event BytesAvailable OnBytesAvailable;
 		public event ClientDisconnected OnClientDisconnected;
+		public event ClientConnected OnClientConnected;
 		public byte Delimiter
 		{
 			get
@@ -97,6 +99,7 @@ namespace CsNetLib2
 
 			lock (_clients) {
 				_clients.Add(client.ClientId, client);
+
 				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
 			}
 			var stream = client.NetworkStream;
