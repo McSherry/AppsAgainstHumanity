@@ -11,8 +11,8 @@ namespace CsNetLib2
 		private DataAvailabe DataAvailableCallback;
 		private BytesAvailable BytesAvailableCallback;
 
-		private byte l_Delimiter = 0x00;
-		public byte Delimiter { get { return l_Delimiter; } set { l_Delimiter = value; } }
+		private byte[] l_Delimiter = new byte[]{ 0x00 };
+		public byte[] Delimiter { get { return l_Delimiter; } set { l_Delimiter = value; } }
 
 		private byte[] Retain = new byte[0];
 
@@ -30,40 +30,50 @@ namespace CsNetLib2
 
 		public override byte[] FormatData(byte[] data)
 		{
-			if (data.Contains(Delimiter)) {
-				throw new InvalidOperationException("Data to be sent contains a byte that is used as a delimiter.");
-			}
-			byte[] newData = new byte[data.Length + 1]; // Add space for delimiter
+			byte[] newData = new byte[data.Length + Delimiter.Length]; // Add space for delimiter
 			Array.Copy(data, newData, data.Length); // Put the data back in
-			newData[data.Length] = Delimiter; // Put a delimiter at the end
+			Array.Copy(Delimiter, 0, newData, data.Length, Delimiter.Length);
 			return newData;
 		}
 
 		public override void ProcessData(byte[] buffer, int read, long clientId)
 		{
-			logCallback(string.Format("TRACE--> Protocol takeover: buffer size: {0}, delimiter: {1}, {2} bytes read", buffer.Length, Delimiter, read));
 			if (Retain.Length != 0) { // There's still data left over
 				byte[] oldBuf = buffer; // Temporarily put the new data aside
 				buffer = new byte[read + Retain.Length]; // Expand the buffer to fit both the old and the new data
 				Array.Copy(Retain, buffer, Retain.Length); // Put the old data in first
 				Array.Copy(oldBuf, 0, buffer, Retain.Length, read); // Now put the new data back in
+				read += Retain.Length;
 			}
 			//var set = buffer.Where(b => b != 0).Select(b => string.Format("{0:X2}", b));
 			var set = buffer.Where(b => b != 0).Select(b => (char)b);
 			var dmp = string.Join("", set);
 
-			logCallback("TRACE--> Buffer dump: " + dmp);
 
 			int beginIndex = 0; // This is where the next message starts
 			for (int i = beginIndex; i < read; i++) { // Iterate over buffer
-				if (buffer[i] == Delimiter) { // We've found a delimiter
-					logCallback("     --> Message Processing");
-					ProcessMessage(buffer, beginIndex == 0 ? beginIndex : beginIndex + 1, i, clientId); // Process a message from the begin index to the current position
-					beginIndex = i; // Since we've found a new delimiter, set the begin index equal to its location
+				if (buffer[i] == Delimiter[0]) { // We've found a delimiter
+					bool validDelimiter = true;
+					i++;
+					for (int j = 1; j < Delimiter.Length; j++, i++) { // Check if the next delimiter bytes occur as well, if applicable
+						if (i >= buffer.Length) {
+							validDelimiter = false;
+							break;
+						}
+						if (buffer[i] != Delimiter[j]) {
+							validDelimiter = false;
+							break;
+						}
+					}
+					if (validDelimiter) {
+						ProcessMessage(buffer, beginIndex, i - Delimiter.Length, clientId); // Process a message from the begin index to the current position
+						beginIndex = i; // Since we've found a new delimiter, set the begin index equal to its location
+						i--;
+					}
 				}
-				if (i == read - 1) {
-					Retain = new byte[read - beginIndex - 1];
-					Array.Copy(buffer, beginIndex + 1, Retain, 0, read - beginIndex - 1); // Take any left over data and keep it for next usage
+				if (i == read) {
+					Retain = new byte[read - beginIndex];
+					Array.Copy(buffer, beginIndex, Retain, 0, read - beginIndex); // Take any left over data and keep it for next usage
 				}
 			}
 		}

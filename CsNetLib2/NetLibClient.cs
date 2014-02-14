@@ -25,7 +25,7 @@ namespace CsNetLib2
 		public event LogEvent OnLogEvent;
 
 		public bool Connected { get { return Client.Connected; } }
-		public byte Delimiter
+		public byte[] Delimiter
 		{
 			get
 			{

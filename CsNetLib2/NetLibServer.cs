@@ -21,7 +21,7 @@ namespace CsNetLib2
 		public event BytesAvailable OnBytesAvailable;
 		public event ClientDisconnected OnClientDisconnected;
 		public event ClientConnected OnClientConnected;
-		public byte Delimiter
+		public byte[] Delimiter
 		{
 			get
 			{
@@ -99,8 +99,8 @@ namespace CsNetLib2
 
 			lock (_clients) {
 				_clients.Add(client.ClientId, client);
-
-				Console.WriteLine("New TCP client accepted with ID " + client.ClientId);
+				if (OnClientConnected != null)
+					OnClientConnected(client.ClientId);
 			}
 			var stream = client.NetworkStream;
 			try {
