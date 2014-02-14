@@ -9,14 +9,15 @@ namespace AppsAgainstHumanity.Server.Game
     /// <summary>
     /// The game ruleset the server should be configured to handle.
     /// </summary>
+    [Obsolete("Ruleset system switched; see Game.ModeController.", true)]
     public enum GameRuleset
     {
         /// <summary>
         /// The basic Cards Against Humanity ruleset without any modification.
         /// </summary>
-        Basic = 0,
+        Standard = 0,
 
-        // ONLY BASIC WILL BE SUPPORTED INITIALLY
+        // ONLY STANDARD WILL BE SUPPORTED INITIALLY
         // FURTHER RULESETS MAY BE SUPPORTED IN FUTURE
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// into the mix. If this imaginary player wins, all other players enter into a state of
         /// everlasting shame.
         /// </summary>
-        RandoCandrissian = 3,
+        RandoCardrissian = 3,
         /// <summary>
         /// Play without a Card Czar. Each player picks his or her favourite card each round, and
         /// the card with the most votes at the end of the round wins.
@@ -64,7 +65,11 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// Pick a random player each round to be the Card Czar.
         /// </summary>
-        Random = 1
+        Random = 1,
+        /// <summary>
+        /// The winner of the previous round becomes the Card Czar.
+        /// </summary>
+        Winner = 2
     }
 
     /// <summary>
@@ -75,7 +80,7 @@ namespace AppsAgainstHumanity.Server.Game
         /// <summary>
         /// The ruleset the server should adhere to.
         /// </summary>
-        public GameRuleset Ruleset { get; set; }
+        public string Ruleset { get; set; }
         /// <summary>
         /// How the server should select Card Czars for each round of the game.
         /// </summary>
@@ -133,6 +138,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// Whether players are allowed to chat on this server.
         /// </summary>
         public bool AllowPlayerChat { get; set; }
-
+        /// <summary>
+        /// Whether to only allow black cards where a single white card may be picked
+        /// into the pool of black cards to be given to players.
+        /// </summary>
+        public bool BlackCardPickLimit { get; set; }
     }
 }

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!--
+        Cows Abhor Hamburgers is free to use under the Creative Commons BY-NC-SA 4.0 licence.
+        The texts herein are a reproduction of the Cows Abhor Hamburgers unofficial expansion to Cards Against Humanity.
+        
+        https://github.com/redh4re/cows-abhor-hamburgers
+        
+        Minor alterations have been made.
+    -->
+    <name>Cows Abhor Hamburgers</name>
+    <count white="90" black="62"/>
+    <cards>
+        <white>
+            <card>Power walking due to impending explosive diarrhoea.</card>
+            <card>Pity fucking.</card>
+            <card>Receiving oral sex from someone that recently at Sriracha.</card>
+            <card>Pedobear.</card>
+            <card>Rohypnol.</card>
+            <card>The good kind of racism.</card>
+            <card>A prison bitch.</card>
+            <card>Masturbating in a public restroom.</card>
+            <card>Sock puppet porn.</card>
+            <card>Picking up dates at the abortion clinic.</card>
+            <card>Handing a nun a dildo.</card>
+            <card>Accidentally posting your tits on Facebook®.</card>
+            <card>Motorboating your grandmother at her funeral.</card>
+            <card>Angry road head.</card>
+            <card>Helen Keller.</card>
+            <card>A Sriracha enema.</card>
+            <card><![CDATA[Law & Order: SVU Erotica.]]></card>
+            <card>Goatse.</card>
+            <card>2 in the pink, 1 in the stink.</card>
+            <card>Brogrammers.</card>
+            <card>Accidentally ejaculating on your cat.</card>
+            <card>A decomposing stripper.</card>
+            <card>Cheating on a paternity test.</card>
+            <card>That burning sensation.</card>
+            <card>The first shit after Indian food.</card>
+            <card>Vaginal tearing.</card>
+            <card>A Baby Jesus butt plug.</card>
+            <card>Human trafficking.</card>
+            <card>Guantanamo Bay.</card>
+            <card>Twincest.</card>
+            <card>Tiger moms.</card>
+            <card>A bus full of orphans.</card>
+            <card>A shamerection.</card>
+            <card>Anal warts.</card>
+            <card>The Olsen twins.</card>
+            <card>Skull fucking.</card>
+            <card>Midget strippers.</card>
+            <card>Finding your parent's sex tape.</card>
+            <card>Paula Deen, covered in butter, shouting the N-word.</card>
+            <card>Fucking a fold of fat.</card>
+            <card>A third trimester abortion.</card>
+            <card><![CDATA["Forgetting" to pull out.]]></card>
+            <card>The 50 Shades of Grey audiobook narrated by Gilbert Gottfried.</card>
+            <card>Sneezing in the chocolate fountain at Golden Corral®.</card>
+            <card>Hate fucking.</card>
+            <card>Coming so hard you poop a little.</card>
+            <card>Hermione's prepubescent pubes.</card>
+            <card>An average-size white penis.</card>
+            <card>Autoerotic asphyxia.</card>
+            <card>Being forced to have sex in front of your parents.</card>
+            <card>Interspecies erotica.</card>
+            <card>A high-functioning autistic.</card>
+            <card>Curb stomping.</card>
+            <card>Semen-coated cookies.</card>
+            <card>Forgetting to wipe.</card>
+            <card>A teddy bear stuck to a Snuggie with dried cum.</card>
+            <card>Deliberate no-warning wrong hole.</card>
+            <card>Your sister's vagina.</card>
+            <card>Holding her eyelids open so you can cum in them.</card>
+            <card>Throatfucking.</card>
+            <card>Morbid obesity.</card>
+            <card>Tween prostitutes.</card>
+            <card>Gender bias.</card>
+            <card>Razorblades.</card>
+            <card>Gender-directed abortions.</card>
+            <card>The short bus.</card>
+            <card>Taking a Real Doll® to meet your parents.</card>
+            <card>Dipping into your child's pot stash.</card>
+            <card>Wearing a Fox Tail Anal Plug in public.</card>
+            <card>Performance anxiety.</card>
+            <card>Snapchatting dick picks to your underaged cousin.</card>
+            <card>The resurrected Jesus Christ using the holes in his hands to masturbate.</card>
+            <card>Staring into a gaping butthole.</card>
+            <card>Faecalphelia.</card>
+            <card>Faeces moustaches.</card>
+            <card><![CDATA[That "quality blowjob" vomit.]]></card>
+            <card>Throwing up in your mouth a little and swallowing it.</card>
+            <card><![CDATA[Picking up "strange" at a nursing home.]]></card>
+            <card>Sucking the ooze from herpes sores with a straw.</card>
+            <card>Kanye West's ego.</card>
+            <card>Diabetes, the gravy kind.</card>
+            <card>Steel anal hooks.</card>
+            <card>Those cunts who won't swallow.</card>
+            <card>Mother/daughter snowballing.</card>
+            <card>Sodomising quadraplegic children.</card>
+            <card>An HIV-positive rape baby.</card>
+            <card>Corrective rape.</card>
+            <card>Female genital mutilation.</card>
+            <card>A bed that smells like urine.</card>
+        </white>
+        <black>
+            <card pick="1">Never turn your back on __________.</card>
+            <card pick="1">Guns don't kill people. __________ kills people.</card>
+            <card pick="1">It rubs the lotion on its skin or else it gets __________ again.</card>
+            <card pick="1">A never knew they had a __________-flavoured jelly bean.</card>
+            <card pick="1">__________ is the next Doritos® flavour.</card>
+            <card pick="1">__________ is a hell of a drug.</card>
+            <card pick="1">Abandon hope all ye who enter __________.</card>
+            <card pick="1">My God, it's full of __________.</card>
+            <card pick="1">Instead of candy, for Hallowe'en I'm giving out __________.</card>
+            <card pick="1">The economy would bounce back if we'd just legalise __________.</card>
+            <card pick="1">Bacon-flavoured __________.</card>
+            <card pick="1">It could be worse; you could have a wife that doesn't like __________.</card>
+            <card pick="1">__________ is the next super-food.</card>
+            <card pick="1">Peekaboo! I see __________!</card>
+            <card pick="3" xd="true">Side effects may include: _____, ______, and _____.</card>
+            <card pick="1">The secret to a happy marriage is __________.</card>
+            <card pick="1">Thanks to autocorrect, I sent my boss a text telling them I would be busy working on _____ this weekend.</card>
+            <card pick="1">Crying doesn't signal a lack of consent for __________.</card>
+            <card pick="1">What did I buy in bulk at Costco®?</card>
+            <card pick="1">__________ is always better at gunpoint.</card>
+            <card pick="1">Surprise __________!</card>
+            <card pick="2">If you _____ when you should've _____'d, you're gonna have a bad time.</card>
+            <card pick="1">Waffle House® hashbrowns scattered, smothered, and covered with __________.</card>
+            <card pick="1">__________ is the reason we can't have nice things.</card>
+            <card pick="1">__________? CHALLENGE ACCEPTED.</card>
+            <card pick="1">__________? I could fap to that.</card>
+            <card pick="1">Never again will I lick __________.</card>
+            <card pick="1">One time I woke up with __________.</card>
+            <card pick="2">__________ that the NSA was spying on __________.</card>
+            <card pick="2">It has been scientifically proven that _____ improves _____.</card>
+            <card pick="1">__________. Thanks, Obama!</card>
+            <card pick="1">__________: finger-lickin' good.</card>
+            <card pick="1">Autism is caused by __________.</card>
+            <card pick="1">My day was going so well until I ejaculated all over __________.</card>
+            <card pick="1">When did __________ suddenly become a racial slur?</card>
+            <card pick="1">I know you are, but what am I?</card>
+            <card pick="1">Women are only good for three things: cooking, cleaning, and __________.</card>
+            <card pick="1">__________. Better drink my own piss.</card>
+            <card pick="1">All __________ look alike.</card>
+            <card pick="1">It was __________ that totally justified the genocide.</card>
+            <card pick="1">The whores in my freezer should have been more careful with __________.</card>
+            <card pick="1">Watching my wife get __________ by a stranger.</card>
+            <card pick="1">Watching your child enjoy __________ on RedTube®.</card>
+            <card pick="1">__________! Right in the kisser.</card>
+            <card pick="2">My favourite fetish is __________, but only when __________ is involved.</card>
+            <card pick="1">__________? Why not Zoidberg?</card>
+            <card pick="1">__________ gives you wings.</card>
+            <card pick="1">__________ and a lot of coke made the gangbang last a day longer than expected.</card>
+            <card pick="1">Remember kids, __________ is not edible.</card>
+            <card pick="1">Yeah, __________ is amusing, but it's no rape.</card>
+            <card pick="1">__________ is the best way to show respect for authority.</card>
+            <card pick="1">I rented out my wife so I could afford __________.</card>
+            <card pick="1">You weren't the one that got __________ in your cooch.</card>
+            <card pick="1"><![CDATA[__________ doesn't count as "real rape" anyway.]]></card>
+            <card pick="1">A Super Soaker® full of __________.</card>
+            <card pick="1">Mexicans are just not cut out for __________.</card>
+            <card pick="1">Consent ruins __________.</card>
+            <card pick="1">Her cunt reeked of __________.</card>
+            <card pick="1">__________: it's so good once it hits the lips.</card>
+            <card pick="1">I hope your children die of __________.</card>
+            <card pick="1">My Pinterest® is full of __________.</card>
+        </black>
+    </cards>
+</deck>

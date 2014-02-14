@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Timers;
@@ -10,11 +11,99 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.IO;
+using AppsAgainstHumanity.Server.Game.Modes;
 
 namespace AppsAgainstHumanity.Server.Game
 {
     public class Game
     {
+        /// <summary>
+        /// A class containing a list of all available game-modes.
+        /// </summary>
+        public class ModeController : IEnumerable<string>
+        {
+            internal static ModeController _modeController;
+            private Dictionary<string, Type> _gameModes;
+            internal List<string> _gameModeKeys;
+
+            public ModeController()
+            {
+                _gameModes = new Dictionary<string, Type>()
+                {
+                    { "Standard", typeof(StandardGameMode) }
+                };
+                _gameModeKeys = new List<string>()
+                {
+                    "Standard"
+                };
+            }
+
+            /// <summary>
+            /// Create an instance of, or add to the list, a game mode specified
+            /// by name.
+            /// </summary>
+            /// <param name="modeName">The name of the game mode.</param>
+            /// <param name="parent">When creating an instance, the parent Game instance to associate.</param>
+            /// <returns></returns>
+            public GameMode this[string modeName, Game parent = null] {
+                get
+                {
+                    return Activator.CreateInstance(_gameModes[modeName], parent) as GameMode;
+                }
+                set
+                {
+                    if (!_gameModes.ContainsKey(modeName))
+                    {
+                        _gameModes.Add(modeName, value.GetType());
+                        _gameModeKeys.Add(modeName);
+                    }
+                    else throw new InvalidOperationException
+                    ("Cannot modify pre-existing game modes.");
+                }
+            }
+            /// <summary>
+            /// Create an instance of a game mode, specified by index.
+            /// </summary>
+            /// <param name="index"></param>
+            /// <param name="parent"></param>
+            /// <returns></returns>
+            public GameMode this[int index, Game parent]
+            {
+                get
+                {
+                    return Activator.CreateInstance(_gameModes[_gameModeKeys[index]], parent) as GameMode;
+                }
+            }
+            /// <summary>
+            /// Retrieve the name of a game-mode by index.
+            /// </summary>
+            /// <param name="index">The index at which the game-mode name should be retrieved.</param>
+            /// <returns></returns>
+            public string this[int index]
+            {
+                get { return _gameModeKeys[index]; }
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return _gameModeKeys.GetEnumerator();
+            }
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                return _gameModeKeys.GetEnumerator();
+            }
+        }
+
+        public static ModeController GameModes
+        {
+            get
+            {
+                if (Game.ModeController._modeController == null)
+                    Game.ModeController._modeController = new ModeController();
+                return Game.ModeController._modeController;
+            }
+        }
+
         /// <summary>
         /// The port an AAH server runs on. Selected because it's an easy to remember
         /// sequence (being nearly linear AND fibonacci) and because it isn't something
@@ -29,12 +118,18 @@ namespace AppsAgainstHumanity.Server.Game
         private Random _RNG;
         private ulong _gameSeed;
         private bool _gameWon = false;
+        private bool _roundWon = false;
         private bool _hasStarted = false;
+        // A variable indicating whether the server should deal new
+        // white cards to players at the beginning of the round.
+        private bool _drawNewWhites = true;
         private NetLibServer _server;
-        private AAHProtocolWrapper _serverWrapper;
+        internal AAHProtocolWrapper _serverWrapper;
         private System.Timers.Timer _pingTimer;
         private Round _currRound;
         private Thread _gameThread;
+        internal GameMode CurrentGameMode;
+        private Player _previousRoundWinner;
 
         // use instead of AAHProtocolWrapper.SendCommand()
         // handles when SendCommand() returns false (e.g. player not available)
@@ -64,7 +159,8 @@ namespace AppsAgainstHumanity.Server.Game
                     //    _senderCLNF(p.ClientIdentifier);
                 }
                 // Players.First() found no match, probably because there are no players
-                // we'll ignore it and continue.
+                // we'll ignore it and continue. This is also thrown when we do
+                // cross-thread UI stuff, sometimes.
                 catch (InvalidOperationException) { }
             }
         }
@@ -449,7 +545,7 @@ namespace AppsAgainstHumanity.Server.Game
                         ),
                         new XElement(
                             "ruleset",
-                            (int)Parameters.Ruleset
+                            Parameters.Ruleset
                         ),
                         new XElement(
                             "aplimit",
@@ -563,6 +659,128 @@ namespace AppsAgainstHumanity.Server.Game
                 _senderCLEX(p.ClientIdentifier, rmPl);
             }
         }
+        // handles when a player wins a round.
+        private void _handlerPlayerRWin(Player p, int cardID)
+        {
+            // If this condition is met (p being null), the round should be
+            // considered invalid. Thus, all cards played should be returned
+            // to their respective players.
+            if (p == null)
+            {
+                foreach (Player pl in this.Players.ToList())
+                {
+                    // Inform clients, via a blank RWIN, that the round is considered
+                    // null and void. Implementations of GameMode should send any appropriate
+                    // broadcasts, so we won't do that.
+                    this.SendCommand(CommandType.RWIN, (string[])null, pl.ClientIdentifier);
+
+                    // Return each card played by the player this round. 
+                    foreach (KeyValuePair<int, WhiteCard> card in this.CurrentGameMode.PlayedCards[pl])
+                    {
+                        this.SendCommand(
+                            CommandType.WHTE,
+                            new string[2] { card.Key.ToString(), card.Value.Text },
+                            pl.ClientIdentifier
+                        );
+                    }
+
+                    // Stop the server from dealing new cards in the next round,
+                    // as we've returned already-played cards to their players here.
+                    this._drawNewWhites = false;
+                }
+            }
+            // If we get to here, a player has been declared the winner by the thread
+            // handling the game mode, and so we can continue on.
+            else
+            {
+                if (this.CurrentGameMode.Gamblers.Contains(p))
+                    // If the player who won the round had gambled,
+                    // give back to them their gambled Awesome Point
+                    // as well as the point they won. We can hard-code
+                    // the 2 without issue as gambles are limited to
+                    // one per player per round.
+                    p.AwesomePoints += 2;
+                // If the player did not gamble, we can simply increment
+                // their points total instead of adding two to it.
+                else p.AwesomePoints++;
+
+                // Set the winner of the previous round (as this round has now ended)
+                // to whichever player won the round.
+                this._previousRoundWinner = p;
+
+                // As gamblers will have played an additional card in the round,
+                // we'll need to deal them an extra card to ensure that they don't
+                // end up with a lower total number of cards.
+                Dictionary<int, WhiteCard> gamblerDeals = _selectWhites(this.CurrentGameMode.Gamblers.Count);
+                foreach (Player pl in this.CurrentGameMode.Gamblers.ToList())
+                {
+                    // Select a random card from the pool of cards to be dealt to gamblers.
+                    KeyValuePair<int, WhiteCard> card = gamblerDeals.ElementAt(_RNG.Next(0, gamblerDeals.Count - 1));
+                    // Remove the card from the pool so that it will not be dealt again.
+                    gamblerDeals.Remove(card.Key);
+                    // Add this new card to the list of cards that the player currently has
+                    // drawn.
+                    this.DrawnCards[pl].Add(card.Key, card.Value);
+                    // Send to the client their newly-drawn card.
+                    this.SendCommand(
+                        CommandType.WHTE,
+                        new string[2] { card.Key.ToString(), card.Value.Text },
+                        pl.ClientIdentifier
+                    );
+                }
+
+                // Inform players of the winner of the round.
+                foreach (Player pl in Players.ToList())
+                {
+                    this.SendCommand(
+                        CommandType.RWIN,
+                        new string[2] { p.Nickname, cardID.ToString() },
+                        pl.ClientIdentifier
+                    );
+                }
+            }
+
+            // Query our list of players to see if anyone has yet reached the points
+            // limit. If they have, we can declare them the winner and end the game.
+            Player maybeWinner = this.Players.FirstOrDefault(pl => pl.AwesomePoints == this.Parameters.PointsLimit);
+            // This being null indicates that no winner is yet available. Since we don't
+            // need to take any action for the lack of a winner
+            if (maybeWinner != null)
+            {
+                // We've got a winner, so we can end the game and run all
+                // the things we need to run when we get a winner.
+                _gameWon = true;
+
+                foreach (Player pl in Players.ToList())
+                {
+                    // Inform all players of the winner using
+                    // their nickname.
+                    this.SendCommand(
+                        CommandType.GWIN,
+                        maybeWinner.Nickname,
+                        pl.ClientIdentifier
+                    );
+
+                }
+
+                foreach (Player pl in Players.ToList())
+                {
+                    // Disconnect the player after they have been informed
+                    // of the winner. We're doing this in a separate loop
+                    // so clients know the game has ended prior to players
+                    // appearing to leave.
+                    this._senderDISC(pl.ClientIdentifier, "The game has ended.", false);
+                }
+
+                // Forcibly end the execution of the game thread
+                // to ensure that the game does not continue.
+                this._gameThread.Abort();
+                // Exit texecution of this function.
+                return;
+            }
+
+            _roundWon = true;
+        }
 
         // sends CLNFs to a client 
         private void _senderCLNF(long clientID)
@@ -629,7 +847,7 @@ namespace AppsAgainstHumanity.Server.Game
             else return;
         }
         // Informs a client that they have been disconnected.
-        private void _senderDISC(long clientID, string message = null)
+        private void _senderDISC(long clientID, string message = null, bool fireEvent = true)
         {
             SendCommand(
                 CommandType.DISC,
@@ -647,7 +865,7 @@ namespace AppsAgainstHumanity.Server.Game
                 this._currRound.HasPlayedList.Remove(rmPl);
             }
 
-            if (this.OnPlayerDisconnected != null) this.OnPlayerDisconnected.Invoke(rmPl);
+            if (this.OnPlayerDisconnected != null && fireEvent) this.OnPlayerDisconnected.Invoke(rmPl);
         }
 
         /// <summary>
@@ -695,7 +913,9 @@ namespace AppsAgainstHumanity.Server.Game
             {
                 this.WhiteCardPool.Add(_RNG.Next(), wc);
             }
-            this.BlackCardPool = Parameters.Cards.BlackCards;
+
+            if (Parameters.BlackCardPickLimit) this.BlackCardPool = Parameters.Cards.BlackCards.Where(bc => bc.Pick == 1).ToList();
+            else this.BlackCardPool = Parameters.Cards.BlackCards;
 
 
             _pingTimer = new System.Timers.Timer(1000);
@@ -707,6 +927,10 @@ namespace AppsAgainstHumanity.Server.Game
                 // method and will have the player removed.
                 foreach (Player p in Players.ToList())
                     SendCommand(CommandType.PING, (string[])null, p.ClientIdentifier);
+                // Due to this aforementioned behaviour, actual latency between the
+                // client and server is not taken into account. As long as the client
+                // can be reached, they will remain in the game. TCP accounts for
+                // packet loss.
             };
             // TODO: Re-enable this at production!
             // Pings disabled because they spam the console
@@ -721,8 +945,9 @@ namespace AppsAgainstHumanity.Server.Game
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);
             _serverWrapper.RegisterCommandHandler(CommandType.NICK, _handlerNICK);
             _serverWrapper.RegisterCommandHandler(CommandType.SMSG, _handlerSMSG);
-            _serverWrapper.RegisterCommandHandler(CommandType.PICK, _handlerPICK);
-            _serverWrapper.RegisterCommandHandler(CommandType.CZPK, _handlerCZPK);
+            // Replaced in new round/game-mode system.
+            //_serverWrapper.RegisterCommandHandler(CommandType.PICK, _handlerPICK);
+            //_serverWrapper.RegisterCommandHandler(CommandType.CZPK, _handlerCZPK);
             _serverWrapper.RegisterCommandHandler(CommandType.META, _handlerMETA);
 
             _server.StartListening();
@@ -811,6 +1036,10 @@ namespace AppsAgainstHumanity.Server.Game
         /// Indicates whether the game has started.
         /// </summary>
         public bool HasStarted { get { return _hasStarted; } }
+        /// <summary>
+        /// The round which is currently in play. Null if the game has not yet started.
+        /// </summary>
+        public Round CurrentRound { get { return _currRound; } }
 
         public void Start()
         {
@@ -839,123 +1068,80 @@ namespace AppsAgainstHumanity.Server.Game
                         );
                 }
 
-                // A variable passed on to each new round during instantiation. Set to true for the
-                // server to deal new cards to players, false for it to refrain from doing so.
-                // Resets to true after each round is instantiated.
-                bool drawNewWhites = true;
                 // Game loop, which will terminate once the Awesome Point limit for a single player
                 // is reached.
                 while (!_gameWon)
                 {
-
                     BlackCard roundBlack = _selectBlack();
                     // The cards which will be given to players at the start of this round.
                     // Does not include the ten cards drawn at the start of a game.
                     Dictionary<int, WhiteCard> roundPool = _selectWhites(roundBlack.Draw * Players.Count);
-                     _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr], drawNewWhites);
+                    _currRound = new Round(roundBlack, roundPool, this, Players[czarCtr], _drawNewWhites);
                     // Reset whether new white cards should be drawn. Done after each round is instantiated.
-                     drawNewWhites = true;
+                    _drawNewWhites = true;
 
-                    Player roundWinner = _currRound.Start();
-                    if (roundWinner == null)
+                    // Attempt to create an instance of the specified game mode. If
+                    // the game mode's name doesn't exist in our dictionary, we default
+                    // to the standard game mode instead.
+                    try
                     {
+                        this.CurrentGameMode = GameModes[this.Parameters.Ruleset, this];
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        this.CurrentGameMode = GameModes[Constants.DefaultGameMode, this];
+                        this.Parameters.Ruleset = Constants.DefaultGameMode;
+                    }
+                    this.CurrentGameMode.OnPlayerWin += _handlerPlayerRWin;
+
+                    this._currRound.Start();
+                    // Wait until the handler for a player winning the round fires
+                    // and sets the field _roundWon to true.
+                    while (!_roundWon) ;
+                    // Reset the state of _roundWon for the next iteration.
+                    _roundWon = false;
+
+                    if (!_gameWon)
+                    {
+                        // Cause a 5000ms (5s) delay before the beginning of the next round.
+                        // Before the delay, inform each player of the delay via a broadcast.
                         foreach (Player p in Players.ToList())
                         {
-                            // Inform player via broadcast that the round was skipped.
                             SendCommand(
                                 CommandType.BDCS,
-                                "Card Czar failed to pick within given time. This round will be skipped.",
-                                p.ClientIdentifier
-                            );
-                            SendCommand(
-                                CommandType.RWIN,
-                                (string[])null,
+                                "The next round will begin in 5 seconds.",
                                 p.ClientIdentifier
                             );
                         }
-                        // Select only the players who have played cards.
-                        foreach (KeyValuePair<Player, bool> playedPlayer in _currRound.HasPlayedList.Where(pl => pl.Value))
+                        Thread.Sleep(5000);
+
+                        // Handle the various methods of Card Czar selection available to
+                        // server administrators.
+                        switch (Parameters.CzarSelection)
                         {
-                            foreach (KeyValuePair<int, WhiteCard> kvp in _currRound.PlayedCards[playedPlayer.Key].ToList())
-                            {
-                                // Return cards to players.
-                                SendCommand(
-                                    CommandType.WHTE,
-                                    new string[2] { kvp.Key.ToString(), kvp.Value.Text.ToString() },
-                                    playedPlayer.Key.ClientIdentifier
-                                );
-                            }
+                            default:
+                            case CzarSelection.Sequential:
+                                // Increments the Card Czar counter by one, rolling over to zero if the number goes
+                                // above the number of players. This causes Czars to be chosen sequentially. Since the
+                                // counter is out of loop, the foreach at the start of the loop will choose the player
+                                // indicated by the counter at the point below this comment.
+                                czarCtr = ++czarCtr % Players.Count;
+                                break;
+                            case CzarSelection.Random:
+                                // Generate a random number that between zero and the number of players in the server.
+                                // We have to do (Players.Count - 1) as lists/dicts/arrays are zero-based.
+                                czarCtr = _RNG.Next(0, Players.Count - 1);
+                                break;
+                            case CzarSelection.Winner:
+                                // The winner of the current round becomes the Czar for the next round. If there was
+                                // no winner, we'll go for sequential instead. 
+                                if (this._previousRoundWinner != null)
+                                {
+                                    czarCtr = Players.IndexOf(this._previousRoundWinner);
+                                }
+                                else czarCtr = ++czarCtr % Players.Count;
+                                break;
                         }
-
-                        // Stop the server from sending a new white card in the next round.
-                        drawNewWhites = false;
-                    }
-                    else
-                    {
-                        ++roundWinner.AwesomePoints;
-                    }
-
-                    // Check whether a player has the number of points required to win the game.
-                    // This will result in maybeWinner being NULL if no such player exists.
-                    Player maybeWinner = Players.FirstOrDefault(pl => pl.AwesomePoints == Parameters.PointsLimit);
-                    if (maybeWinner != null)
-                    {
-                        // We've got a winner, so we no longer require this game loop.
-                        // Setting _gameWon to true will end the loop after this
-                        // iteration finishes.
-                        _gameWon = true;
-
-                        foreach (Player p in Players.ToList())
-                        {
-                            // Inform each player of the winner of the current game.
-                            SendCommand(
-                                CommandType.GWIN,
-                                maybeWinner.Nickname,
-                                p.ClientIdentifier
-                            );
-                            // Request that clients gracefully disconnect.
-                            _senderDISC(p.ClientIdentifier);
-                        }
-
-                        // Stop pinging, as the game is over now
-                        _pingTimer.Stop();
-                        // Give clients a 2.5s grace period within which to disconnect.
-                        Thread.Sleep(2500);
-                        // After the grace period is up, we'll forcefully kill the
-                        // thread. The exact method may change in future, but this
-                        // is what we're doing for now.
-                        _gameThread.Abort();
-                    }
-
-                    // Cause a 5000ms (5s) delay before the beginning of the next round.
-                    // Before the delay, inform each player of the delay via a broadcast.
-                    foreach (Player p in Players.ToList())
-                    {
-                        SendCommand(
-                            CommandType.BDCS,
-                            "The next round will begin in 5 seconds.",
-                            p.ClientIdentifier
-                        );
-                    }
-                    Thread.Sleep(5000);
-
-                    // Handle the various methods of Card Czar selection available to
-                    // server administrators.
-                    switch (Parameters.CzarSelection)
-                    {
-                        default:
-                        case CzarSelection.Sequential:
-                            // Increments the Card Czar counter by one, rolling over to zero if the number goes
-                            // above the number of players. This causes Czars to be chosen sequentially. Since the
-                            // counter is out of loop, the foreach at the start of the loop will choose the player
-                            // indicated by the counter at the point below this comment.
-                            czarCtr = ++czarCtr % Players.Count;
-                            break;
-                        case CzarSelection.Random:
-                            // Generate a random number that between zero and the number of players in the server.
-                            // We have to do (Players.Count - 1) as lists/dicts/arrays are zero-based.
-                            czarCtr = _RNG.Next(0, Players.Count - 1);
-                            break;
                     }
                 }
             });

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deck type="1">
+    <!-- Card Pack = 0 | Addon Pack = 1 -->
+    <!--
+        Cards Against Humanity is free to use under the Creative Commons BY-NC-SA 2.0 License.
+        The texts herein are a reproduction of the official Cards Against Humanity - Box Expansion pack
+        included with the "Bigger Blacker Box."
+    -->
+    <name>Cards Against Humanity - The Box Expansion</name>
+    <count white="21" black="0"/>
+    <cards>
+        <white>
+            <card>A box.</card>
+            <card>A box within a box.</card>
+            <card>A boxing match with a giant box.</card>
+            <card>A box of biscuits, a box of mixed biscuits, and a biscuit mixer.</card>
+            <card>An outbreak of smallbox.</card>
+            <card>The Boxcar Children.</card>
+            <card>A world without boxes.</card>
+            <card>A box-shaped man.</card>
+            <card>A man-shaped box.</card>
+            <card>Boxing up my feelings.</card>
+            <card>Something that looks like a box but turns out to be a crate.</card>
+            <card>A box that is conscious and wishes it weren't a box.</card>
+            <card>An alternate universe in which boxes store things inside of people.</card>
+            <card>The J15 Patriot Assault Box.</card>
+            <card>A box without hinges, key, or lid, yet golden treasure inside is hid.</card>
+            <card>Two midgets shitting into a box.</card>
+            <card>A falcon with a box on its head.</card>
+            <card>Being a motherfucking box.</card>
+            <card>Former President George W. Box.</card>
+            <card>Pandora's vagina.</card>
+            <!-- Bonus card hidden in the linings of the BBB. -->
+            <card>The biggest, blackest dick.</card>
+        </white>
+    </cards>
+</deck>

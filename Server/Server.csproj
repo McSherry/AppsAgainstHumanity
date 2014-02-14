@@ -68,6 +68,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Crypto\SRand.cs" />
     <Compile Include="Crypto\Sha256.cs" />
+    <Compile Include="Game\Modes\GameMode.cs" />
+    <Compile Include="Game\Modes\StandardGameMode.cs" />
     <Compile Include="UI\expansionPackForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +119,7 @@
     <EmbeddedResource Include="UI\settingsForm.resx">
       <DependentUpon>settingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -140,6 +143,9 @@
     <Content Include="Decks\CA.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Decks\CAH-BoxEx.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Decks\CAH-Holiday-2012.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -150,6 +156,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Decks\CAH-Rejects.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Decks\HackersAgainstHumanity.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Decks\CowsAbhorHamburgers.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Decks\UK.xml">
@@ -190,6 +202,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

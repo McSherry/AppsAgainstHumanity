@@ -105,23 +105,28 @@ namespace AppsAgainstHumanity.Server.UI
         }
         private void _enableUIComponents()
         {
-            #region set form elements to enabled/disabled
-            cardDeckCBox.Enabled = true;
-            deckReloadBtn.Enabled = true;
-            playerLimitBox.Enabled = true;
-            awesomePointsLimitBox.Enabled = true;
-            timeoutLimitCBox.Enabled = true;
-            // TODO: Uncomment these when implemented.
-            czarSelectCBox.Enabled = true;
-            //gameRulesetCBox.Enabled = true;
-            //allowGamblingCheckBox.Enabled = true;
-            allowChatCheckBox.Enabled = true;
-            timeoutKickCheckBox.Enabled = true;
-            expansionPackButtons.Enabled = true;
-            serverStartBtn.Enabled = true;
-            gameStartBtn.Enabled = false;
-            gameStopBtn.Enabled = false;
-            #endregion
+            if (this.InvokeRequired) this.Invoke(new Action(_enableUIComponents));
+            else
+            {
+                #region set form elements to enabled/disabled
+                cardDeckCBox.Enabled = true;
+                deckReloadBtn.Enabled = true;
+                playerLimitBox.Enabled = true;
+                awesomePointsLimitBox.Enabled = true;
+                timeoutLimitCBox.Enabled = true;
+                // TODO: Uncomment these when implemented.
+                czarSelectCBox.Enabled = true;
+                //gameRulesetCBox.Enabled = true;
+                //allowGamblingCheckBox.Enabled = true;
+                allowChatCheckBox.Enabled = true;
+                timeoutKickCheckBox.Enabled = true;
+                onePickBlacksCBox.Enabled = true;
+                expansionPackButtons.Enabled = true;
+                serverStartBtn.Enabled = true;
+                gameStartBtn.Enabled = false;
+                gameStopBtn.Enabled = false;
+                #endregion
+            }
         }
         private void _disableUIComponents()
         {
@@ -135,6 +140,7 @@ namespace AppsAgainstHumanity.Server.UI
             allowGamblingCheckBox.Enabled = false;
             allowChatCheckBox.Enabled = false;
             timeoutKickCheckBox.Enabled = false;
+            onePickBlacksCBox.Enabled = false;
             serverStartBtn.Enabled = false;
             gameStartBtn.Enabled = true;
             gameStopBtn.Enabled = true;
@@ -148,7 +154,8 @@ namespace AppsAgainstHumanity.Server.UI
             switch (gms)
             {
                 case _GameMonitorState.Offline:
-                    FC = BC = Color.Red;
+                    FC = Color.Red;
+                    BC = Color.Red;
                     text = "Offline.";
                     break;
                 case _GameMonitorState.Online:
@@ -163,9 +170,17 @@ namespace AppsAgainstHumanity.Server.UI
                     break;
             }
 
-            this.serverStatusIndicLbl.ForeColor = FC;
-            this.serverStatusIndicLbl.Text = text;
-            this.serverStatusIndicRect.BackColor = BC;
+            if (this.serverStatusIndicLbl.InvokeRequired)
+                this.serverStatusIndicLbl.Invoke(new Action<_GameMonitorState>(_setGameMonitorState), gms);
+            else
+            {
+                this.serverStatusIndicLbl.ForeColor = FC;
+                this.serverStatusIndicLbl.Text = text;
+            }
+
+            if (this.serverStatusIndicRect.InvokeRequired)
+                this.serverStatusIndicRect.Invoke(new Action<_GameMonitorState>(_setGameMonitorState), gms);
+            else this.serverStatusIndicRect.BackColor = BC;
         }
 
         public mainForm()
@@ -177,6 +192,8 @@ namespace AppsAgainstHumanity.Server.UI
             this.awesomePointsLimitBox.Value = 8;
             this.timeoutLimitCBox.Value = 30;
             this.czarSelectCBox.SelectedIndex = 0;
+            Game.Game.ModeController gmc = Game.Game.GameModes;
+            this.gameRulesetCBox.Items.AddRange(gmc._gameModeKeys.ToArray());
             this.gameRulesetCBox.SelectedIndex = 0;
             this.connectedPlayersListBox.Text = String.Empty;
             this.aahAboutDescRTBox.SelectAll();
@@ -279,28 +296,43 @@ namespace AppsAgainstHumanity.Server.UI
                 Players = int.Parse(playerLimitBox.Value.ToString()),
                 PointsLimit = int.Parse(awesomePointsLimitBox.Value.ToString()),
                 TimeoutLimit = int.Parse(timeoutLimitCBox.Value.ToString()),
-                Ruleset = (GameRuleset)gameRulesetCBox.SelectedIndex,
+                Ruleset = gameRulesetCBox.SelectedItem.ToString(),
                 CzarSelection = (CzarSelection)czarSelectCBox.SelectedIndex,
                 AllowGambling = allowGamblingCheckBox.Checked,
                 KickOnTimeout = timeoutKickCheckBox.Checked,
-                AllowPlayerChat = allowChatCheckBox.Checked
+                AllowPlayerChat = allowChatCheckBox.Checked,
+                BlackCardPickLimit = onePickBlacksCBox.Checked
             };
 
-            this.game = new Game.Game(gp);
-
-            game.OnClientMessageReceived += _receivedMessageHandler;
-            game.OnPlayerJoin += _playerJoinHandler;
-            game.OnPlayerLeave += _playerLeaveHandler;
-            game.OnPlayerDisconnected += _playerLeaveHandler;
-            game.OnGameStopped += (s, ee) =>
+            try
             {
-                _setGameMonitorState(_GameMonitorState.Offline);
-                _enableUIComponents();
-            };
+                this.game = new Game.Game(gp);
 
-            _disableUIComponents();
+                game.OnClientMessageReceived += _receivedMessageHandler;
+                game.OnPlayerJoin += _playerJoinHandler;
+                game.OnPlayerLeave += _playerLeaveHandler;
+                game.OnPlayerDisconnected += _playerLeaveHandler;
+                game.OnGameStopped += gameStop_handler;
 
-            _setGameMonitorState(_GameMonitorState.Waiting);
+                _disableUIComponents();
+
+                _setGameMonitorState(_GameMonitorState.Waiting);
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                MessageBox.Show(
+                    String.Format(
+                        "Failed to bind: port {0} is already in use!",
+                        Settings.Port
+                    ),
+                    "Failed to Bind to Port",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                this._enableUIComponents();
+                this._setGameMonitorState(_GameMonitorState.Offline);
+            }
         }
         private void gameStartBtn_Click(object sender, EventArgs e)
         {
@@ -338,6 +370,13 @@ namespace AppsAgainstHumanity.Server.UI
             {
                 game.Stop();
             }
+        }
+        private void gameStop_handler(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            _setGameMonitorState(_GameMonitorState.Offline);
+            _enableUIComponents();
+            ResumeLayout();
         }
 
         private void expansionPackButtons_Click(object sender, EventArgs e)
