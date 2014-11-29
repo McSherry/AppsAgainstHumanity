@@ -939,7 +939,7 @@ namespace AppsAgainstHumanity.Server.Game
 
 
             this._server = new NetLibServer(Settings.Port, TransferProtocols.Delimited, Encoding.UTF8);
-            _server.Delimiter = ETX;
+            _server.Delimiter = new[] { ETX };
             this._serverWrapper = new AAHProtocolWrapper(_server);
 
             _serverWrapper.RegisterCommandHandler(CommandType.JOIN, _handlerJOIN);

@@ -43,7 +43,7 @@ namespace AppsAgainstHumanityClient
             if (port > Int16.MaxValue - 1 || port < 1024) port = DefaultPort;
 
 			Task t = Client.Connect(host, port, TransferProtocols.Delimited, Encoding.UTF8);
-			Client.Delimiter = ETX;
+			Client.Delimiter = new[] { ETX };
 			await t;
 			ClientWrapper.SendCommand(CommandType.JOIN, nick);
 		}
