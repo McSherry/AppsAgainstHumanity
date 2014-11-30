@@ -60,7 +60,6 @@
             this.serverVersionLbl = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.aahAboutDescRTBox = new System.Windows.Forms.RichTextBox();
-            this.aahWebLinkLbl = new System.Windows.Forms.LinkLabel();
             this.serverSettingsBtn = new System.Windows.Forms.Button();
             this.gameMonitorGBox.SuspendLayout();
             this.gameConfigGBox.SuspendLayout();
@@ -219,16 +218,6 @@
             this.gameRulesetCBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gameRulesetCBox.Enabled = false;
             this.gameRulesetCBox.FormattingEnabled = true;
-            var gameRulesetCBoxItems = new System.Collections.Generic.List<object>();
-            /*
-            new object[] {
-            "Standard",
-            "Rebooting the Universe",
-            "Packing Heat",
-            "Rando Cardrissian",
-            "God Is Dead",
-            "Survival of the Fittest",
-            "Serious Business"});*/
             this.gameRulesetCBox.Location = new System.Drawing.Point(327, 79);
             this.gameRulesetCBox.Name = "gameRulesetCBox";
             this.gameRulesetCBox.Size = new System.Drawing.Size(220, 21);
@@ -470,21 +459,6 @@
             this.aahAboutDescRTBox.Text = "Copyright 2013 (c) Johan Geluk, Liam McSherry\n\nApps Against Humanity is released " +
     "under the Apache 2.0 licence, and the source code is available via GitHub.";
             // 
-            // aahWebLinkLbl
-            // 
-            this.aahWebLinkLbl.ActiveLinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.AutoSize = true;
-            this.aahWebLinkLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.aahWebLinkLbl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.Location = new System.Drawing.Point(103, 288);
-            this.aahWebLinkLbl.Name = "aahWebLinkLbl";
-            this.aahWebLinkLbl.Size = new System.Drawing.Size(58, 13);
-            this.aahWebLinkLbl.TabIndex = 12;
-            this.aahWebLinkLbl.TabStop = true;
-            this.aahWebLinkLbl.Text = "getaah.net";
-            this.aahWebLinkLbl.VisitedLinkColor = System.Drawing.Color.DodgerBlue;
-            this.aahWebLinkLbl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aahWebLinkLbl_LinkClicked);
-            // 
             // serverSettingsBtn
             // 
             this.serverSettingsBtn.Location = new System.Drawing.Point(174, 428);
@@ -502,7 +476,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 460);
             this.Controls.Add(this.serverSettingsBtn);
-            this.Controls.Add(this.aahWebLinkLbl);
             this.Controls.Add(this.aahAboutDescRTBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.serverVersionLbl);
@@ -560,7 +533,6 @@
         private System.Windows.Forms.Button expansionPackButtons;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RichTextBox aahAboutDescRTBox;
-        private System.Windows.Forms.LinkLabel aahWebLinkLbl;
         private System.Windows.Forms.Button serverSettingsBtn;
         private System.Windows.Forms.CheckBox onePickBlacksCBox;
 	}

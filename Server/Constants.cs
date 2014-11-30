@@ -15,7 +15,7 @@ namespace AppsAgainstHumanity.Server
         /// <summary>
         /// The minimum number of players required for a game to begin.
         /// </summary>
-        public const int MinimumPlayers = 1;
+        public const int MinimumPlayers = 2;
 #else
         /// <summary>
         /// The minimum number of players required for a game to begin.
